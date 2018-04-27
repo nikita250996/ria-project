@@ -79,7 +79,7 @@ a {
 .header {
   width: 100%;
 
-  padding: 20px 40px;
+  padding: 20px 100px 20px 40px;
 
   background: #ff6000;
   background: -moz-linear-gradient(-45deg, #ff8700 0%, #ff6000 100%);
@@ -97,7 +97,8 @@ a {
 }
 
 .project-link:hover {
-  filter: blur(1px);
+  color: #3a332f;
+  transition: all 0.2s;
 }
 
 .staff-info {
@@ -109,7 +110,8 @@ a {
 }
 
 .employee,
-.ground {
+.ground,
+.logout {
   display: inline-block;
 
   font-size: 1rem;
@@ -119,12 +121,22 @@ a {
   vertical-align: middle;
 }
 
-.employee {
+.employee,
+.ground {
   margin-right: 10px;
   padding-right: 10px;
 
   border: none;
   border-right: 1px solid rgb(255, 255, 255);
+}
+
+.logout a {
+  color: #fff;
+}
+
+.logout a:hover {
+  color: #3a332f;
+  transition: all 0.2s;
 }
 
 
