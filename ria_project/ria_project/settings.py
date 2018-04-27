@@ -81,6 +81,7 @@ DATABASES = {
         'USER': 'ria_user',
         'PASSWORD': 'ria_user',
         'HOST': 'localhost',
+        'PORT': '5433',
     }
 }
 

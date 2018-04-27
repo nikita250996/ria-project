@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="utf-8">
+    {% block title %}<title>Заявки на РИД</title>{% endblock %}
+
+    {% load static %}
+	<link rel="stylesheet" href="{% static 'css/stylesheet.css' %}">
+</head>
+<body>
+	<!-- Шапка -->
+	<header class="header">
+		<!-- Сотрудник и номер площадки -->
+		<section class="staff-info group">
+			<!-- Сотрудник -->
+			<div class="employee">Иванова Анна Ивановна</div>
+			<!-- Номер площадки -->
+			<div class="ground">Площадка № 5</div>
+		</section>
+		<!-- Название -->
+		<h1 class="project-name"><a href="{% url 'index' %}" class="project-link">РИД СФУ</a></h1>
+	</header>
+
+	<div>
+		<!-- Меню/Навигация -->
+		<div class="col col-1-2">
+            {% block nav %}
+			<nav class="menu">
+				<ul class="navigation-list">
+					<li class="nav-item"><a class="nav-link active" href="{% url 'index' %}">Заявки на РИД</a></li>
+					<li class="nav-item"><a class="nav-link" href="{% url 'intellectual_properties' %}">РИД</a></li>
+					<li class="nav-item"><a class="nav-link" href="{% url 'contract_intellectual_properties' %}">РИД по договорам</a></li>
+					<li class="nav-item"><a class="nav-link" href="{% url 'protection_titles' %}">Охранные документы</a></li>
+					<li class="nav-item"><a class="nav-link" href="{% url 'intangible_assets' %}">НМА</a></li>
+					<li class="nav-item"><a class="nav-link" href="{% url 'duties' %}">Пошлины</a></li>
+					<li class="nav-item"><a class="nav-link" href="{% url 'intellectual_properties_commercialization' %}">Коммерциализация РИД</a></li>
+					<li class="nav-item"><a class="nav-link" href="{% url 'statistics' %}">Отчеты/Реестры</a></li>
+				</ul>
+			</nav>
+            {% endblock %}
+		</div>
+
+		<!-- Основная часть -->
+		<div class="col col-1-2">
+			<main class="">
+				<!-- Таблица -->
+                <section>
+					{% block table %}
+                    {% endblock %}
+				</section>
+				<!-- Форма -->
+				<section>
+                    {% block form %}
+                    {% endblock %}
+                </section>
+			</main>
+		</div>
+	</div>
+
+	<!-- Подвал -->
+	<footer></footer>
+</body>
+</html>
