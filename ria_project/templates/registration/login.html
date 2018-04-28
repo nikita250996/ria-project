@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>Вход</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/stylesheet.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login_styles.css' %}">
+</head>
+<body>
+    <!-- Шапка -->
+	<header class="header">
+		<!-- Название -->
+		<h1 class="project-name"><a href="{% url 'index' %}" class="project-link">РИД СФУ</a></h1>
+	</header>
+
+    <main class="login-container">
+        <form class="login-form" method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+
+            {% if form.errors %}
+                <p>Your username and password didn't match. Please try again.</p>
+            {% endif %}
+
+            <div class="form-group">
+                {{ form.username.label_tag }}
+                {{ form.username }}
+            </div>
+            <div class="form-group">
+                {{ form.password.label_tag }}
+                {{ form.password }}
+            </div>
+
+            <input type="submit" value="Войти">
+            <input type="hidden" name="next" value="{{ next }}" >
+        </form>
+    </main>
+
+
+</body>
+</html>
