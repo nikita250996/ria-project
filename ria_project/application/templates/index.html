@@ -1,2 +1,25 @@
 {% extends "base_template.html" %}
 
+{% block table %}
+<table class="table">
+    <caption class="table-name">Заявки</caption>
+    <thead class="table-header">
+        <tr>
+            <th scope="col">Название</th>
+            <th scope="col">Страна</th>
+            <th scope="col">Код РИД</th>
+            <th scope="col">Номер охр. документа</th>
+            <th scope="col">Номер заявки</th>
+        </tr>
+    </thead>
+    <tbody class="table-body">
+        {% for obj in ip_requests %}
+            <td>{{ obj.ip_name }}</td>
+            <td>{{ obj.country }}</td>
+            <td>{{ obj.ip_code }}</td>
+            <td>{{ obj.protection_title }}</td>
+            <td>{{ obj.number }}</td>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
