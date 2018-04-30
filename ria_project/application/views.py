@@ -37,7 +37,8 @@ def intangible_assets(request):
 # пошлины
 @login_required
 def duties(request):
-    return render(request, 'duties.html')
+    duties = Duty.objects.all()
+    return render(request, 'duties.html', {'duties': duties})
 
 
 # коммерциализация рид
