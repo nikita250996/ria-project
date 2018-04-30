@@ -4,6 +4,7 @@
 	<meta charset="utf-8">
     {% block title %}<title>Заявки на РИД</title>{% endblock %}
 
+		{% load app_extras %}
     {% load static %}
 	<link rel="stylesheet" href="{% static 'css/stylesheet.css' %}">
 </head>
@@ -15,7 +16,7 @@
 			<!-- Сотрудник -->
 			<div class="employee">{{ user.get_full_name }}</div>
 			<!-- Номер площадки -->
-			<div class="ground">Площадка № 5</div>
+			<div class="ground">Площадка №{% ground user %}</div>
             <!-- Завершение работы -->
             <div class="logout">
                 <a href="{% url 'logout' %}">Выход</a>

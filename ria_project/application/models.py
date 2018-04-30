@@ -1,4 +1,24 @@
 from django.db import models
+from django.contrib.auth.models import User
+
+# Пользователи системы
+class Employees(models.Model):
+    # Использованы в User
+    # name = models.CharField(max_length=100, blank=False)
+    # surname = models.CharField(max_length=100)
+    # email = models.CharField(max_length=100, null=True)
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    ground = models.ForeignKey(to='Ground', on_delete=models.PROTECT, null=True)
+    patronymic = models.CharField(max_length=100, null=True)
+    jobrole = models.CharField(max_length=100, null=True)
+    # поменял на 200
+    home_address = models.CharField(max_length=200, null=True)
+    birth_date = models.DateField(null=True)
+
+    mobile_phone = models.CharField(max_length=20, null=True)
+    home_phone = models.CharField(max_length=20, null=True)
+
 
 # Тип коммерциализации РИД
 #   name - наименование использования РИД
@@ -43,19 +63,6 @@ class IPC(models.Model):
 class Country(models.Model):
     code = models.CharField(max_length=10)
     name = models.CharField(max_length=100, blank=False)
-
-class Employees(models.Model):
-    ground = models.ForeignKey(to='Ground', on_delete=models.PROTECT, null=True)
-    name = models.CharField(max_length=100, blank=False)
-    surname = models.CharField(max_length=100)
-    patronymic = models.CharField(max_length=100, null=True)
-    jobrole = models.CharField(max_length=100, null=True)
-    # поменял на 200
-    home_address = models.CharField(max_length=200, null=True)
-    birth_date = models.DateField(null=True)
-    email = models.CharField(max_length=100, null=True)
-    mobile_phone = models.CharField(max_length=20, null=True)
-    home_phone = models.CharField(max_length=20, null=True)
 
 class Request(models.Model):
     number = models.IntegerField()
