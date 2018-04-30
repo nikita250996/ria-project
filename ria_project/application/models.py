@@ -186,7 +186,7 @@ class IPC(models.Model):
 
 class Country(models.Model):
     """Страна
-
+    
     Поля:
         code Код
         name Название
