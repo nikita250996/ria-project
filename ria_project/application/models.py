@@ -15,7 +15,7 @@ class ContractType(models.Model):
 #   index - индекс площадки
 #   address - адрес площадки
 class Ground(models.Model):
-    ground_code = models.IntegerField(default=0)
+    ground_code = models.IntegerField(unique=True)
     phone = models.CharField(max_length=50, null=True)
     index = models.CharField(max_length=20, null=True)
     address = models.CharField(max_length=100, blank=False, null=True)
