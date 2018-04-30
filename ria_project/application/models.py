@@ -15,6 +15,7 @@ class ContractType(models.Model):
 #   index - индекс площадки
 #   address - адрес площадки
 class Ground(models.Model):
+    ground_code = models.IntegerField(default=0)
     phone = models.CharField(max_length=50, null=True)
     index = models.CharField(max_length=20, null=True)
     address = models.CharField(max_length=100, blank=False, null=True)
@@ -191,15 +192,3 @@ class LegalPerson(Person):
     fax = models.CharField(max_length=100, blank=False, null=True)
     site = models.CharField(max_length=100, blank=False, null=True)
     email = models.CharField(max_length=100, blank=False, null=True)
-
-
-# удалить тестовые модели ниже
-# class Test2(models.Model):
-#     name = models.CharField(max_length=100)
-#
-# class Test1(models.Model):
-#     name = models.CharField(max_length=100)
-#     t2 = models.ManyToManyField(Test2)
-#
-# class JustTest(models.Model):
-#     tdate = models.DateTimeField('just test date')

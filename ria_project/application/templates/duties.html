@@ -16,3 +16,26 @@
     </ul>
 </nav>
 {% endblock %}
+
+
+{% block table %}
+<table class="table">
+    <caption class="table-name">Пошлины</caption>
+    <thead class="table-header">
+        <tr>
+            <th scope="col">Номер перечня</th>
+            <th scope="col">Наименование пошлины</th>
+            <th scope="col">Размер пошлины</th>
+        </tr>
+    </thead>
+    <tbody class="table-body">
+        {% for obj in duties %}
+          <tr>
+            <td>{{ obj.order_number }}</td>
+            <td>{{ obj.name }}</td>
+            <td>{{ obj.size }}</td>
+          </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
