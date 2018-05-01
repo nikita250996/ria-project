@@ -76,5 +76,4 @@ admin.site.register(IntangibleAssets, IntangibleAssetsAdmin)
 admin.site.register(CardRegister, CardRegisterAdmin)
 admin.site.register(PrivatePerson, PrivatePersonAdmin)
 admin.site.register(LegalPerson, LegalPersonAdmin)
-# Что-то тут не очень :(
-admin.site.register(Person)
+# admin.site.register(Person)
