@@ -6,5 +6,7 @@ register = template.Library()
 
 @register.simple_tag
 def ground(user):
-    emp = Employees.objects.get(user=user.id)
-    return emp.ground.ground_code
+    if not user.is_superuser:
+        emp = Employees.objects.get(user=user.id)
+        return emp.ground.ground_code
+    return 0

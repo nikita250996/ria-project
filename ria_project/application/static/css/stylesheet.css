@@ -143,19 +143,28 @@ a {
 
 
 /* GRID */
+.container {
+  font-size: 0;
+}
+
 .col {
   display: inline-block;
 
   vertical-align: top;
-
-  font-size: 0;
 }
 
+.menu-container {
+  width: 18%;
+}
+
+.content-container {
+  width: 82%;
+}
 
 /* MENU */
 .menu {
   height: 100vh;
-
+  /*max-height: 100vh;*/
   font-size: 1rem;
   font-weight: 500;
   background: linear-gradient(135deg, #3a332f 0%,#403935 100%);
@@ -187,7 +196,13 @@ a {
   font-weight: 400;
 }
 
+.table-container {
+  overflow: auto;
+}
+
 .table {
+  word-break: break-word;
+
   border-collapse: collapse;
   border-spacing: 0;
 }
