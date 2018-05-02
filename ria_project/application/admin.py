@@ -24,17 +24,38 @@ class IPCAdmin(admin.ModelAdmin):
 class EmployeesAdmin(admin.ModelAdmin):
     list_display = ('user', 'ground', 'patronymic', 'jobrole', 'jobrole', 'birth_date', 'mobile_phone', 'home_phone')
 
-# Нужно получать ещё ipc, owner, creator, country
+# TODO Нужно получать ещё ipc
 class RequestAdmin(admin.ModelAdmin):
-    list_display = ('number', 'protection_title', 'ip_name', 'abridgement', 'ground', 'ip_type', 'bulletin_number', 'bulletin_date', 'priority_date', 'send_date', 'receipt_date', 'grant_date', 'is_contracted', 'contract_number', 'contract_date', 'text', 'number_policy_measure', 'note', 'contract_type', 'provider', 'commissioner')
+    list_display = ('number', 'protection_title', 'ip_name', 'abridgement', 'ground', 'ip_type', 'bulletin_number', 'bulletin_date', 'priority_date', 'send_date', 'receipt_date', 'grant_date', 'is_contracted', 'contract_number', 'contract_date', 'text', 'number_policy_measure', 'note', 'contract_type', 'provider', 'commissioner', 'Патентообладатели', 'Авторы', 'Страны')
 
-# Нужно получать ещё intellectual_property_type
+    def Патентообладатели(self, obj):
+        return ", ".join([str(owner) for owner in obj.owner.all()])
+
+    def Авторы(self, obj):
+        return ", ".join([str(creator) for creator in obj.creator.all()])
+
+    def Страны(self, obj):
+        return ", ".join([str(country) for country in obj.country.all()])
+
+# TODO Разделить ТипыРИД на два слова
 class DutyAdmin(admin.ModelAdmin):
-    list_display = ('order_number', 'name', 'size')
+    list_display = ('order_number', 'name', 'ТипыРИД')
 
-# Нужно получать ещё duty_payments
+    def ТипыРИД(self, obj):
+        return ", ".join([str(intellectual_property_type) for intellectual_property_type in obj.intellectual_property_type.all()])
+
+# Для IntellectualPropertyAdmin
+class PaymentInline(admin.TabularInline):
+    model = Payment
+    extra = 0
+
+# TODO Разделить Оплатыпошлины на два слова
 class IntellectualPropertyAdmin(admin.ModelAdmin):
-    list_display = ('request_number', 'protection_title', 'name', 'abridgement', 'ground', 'type_fk', 'bulletin_number', 'bulletin_date', 'priority_date', 'grant_date')
+    inlines = (PaymentInline,)
+    list_display = ('request_number', 'protection_title', 'name', 'abridgement', 'ground', 'type_fk', 'bulletin_number', 'bulletin_date', 'priority_date', 'grant_date', 'Оплатыпошлины')
+
+    def Оплатыпошлины(self, obj):
+        return ", ".join([str(duty_payment) for duty_payment in obj.duty_payments.all()])
 
 class PaymentAdmin(admin.ModelAdmin):
     list_display = ('duty', 'intellectual_property', 'purchase_order_number', 'payment_date', 'posted_date', 'paid_amount', 'note')
@@ -42,9 +63,11 @@ class PaymentAdmin(admin.ModelAdmin):
 class ContractIntellectualPropertiesAdmin(admin.ModelAdmin):
     list_display = ('intellectual_property', 'number', 'date', 'text', 'number_policy_measure', 'note', 'contract_type', 'provider', 'commissioner')
 
-# Нужно получать ещё licenser
 class IntellectualPropertyCommercializationAdmin(admin.ModelAdmin):
-    list_display = ('intellectual_property', 'reference_number', 'send_date', 'commercialization_type', 'licencee', 'version_number', 'filing_date', 'acceptance_delivery_acr', 'contract_duration', 'agreement_terms', 'note')
+    list_display = ('intellectual_property', 'reference_number', 'send_date', 'commercialization_type', 'licencee', 'version_number', 'filing_date', 'acceptance_delivery_acr', 'contract_duration', 'agreement_terms', 'note', 'Лицензиары')
+
+    def Лицензиары(self, obj):
+        return ", ".join([str(licenser) for licenser in obj.licenser.all()])
 
 class IntangibleAssetsAdmin(admin.ModelAdmin):
     list_display = ('intellectual_property', 'date', 'number', 'book_value', 'retirement_date')
