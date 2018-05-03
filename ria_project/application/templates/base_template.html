@@ -4,68 +4,82 @@
 	<meta charset="utf-8">
     {% block title %}<title>Заявки на РИД</title>{% endblock %}
 
-		{% load app_extras %}
+    {% load app_extras %}
     {% load static %}
 	<link rel="stylesheet" href="{% static 'css/stylesheet.css' %}">
+	<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
 </head>
 <body>
 	<!-- Шапка -->
-	<header class="header">
+	<header class="header row">
+        <!-- Название -->
+		<h1 class="project-name col-sm-3">
+            <a href="{% url 'index' %}" class="project-link">РИД СФУ</a>
+        </h1>
+        <div class="col-sm-5"></div>
 		<!-- Сотрудник и номер площадки -->
-		<section class="staff-info group">
+		<section class="col-sm-4 text-center my-auto staff-info">
 			<!-- Сотрудник -->
-			<div class="employee">{{ user.get_full_name }}</div>
+			<div class="employee">
+                <span>{{ user.get_full_name }}</span>
+            </div>
 			<!-- Номер площадки -->
-			<div class="ground">Площадка №{% ground user %}</div>
+            {% if not user.is_superuser %}
+			<div class="ground">
+                <span>Площадка № {% ground user %}</span>
+            </div>
+            {% endif %}
             <!-- Завершение работы -->
             <div class="logout">
                 <a href="{% url 'logout' %}">Выход</a>
             </div>
 		</section>
-		<!-- Название -->
-		<h1 class="project-name"><a href="{% url 'index' %}" class="project-link">РИД СФУ</a></h1>
 	</header>
 
-	<div class="container">
-		<!-- Меню/Навигация -->
-		<div class="col menu-container">
+	<div class="container-fluid">
+        <div class="row">
+            <!-- Меню/Навигация -->
             {% block nav %}
-			<nav class="menu">
-				<ul class="navigation-list">
-					<li class="nav-item"><a class="nav-link active" href="{% url 'index' %}">Заявки на РИД</a></li>
-					<li class="nav-item"><a class="nav-link" href="{% url 'intellectual_properties' %}">РИД</a></li>
-					<li class="nav-item"><a class="nav-link" href="{% url 'contract_intellectual_properties' %}">РИД по договорам</a></li>
-					<li class="nav-item"><a class="nav-link" href="{% url 'protection_titles' %}">Охранные документы</a></li>
-					<li class="nav-item"><a class="nav-link" href="{% url 'intangible_assets' %}">НМА</a></li>
-					<li class="nav-item"><a class="nav-link" href="{% url 'duties' %}">Пошлины</a></li>
-					<li class="nav-item"><a class="nav-link" href="{% url 'intellectual_properties_commercialization' %}">Коммерциализация РИД</a></li>
-					<li class="nav-item"><a class="nav-link" href="{% url 'statistics' %}">Отчеты/Реестры</a></li>
-					{% if user.is_superuser %}
-						<li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">Панель администратора</a></li>
-					{% endif %}
-				</ul>
-			</nav>
+            <nav class="col-md-3 col-lg-2 d-none d-md-block sidebar menu">
+                <div class="sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item"><a class="nav-link active" href="{% url 'index' %}">Заявки на РИД</a></li>
+                        <li class="nav-item"><a class="nav-link"        href="{% url 'intellectual_properties' %}">РИД</a></li>
+                        <li class="nav-item"><a class="nav-link"        href="{% url 'contract_intellectual_properties' %}">РИД по договорам</a></li>
+                        <li class="nav-item"><a class="nav-link"        href="{% url 'protection_titles' %}">Охранные документы</a></li>
+                        <li class="nav-item"><a class="nav-link"        href="{% url 'intangible_assets' %}">НМА</a></li>
+                        <li class="nav-item"><a class="nav-link"        href="{% url 'duties' %}">Пошлины</a></li>
+                        <li class="nav-item"><a class="nav-link"        href="{% url 'intellectual_properties_commercialization' %}">Коммерциализация РИД</a></li>
+                        <li class="nav-item"><a class="nav-link"        href="{% url 'statistics' %}">Отчеты/Реестры</a></li>
+                        {% if user.is_superuser %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">Панель администратора</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
             {% endblock %}
-		</div>
 
-		<!-- Основная часть -->
-		<div class="col content-container">
-			<main class="content">
-				<!-- Таблица -->
-        <section>
-					{% block table %}
-          {% endblock %}
-				</section>
-				<!-- Форма -->
-				<section>
+            <!-- Основная часть -->
+            <main class="col-md-9 ml-sm-auto col-lg-10 px-4" role="main">
+                <!-- Таблица -->
+                {% block table %}
+                {% endblock %}
+                <!-- Форма -->
+                <section>
                     {% block form %}
                     {% endblock %}
                 </section>
-			</main>
-		</div>
+            </main>
+        </div>
 	</div>
 
-	<!-- Подвал -->
-	<footer></footer>
+    <!-- Javascript files -->
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'js/popperjs/popper.min.js' %}"></script>
+    <script src="{% static 'js/vuejs/vuejs.js' %}"></script>
+    <script src="{% static 'js/vue-tables-2/vue-tables-2.min.js' %}"></script>
+    {% block custom-js %}
+    {% endblock %}
 </body>
 </html>
