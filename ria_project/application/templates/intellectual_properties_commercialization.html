@@ -3,19 +3,21 @@
 {% block title %}<title>РИД по договорам</title>{% endblock %}
 
 {% block nav %}
-<nav class="menu">
-    <ul class="navigation-list">
-        <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Заявки на РИД</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'intellectual_properties' %}">РИД</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'contract_intellectual_properties' %}">РИД по договорам</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'protection_titles' %}">Охранные документы</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'intangible_assets' %}">НМА</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'duties' %}">Пошлины</a></li>
-        <li class="nav-item"><a class="nav-link active" href="{% url 'intellectual_properties_commercialization' %}">Коммерциализация РИД</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'statistics' %}">Отчеты/Реестры</a></li>
-        {% if user.is_superuser %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">Панель администратора</a></li>
-        {% endif %}
-    </ul>
+<nav class="col-md-2 d-none d-md-block sidebar menu">
+    <div class="sidebar-sticky">
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link"        href="{% url 'index' %}">Заявки на РИД</a></li>
+            <li class="nav-item"><a class="nav-link"        href="{% url 'intellectual_properties' %}">РИД</a></li>
+            <li class="nav-item"><a class="nav-link"        href="{% url 'contract_intellectual_properties' %}">РИД по договорам</a></li>
+            <li class="nav-item"><a class="nav-link"        href="{% url 'protection_titles' %}">Охранные документы</a></li>
+            <li class="nav-item"><a class="nav-link"        href="{% url 'intangible_assets' %}">НМА</a></li>
+            <li class="nav-item"><a class="nav-link"        href="{% url 'duties' %}">Пошлины</a></li>
+            <li class="nav-item"><a class="nav-link active"        href="{% url 'intellectual_properties_commercialization' %}">Коммерциализация РИД</a></li>
+            <li class="nav-item"><a class="nav-link"        href="{% url 'statistics' %}">Отчеты/Реестры</a></li>
+            {% if user.is_superuser %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">Панель администратора</a></li>
+            {% endif %}
+        </ul>
+    </div>
 </nav>
 {% endblock %}
