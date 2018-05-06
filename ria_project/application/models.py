@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 Классы, редактирование которых критически важно
 Employees, Request
 Классы, редактирование которых можно отложить
-Employees, CommercializationType, ContractType, Ground, IntellectualPropertyType, Person, IPC, Request, Duty, IntellectualProperty, Payment, ContractIntellectualProperties, IntellectualPropertyCommercialization, IntangibleAssets, CardRegister, PrivatePerson, LegalPerson
+Employees, CommercializationType, ContractType, Ground, IntellectualPropertyType, Person, IPC, Request, Duty, IntellectualProperty, Payment, ContractIntellectualProperties, IPCommercialization, IntangibleAssets, CardRegister, PrivatePerson, LegalPerson
 Над каждым классом написаны задачи
 """
 
@@ -171,9 +171,9 @@ class Person(models.Model):
     # class Meta:
     #     abstract = True
     # pass
-    def __str__(self):
-        # TODO ВТОРИЧНОЙ важности Что возвращать?
-        return 'Пока просто id ' + str(self.id)
+    # def __str__(self):
+    #     # TODO ВТОРИЧНОЙ важности Что возвращать?
+    #     return 'Пока просто id ' + str(self.id)
 
 # Вторичные задачи
 # index
@@ -216,7 +216,8 @@ class Country(models.Model):
         verbose_name_plural = 'Страны'
 
     def __str__(self):
-        return self.name
+        return self.code
+
 
 # Вторичные задачи
 # number
@@ -541,7 +542,7 @@ class ContractIntellectualProperties(models.Model):
 # Meta->verbose_name
 # __str__
 # TODO ВТОРИЧНОЙ важности IntellectualPropertyCommercialisation?
-class IntellectualPropertyCommercialization(models.Model):
+class IPCommercialization(models.Model):
     """Коммерциализация РИД
 
     Поля:
