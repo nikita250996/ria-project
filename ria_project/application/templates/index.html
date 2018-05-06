@@ -2,27 +2,78 @@
 
 {% block table %}
 <h3 class="table-name">Заявки</h3>
-<div class="table-responsive" id="table">
-    {# class="table table-striped table-lg"#}
-    <v-server-table url="http://127.0.0.1:8000/api/requests/" :columns="columns" :options="options">
-    </v-server-table>
+<div class="table-responsive">
+    <table id="myTable" class="table table-striped table-sm" style="width:100%">
+    </table>
 </div>
 {% endblock %}
 
 {% block custom-js %}
 <script>
-    Vue.use(VueTables.ServerTable);
     $(document).ready( function() {
-        new Vue({
-            el: "#table",
-            data: {
-                columns: ['number', 'protection_title', 'ip_name'],
-                options: {
-                    // see the options API
-                }
-            }
-        });
-
+        $('#myTable').DataTable( {
+            ajax: {
+                url: 'http://127.0.0.1:8000/api/requests/',
+                dataSrc: '',
+            },
+            language: languageSettings,
+            processing: true,
+            responsive: true,
+            columns: [
+                {data: 'id', title: '#'},
+                {data: 'number', title: 'Номер заявки'},
+                {data: 'protection_title', title: 'Охранный документ'},
+                {data: 'abridgement', title: 'Реферат'},
+                {data: 'ground.ground_code', title: 'Номер площадки'},
+                {data: 'ip_type.name', title: 'Тип РИД'},
+                {data: 'bulletin_number', title: 'Номер бюллетеня'},
+                {data: 'bulletin_date', title: 'Дата публикации бюллетеня',
+                        render: function( data, type, row) {
+                            return formatDate(data);
+                        }
+                },
+                {data: 'priority_date', title: 'Дата приоритета',
+                        render: function( data, type, row) {
+                            return formatDate(data);
+                        }
+                },
+                {data: 'send_date', title: 'Дата отправки запроса',
+                        render: function( data, type, row) {
+                            return formatDate(data);
+                        }
+                },
+                {data: 'receipt_date', title: 'Дата получения охранного документа',
+                        render: function( data, type, row) {
+                            return formatDate(data);
+                        }
+                },
+                {data: 'grant_date', title: 'Дата выдачи ФИПСом охранного документа на РИД',
+                        render: function( data, type, row) {
+                            return formatDate(data);
+                        }
+                },
+                {data: 'is_contracted', title: 'Договор',
+                        render: function( data, type, row ) {
+                            return formatBool(data);
+                        }
+                },
+                {data: 'contract_number', title: 'Номер договора'},
+                {data: 'contract_date', title: 'Дата заключения договора',
+                        render: function( data, type, row) {
+                            return formatDate(data);
+                        }
+                },
+                {data: 'text', title: 'Тема'},
+                {data: 'number_policy_measure', title: 'Номер программного мероприятия'},
+                {data: 'note', title: 'Примечание'},
+                {data: 'contract_type.name', title: 'Вид договора'},
+                {data: 'provider', title: 'Исполнитель'},
+                {data: 'commissioner', title: 'Руководитель'},
+                {data: 'owner', title: 'Патентообладатели'},
+                {data: 'creator', title: 'Авторы'},
+                {data: 'country', title: 'Страны'},
+            ],
+        } );
     });
 </script>
 {% endblock %}
