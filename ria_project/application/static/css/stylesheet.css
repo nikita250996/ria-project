@@ -53,12 +53,13 @@ table {
 
 
 body {
+    font-size: .875rem;
   color: rgb(102, 102, 102);;
   font-family: "Open Sans", serif;
 }
 
 a {
-  text-decoration: none;
+  text-decoration: none !important;
 }
 
 /* CLEAR FIX */
@@ -78,9 +79,7 @@ a {
 
 /* HEADER */
 .header {
-  width: 100%;
-
-  padding: 20px 100px 20px 40px;
+  padding: 10px 20px 10px 15px;
 
   background: #ff6000;
   background: -moz-linear-gradient(-45deg, #ff8700 0%, #ff6000 100%);
@@ -88,9 +87,13 @@ a {
   background: linear-gradient(135deg, #ff8700 0%,#ff6000 100%);
 }
 
+.header.row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
 .project-name {
-  width: 50%;
-  font-size: 2em;
+  font-size: 2rem !important;
   font-weight: 800;
 }
 
@@ -104,32 +107,28 @@ a {
 }
 
 .staff-info {
-  padding-top: 10px;
-
-  float: right;
-
-  font-size: 0;
+    font-size: 0;
 }
 
 .employee,
 .ground,
 .logout {
-  display: inline-block;
+    display: inline-block;
 
-  font-size: 1.1rem;
-  font-weight: 500;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: .01em;
 
-  color: rgb(255, 255, 255);
-  vertical-align: middle;
+    color: rgb(255, 255, 255);
 }
 
-.employee,
-.ground {
-  margin-right: 10px;
-  padding-right: 10px;
+.employee span,
+.ground span {
+    margin-right: 10px;
+    padding-right: 10px;
 
-  border: none;
-  border-right: 1px solid rgb(255, 255, 255);
+    border: none;
+    border-right: 1px solid rgb(255, 255, 255);
 }
 
 .logout a {
@@ -142,30 +141,9 @@ a {
 }
 
 
-/* GRID */
-.container {
-  font-size: 0;
-}
-
-.col {
-  display: inline-block;
-
-  vertical-align: top;
-}
-
-.menu-container {
-  width: 18%;
-}
-
-.content-container {
-  width: 82%;
-}
-
 /* MENU */
 .menu {
-  height: 100vh;
-  /*max-height: 100vh;*/
-  font-size: 1rem;
+  font-size: .9rem;
   font-weight: 500;
   background: linear-gradient(135deg, #3a332f 0%,#403935 100%);
 }
@@ -175,7 +153,6 @@ a {
 }
 
 .nav-link {
-  display: block;
   padding: 10px 20px 10px 40px;
   color: rgb(255, 255, 255);
 }
@@ -186,45 +163,26 @@ a {
 
 .nav-link.active {
   color: #f60;
-  background-color: rgb(255, 255, 255);
 }
 
-.content {
-  padding: 24px 36px;
-
-  font-size: 1rem;
-  font-weight: 400;
-}
-
-.table-container {
-  overflow: auto;
-}
-
-.table {
-  word-break: break-word;
-
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-
-.table th,
-.table td {
-  border: 1px solid #cecfd5;
-  padding: 10px 15px;
+.sidebar-sticky {
+    position: relative;
+    top: 0;
+    height: calc(100vh - 48px);
+    padding-top: .5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .table-name {
-  margin-bottom: 22px;
-
-  font-size: 1.3rem;
-  font-weight: 700;
-  text-align: left;
+    margin-top: 22px;
+    margin-bottom: 22px;
 }
 
-.table-header {
-  background-color: rgb(234, 234, 237);
+.table {
+    font-size: .8rem;
 }
 
-.table-header th {
-  font-size: 0.9rem;
+.table thead tr th {
+    white-space: nowrap;
 }
