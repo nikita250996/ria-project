@@ -116,7 +116,8 @@ a {
     display: inline-block;
 
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 600;
+    letter-spacing: .01em;
 
     color: rgb(255, 255, 255);
 }
@@ -179,5 +180,9 @@ a {
 }
 
 .table {
-    font-size: .875rem;
+    font-size: .8rem;
+}
+
+.table thead tr th {
+    white-space: nowrap;
 }
