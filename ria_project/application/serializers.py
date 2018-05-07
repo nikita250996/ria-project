@@ -3,7 +3,11 @@ from .models import *
 
 
 class RequestSerializer(serializers.ModelSerializer):
-    country = serializers.StringRelatedField(many=True)
+    countries = serializers.StringRelatedField(many=True)
+    owners = serializers.StringRelatedField(many=True)
+    creators = serializers.StringRelatedField(many=True)
+    provider = serializers.StringRelatedField()
+    commissioner = serializers.StringRelatedField()
 
     class Meta:
         model = Request

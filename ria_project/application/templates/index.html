@@ -42,7 +42,7 @@
                             return formatDate(data);
                         }
                 },
-                {data: 'receipt_date', title: 'Дата получения охранного документа',
+                {data: 'receipt_date', title: 'Дата получения\n охранного документа',
                         render: function( data, type, row) {
                             return formatDate(data);
                         }
@@ -69,9 +69,21 @@
                 {data: 'contract_type.name', title: 'Вид договора'},
                 {data: 'provider', title: 'Исполнитель'},
                 {data: 'commissioner', title: 'Руководитель'},
-                {data: 'owner', title: 'Патентообладатели'},
-                {data: 'creator', title: 'Авторы'},
-                {data: 'country', title: 'Страны'},
+                {data: 'owners', title: 'Патентообладатели',
+                        render: function(data, type, row) {
+                            return data.join('; ');
+                        }
+                },
+                {data: 'creators', title: 'Авторы',
+                        render: function(data, type, row) {
+                            return data.join('; ');
+                        }
+                },
+                {data: 'countries', title: 'Страны',
+                        render: function(data, type, row) {
+                            return data.join(', ');
+                        }
+                },
             ],
         } );
     });
