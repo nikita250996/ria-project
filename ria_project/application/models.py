@@ -3,27 +3,6 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 
-"""
-ЧТО НУЖНО СДЕЛАТЬ
-Классы, редактирование которых критически важно
-Employees, Request
-Классы, редактирование которых можно отложить
-Employees, CommercializationType, ContractType, Ground, IntellectualPropertyType, Person, IPC, Request, Duty, IntellectualProperty, Payment, ContractIntellectualProperties, IPCommercialization, IntangibleAssets, CardRegister, PrivatePerson, LegalPerson
-Над каждым классом написаны задачи
-"""
-
-# Критические задачи
-# name
-# surname
-# email
-# Вторичные задачи
-# Поля->user
-# ground_code
-# jobrole
-# home_address
-# birth_date
-# home_phone
-# TODO ВТОРИЧНОЙ важности Employee?
 class Employees(models.Model):
     """Сотрудник УИС
 
@@ -58,19 +37,16 @@ class Employees(models.Model):
 
     def __str__(self):
         return str(self.user)
-    #     return User.objects.get(id=self.user).first_name
 
-# Вторичные задачи
-# name
-# TODO ВТОРИЧНОЙ важности Commercialisation?
+
 class CommercializationType(models.Model):
     """Тип коммерциализации РИД
 
     Поля:
         name Наименование
     """
-    # TODO ВТОРИЧНОЙ важности help_text
-    name = models.CharField(max_length=100, blank=False, verbose_name='Наименование', help_text='Наименование типа коммерциализации РИД. Например, ???')
+    name = models.CharField(max_length=100, blank=False, verbose_name='Наименование',
+                            help_text='Тип коммерциализации РИД.')
 
     class Meta:
         verbose_name = 'тип коммерциализации РИД'
@@ -79,8 +55,7 @@ class CommercializationType(models.Model):
     def __str__(self):
         return self.name
 
-# Вторичные задачи
-# name
+
 class ContractType(models.Model):
     """Тип договора на РИД
 
@@ -88,8 +63,8 @@ class ContractType(models.Model):
         name Наименование
     """
 
-    # TODO ВТОРИЧНОЙ важности help_text
-    name = models.CharField(max_length=100, blank=False, verbose_name='Наименование', help_text='Наименование типа договора на РИД. Например, ???')
+    name = models.CharField(max_length=100, blank=False, verbose_name='Наименование',
+                            help_text='Тип договора на РИД.')
 
     class Meta:
         verbose_name = 'тип договора на РИД'
@@ -98,9 +73,7 @@ class ContractType(models.Model):
     def __str__(self):
         return self.name
 
-# Вторичные задачи
-# index
-# address
+
 class Ground(models.Model):
     """Площадка СФУ
 
@@ -112,11 +85,12 @@ class Ground(models.Model):
     """
 
     ground_code = models.IntegerField(unique=True, verbose_name='Код', help_text='Код площадки СФУ. Например, 1')
-    phone = models.CharField(max_length=50, null=True, verbose_name='Телефонный номер', help_text='Телефонный номер площадки СФУ. Например, +78005553535')
-    # TODO ВТОРИЧНОЙ важности help_text
-    index = models.CharField(max_length=20, null=True, verbose_name='Индекс', help_text='Индекс площадки СФУ. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    address = models.CharField(max_length=100, blank=False, null=True, verbose_name='Физический адрес', help_text='Физический адрес площадки СФУ. Например, ???')
+    phone = models.CharField(max_length=50, null=True, verbose_name='Телефонный номер',
+                             help_text='Телефонный номер площадки СФУ. Например, +78005553535')
+    index = models.CharField(max_length=20, null=True, verbose_name='Индекс',
+                             help_text='Индекс площадки СФУ. Например, 660074')
+    address = models.CharField(max_length=100, blank=False, null=True, verbose_name='Физический адрес',
+                               help_text='Физический адрес площадки СФУ. Например, пр. Свободный 79.')
 
     class Meta:
         verbose_name = 'площадку СФУ'
@@ -125,12 +99,7 @@ class Ground(models.Model):
     def __str__(self):
         return 'Площадка СФУ №' + str(self.ground_code)
 
-# Вторичные задачи
-# name
-# protection_document_name
-# validity
-# renewal
-# pay_period
+
 class IntellectualPropertyType(models.Model):
     """Тип РИД
 
@@ -142,16 +111,17 @@ class IntellectualPropertyType(models.Model):
         pay_period Период оплаты
     """
 
-    # TODO ВТОРИЧНОЙ важности help_text
-    name = models.CharField(max_length=100, blank=False, null=True, verbose_name='Наименование', help_text='Наименование типа РИД. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    protection_document_name = models.CharField(max_length=100, blank=False, null=True, verbose_name='Название охранного документа', help_text='Название охранного документа ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    validity = models.IntegerField(null=True, verbose_name='Срок действия', help_text='Срок действия ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    renewal = models.IntegerField(null=True, verbose_name='Срок продления', help_text='Срок продления ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    pay_period = models.IntegerField(null=True, verbose_name='Период оплаты', help_text='Период оплаты ???. Например, ???')
+    name = models.CharField(max_length=100, blank=False, null=True, verbose_name='Наименование',
+                            help_text='Наименование РИД.')
+    protection_document_name = models.CharField(max_length=100, blank=False, null=True,
+                                                verbose_name='Охранный документ',
+                                                help_text='Охранный документ.')
+    validity = models.IntegerField(null=True, verbose_name='Срок действия',
+                                   help_text='Срок действия ???. Например, ???')
+    renewal = models.IntegerField(null=True, verbose_name='Срок продления',
+                                  help_text='Введите срок продления.')
+    pay_period = models.IntegerField(null=True, verbose_name='Период оплаты',
+                                     help_text='Введите период оплаты.')
 
     class Meta:
         verbose_name = 'тип РИД'
@@ -160,47 +130,14 @@ class IntellectualPropertyType(models.Model):
     def __str__(self):
         return self.name
 
-# Вторичные задачи
-# Поля->???
-# __str__
-class Person(models.Model):
-    """Патентообладатель
 
-    Поля:
-        ??? ???
-    """
-    # class Meta:
-    #     abstract = True
-    # pass
+class Person(models.Model):
+
     def __str__(self):
         if hasattr(self, 'privateperson'):
             return str(self.privateperson)
         return str(self.legalperson)
 
-# Вторичные задачи
-# index
-# description
-# Meta->verbose_name
-class IPC(models.Model):
-    """Международная патентная классификация
-
-    Поля:
-        index Индекс
-        description Описание
-    """
-
-    # TODO ВТОРИЧНОЙ важности help_text
-    index = models.CharField(max_length=50, verbose_name='Индекс', help_text='Индекс ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    description = models.TextField(verbose_name='Описание', help_text='Описание ???. Например, ???')
-
-    class Meta:
-        # TODO ВТОРИЧНОЙ важности
-        verbose_name = 'международную патентную классификацию ???'
-        verbose_name_plural = 'Международная патентная классификация'
-
-    def __str__(self):
-        return self.index
 
 class Country(models.Model):
     """Страна
@@ -211,7 +148,8 @@ class Country(models.Model):
     """
 
     code = models.CharField(max_length=10, verbose_name='Код', help_text='Код страны. Например, RU')
-    name = models.CharField(max_length=100, blank=False, verbose_name='Название', help_text='Название страны. Например, Россия')
+    name = models.CharField(max_length=100, blank=False, verbose_name='Название',
+                            help_text='Название страны. Например, Россия')
 
     class Meta:
         verbose_name = 'страну'
@@ -221,30 +159,6 @@ class Country(models.Model):
         return self.code
 
 
-# Вторичные задачи
-# number
-# protection_title
-# ip_name
-# abridgement
-# ip_type
-# bulletin_number
-# bulletin_date
-# priority_date
-# send_date
-# receipt_date
-# grant_date
-# is_contracted
-# contract_number
-# contract_date
-# text
-# number_policy_measure
-# note
-# contract_type
-# provider
-# commissioner
-# owner
-# creator
-# country
 class Request(models.Model):
     """Заявка на РИД
 
@@ -288,7 +202,8 @@ class Request(models.Model):
                                verbose_name='Площадка СФУ', help_text='Номер площадки СФУ.')
     ip_type = models.ForeignKey(to='IntellectualPropertyType', on_delete=models.PROTECT,
                                 verbose_name='Тип', help_text='Тип РИД.')
-    # ipc = models.IntegerField(verbose_name='', help_text='. Например, ')
+    ipc = models.CharField(max_length=1000, null=True, blank=True,
+                           verbose_name='МПК', help_text='Международная патентная классификация.')
     priority_date = models.DateTimeField(verbose_name='Дата приоритета',
                                          help_text='Дата регистрации РИДа в ОФАП.')
     send_date = models.DateTimeField(verbose_name='Дата подачи заявки',
@@ -339,11 +254,9 @@ class Request(models.Model):
         return 'Заявка на РИД №' + str(self.number)
 
 
-
         # Вторичные задачи
-# order_number
-# name
-# size
+
+
 class Duty(models.Model):
     """Пошлина
 
@@ -371,18 +284,6 @@ class Duty(models.Model):
         return self.name
 
 
-# Вторичные задачи
-# request_number
-# protection_title
-# name
-# abridgement
-# ground
-# type_fk
-# bulletin_number
-# bulletin_date
-# priority_date
-# grant_date
-# duty_payments
 class IntellectualProperty(models.Model):
     """РИД
 
@@ -400,6 +301,7 @@ class IntellectualProperty(models.Model):
         duty_payments Оплаты пошлины
     """
 
+    # TODO: добавить поле ipc
     # TODO ВТОРИЧНОЙ важности help_text
     request_number = models.IntegerField(verbose_name='Номер заявки', help_text='Номер заявки ???. Например, ???')
     # TODO ВТОРИЧНОЙ важности help_text
@@ -430,16 +332,7 @@ class IntellectualProperty(models.Model):
     def __str__(self):
         return self.name
 
-# Вторичные задачи
-# Meta
-# duty
-# intellectual_property
-# purchase_order_number
-# payment_date
-# posted_date
-# paid_amount
-# note
-# __str__
+
 class Payment(models.Model):
     """Оплата пошлин
 
@@ -477,17 +370,7 @@ class Payment(models.Model):
         # TODO ВТОРИЧНОЙ важности Что возвращать?
         return str(self.purchase_order_number)
 
-# Вторичные задачи
-# intellectual_property
-# number
-# date
-# text
-# number_policy_measure
-# note
-# contract_type
-# provider
-# commissioner
-# __str__
+
 class ContractIntellectualProperties(models.Model):
     """РИД, выполненный по гранту
 
@@ -531,21 +414,6 @@ class ContractIntellectualProperties(models.Model):
         return str(self.intellectual_property)
 
 
-# Вторичные задачи
-# intellectual_property
-# reference_number
-# send_date
-# commercialization_type
-# licencee
-# version_number
-# filing_date
-# acceptance_delivery_acr
-# contract_duration
-# agreement_terms
-# note
-# Meta->verbose_name
-# __str__
-# TODO ВТОРИЧНОЙ важности IntellectualPropertyCommercialisation?
 class IPCommercialization(models.Model):
     """Коммерциализация РИД
 
@@ -598,14 +466,7 @@ class IPCommercialization(models.Model):
         # TODO ВТОРИЧНОЙ важности Что возвращать?
         return str(self.intellectual_property)
 
-# Вторичные задачи
-# intellectual_property
-# date
-# number
-# book_value
-# retirement_date
-# Meta->verbose_name
-# __str__
+
 class IntangibleAssets(models.Model):
     """Реестр НМА
 
@@ -637,13 +498,7 @@ class IntangibleAssets(models.Model):
         # TODO ВТОРИЧНОЙ важности Что возвращать?
         return str(self.intellectual_property)
 
-# Вторичные задачи
-# intellectual_property
-# status
-# refusal_date
-# note
-# Meta->verbose_name
-# __str__
+
 class CardRegister(models.Model):
     """Картотека
 
@@ -664,17 +519,13 @@ class CardRegister(models.Model):
     note = models.TextField(verbose_name='Примечание', help_text='Примечание ???. Например, ???')
 
     class Meta:
-        # TODO ВТОРИЧНОЙ важности
-        verbose_name = '???'
+        verbose_name = 'Картотека'
         verbose_name_plural = 'Картотека'
 
     def __str__(self):
-        # TODO ВТОРИЧНОЙ важности Что возвращать?
         return str(self.intellectual_property)
 
-# Вторичные задачи
-# work_place
-# Нужна ли full_name()?
+
 class PrivatePerson(Person):
     """Физическое лицо
 
@@ -697,18 +548,12 @@ class PrivatePerson(Person):
         verbose_name_plural = 'Физические лица'
 
     def __str__(self):
-        return self.info()
+        return self.full_name() + ", " + self.work_place
 
     def full_name(self):
         return self.surname + ' ' + self.name + ' ' + self.patronymic
 
-    def info(self):
-        return self.full_name() + ", " + self.work_place
 
-# Вторичные задачи
-# name
-# address
-# fax
 class LegalPerson(Person):
     """Юридическое лицо
 
