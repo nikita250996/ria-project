@@ -1,5 +1,6 @@
 from django.contrib import admin
 from application.models import *
+from django.utils.safestring import mark_safe
 
 
 class CountryAdmin(admin.ModelAdmin):
@@ -22,16 +23,11 @@ class IntellectualPropertyTypeAdmin(admin.ModelAdmin):
     list_display = ('name', 'protection_document_name', 'validity', 'renewal', 'pay_period')
 
 
-class IPCAdmin(admin.ModelAdmin):
-    list_display = ('index', 'description')
-
-
 # Нужно получать ещё name, surname, email
 class EmployeesAdmin(admin.ModelAdmin):
     list_display = ('user', 'ground', 'patronymic', 'jobrole', 'jobrole', 'birth_date', 'mobile_phone', 'home_phone')
 
 
-# TODO Нужно получать ещё ipc
 class RequestAdmin(admin.ModelAdmin):
     # fieldsets = (
     #     ('Библиографические данные', {
@@ -56,11 +52,10 @@ class RequestAdmin(admin.ModelAdmin):
     # )
 
     list_display = [
-        'number', 'protection_title', 'ip_name', 'abridgement', 'ground', 'ip_type', 'bulletin_number',
-        'bulletin_date', 'priority_date', 'send_date', 'receipt_date', 'grant_date',
-        'is_contracted', 'contract_number', 'contract_date', 'text', 'number_policy_measure',
-        'note', 'contract_type',
-        'provider', 'commissioner', 'get_owners', 'get_creators', 'get_countries'
+        'number', 'protection_title', 'ip_name', 'abridgement', 'ground', 'ip_type', 'ipc',
+        'bulletin_number', 'bulletin_date', 'priority_date', 'send_date', 'receipt_date', 'grant_date',
+        'is_contracted', 'contract_type', 'contract_number', 'contract_date', 'text', 'number_policy_measure',
+        'note', 'provider', 'commissioner', 'get_owners', 'get_creators', 'get_countries'
     ]
 
     def get_countries(self, obj):
@@ -78,43 +73,56 @@ class RequestAdmin(admin.ModelAdmin):
     get_creators.short_description = 'Авторы'
 
 
-
-# TODO Разделить ТипыРИД на два слова
 class DutyAdmin(admin.ModelAdmin):
-    list_display = ('order_number', 'name', 'ТипыРИД')
+    list_display = ('order_number', 'name', 'get_ip_types')
 
-    def ТипыРИД(self, obj):
+    def get_ip_types(self, obj):
         return ", ".join([str(intellectual_property_type) for intellectual_property_type in obj.intellectual_property_type.all()])
+    get_ip_types.short_description = 'Типы РИД'
 
 
-# Для IntellectualPropertyAdmin
 class PaymentInline(admin.TabularInline):
     model = Payment
     extra = 0
 
 
-# TODO Разделить Оплатыпошлины на два слова
 class IntellectualPropertyAdmin(admin.ModelAdmin):
     inlines = (PaymentInline,)
-    list_display = ('request_number', 'protection_title', 'name', 'abridgement', 'ground', 'type_fk', 'bulletin_number', 'bulletin_date', 'priority_date', 'grant_date', 'Оплатыпошлины')
+    list_display = ('request_number', 'protection_title', 'name', 'abridgement', 'ground', 'type_fk',
+                    'bulletin_number', 'bulletin_date', 'priority_date', 'grant_date', 'duty_payment')
 
-    def Оплатыпошлины(self, obj):
+    def duty_payment(self, obj):
         return ", ".join([str(duty_payment) for duty_payment in obj.duty_payments.all()])
+    duty_payment.short_description = 'Оплаты пошлин'
 
 
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ('duty', 'intellectual_property', 'purchase_order_number', 'payment_date', 'posted_date', 'paid_amount', 'note')
+    list_display = ('duty', 'intellectual_property', 'purchase_order_number', 'payment_date', 'posted_date',
+                    'paid_amount', 'note', 'check_scan_image')
+
+    def check_scan_image(self, obj):
+        return mark_safe('<a href={url} target="_blank"><img src="{url}" width="{width}" height={height}"></a>'.format(
+            url=obj.check_scan.url,
+            width=64,
+            height=64,
+        )
+    )
+    check_scan_image.short_description = 'Скан чека'
 
 
 class ContractIntellectualPropertiesAdmin(admin.ModelAdmin):
-    list_display = ('intellectual_property', 'number', 'date', 'text', 'number_policy_measure', 'note', 'contract_type', 'provider', 'commissioner')
+    list_display = ('intellectual_property', 'number', 'date', 'text', 'number_policy_measure', 'note',
+                    'contract_type', 'provider', 'commissioner')
 
 
 class IntellectualPropertyCommercializationAdmin(admin.ModelAdmin):
-    list_display = ('intellectual_property', 'reference_number', 'send_date', 'commercialization_type', 'licencee', 'version_number', 'filing_date', 'acceptance_delivery_acr', 'contract_duration', 'agreement_terms', 'note', 'Лицензиары')
+    list_display = ('intellectual_property', 'reference_number', 'send_date', 'commercialization_type',
+                    'licencee', 'version_number', 'filing_date', 'acceptance_delivery_acr', 'contract_duration',
+                    'agreement_terms', 'note', 'get_licensers')
 
-    def Лицензиары(self, obj):
+    def get_licensers(self, obj):
         return ", ".join([str(licenser) for licenser in obj.licenser.all()])
+    get_licensers.short_description = 'Лицензиары'
 
 
 class IntangibleAssetsAdmin(admin.ModelAdmin):
@@ -139,7 +147,6 @@ admin.site.register(CommercializationType, CommercializationTypeAdmin)
 admin.site.register(ContractType, ContractTypeAdmin)
 admin.site.register(Ground, GroundAdmin)
 admin.site.register(IntellectualPropertyType, IntellectualPropertyTypeAdmin)
-admin.site.register(IPC, IPCAdmin)
 admin.site.register(Employees, EmployeesAdmin)
 admin.site.register(Request, RequestAdmin)
 admin.site.register(Duty, DutyAdmin)

@@ -1,59 +1,33 @@
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets
-from .serializers import RequestSerializer
+from . import serializers
 from . import models
 
 
 class RequestViewSet(viewsets.ModelViewSet):
     queryset = models.Request.objects.all()
-    serializer_class = RequestSerializer
-
-# заявки
-# @login_required
-# def index(request):
-#     ip_requests = Request.objects.all()
-#     return render(request, 'index.html', {'ip_requests': ip_requests})
+    serializer_class = serializers.RequestSerializer
 
 
-# # рид
-# @login_required
-# def intellectual_properties(request):
-#     return render(request, 'intellectual_properties.html')
-#
-#
-# # рид по договорам
-# @login_required
-# def contract_intellectual_properties(request):
-#     return render(request, 'contract_intellectual_properties.html')
-#
-#
-# # охранные документы
-# @login_required
-# def protection_titles(request):
-#     return render(request, 'protection_titles.html')
-#
-#
-# # нма
-# @login_required
-# def intangible_assets(request):
-#     return render(request, 'intangible_assets.html')
-#
-#
-# # пошлины
-# @login_required
-# def duties(request):
-#     return render(request, 'duties.html')
-#
-#
-# # коммерциализация рид
-# @login_required
-# def intellectual_properties_commercialization(request):
-#     return render(request, 'intellectual_properties_commercialization.html')
-#
-#
-# # отчеты/реестры
-# @login_required
-# def statistics(request):
-#     return render(request, 'statistics.html')
+class DutyPaymentViewSet(viewsets.ModelViewSet):
+    queryset = models.Payment.objects.all()
+    serializer_class = serializers.DutySerializer
 
+
+class IntellectualPropertyViewSet(viewsets.ModelViewSet):
+    queryset = models.IntellectualProperty.objects.all()
+    serializer_class = serializers.IntellectualPropertySerializer
+
+
+class ContractIntellectualPropertyViewSet(viewsets.ModelViewSet):
+    queryset = models.ContractIntellectualProperties.objects.all()
+    serializer_class = serializers.ContractIntellectualPropertySerializer
+
+
+class IntellectualPropertyCommercializationViewSet(viewsets.ModelViewSet):
+    queryset = models.IPCommercialization.objects.all()
+    serializer_class = serializers.IntellectualPropertyCommercializationSerializer
+
+
+class IntangibleAssetViewSet(viewsets.ModelViewSet):
+    queryset = models.IntangibleAssets.objects.all()
+    serializer_class = serializers.IntangibleAssetSerializer

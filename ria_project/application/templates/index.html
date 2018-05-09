@@ -1,6 +1,6 @@
 {% extends "base_template.html" %}
 
-{% block table %}
+{% block content %}
 <h3 class="table-name">Заявки</h3>
 <div class="table-responsive">
     <table id="myTable" class="table table-striped table-sm" style="width:100%">
@@ -20,12 +20,13 @@
             processing: true,
             responsive: true,
             columns: [
-                {data: 'id', title: '#'},
+                {data: 'id', title: '№'},
                 {data: 'number', title: 'Номер заявки'},
                 {data: 'protection_title', title: 'Охранный документ'},
                 {data: 'abridgement', title: 'Реферат'},
                 {data: 'ground.ground_code', title: 'Номер площадки'},
                 {data: 'ip_type.name', title: 'Тип РИД'},
+                {data: 'ipc', title: 'МПК'},
                 {data: 'bulletin_number', title: 'Номер бюллетеня'},
                 {data: 'bulletin_date', title: 'Дата публикации бюллетеня',
                         render: function( data, type, row) {
