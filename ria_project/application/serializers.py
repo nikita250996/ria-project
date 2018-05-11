@@ -24,6 +24,7 @@ class DutySerializer(serializers.ModelSerializer):
 
 
 class IntellectualPropertySerializer(serializers.ModelSerializer):
+    duty_payments = serializers.StringRelatedField(many = True)
 
     class Meta:
         model = IntellectualProperty
@@ -32,6 +33,8 @@ class IntellectualPropertySerializer(serializers.ModelSerializer):
 
 
 class ContractIntellectualPropertySerializer(serializers.ModelSerializer):
+    provider = serializers.StringRelatedField()
+    commissioner = serializers.StringRelatedField()
 
     class Meta:
         model = ContractIntellectualProperties
@@ -40,6 +43,7 @@ class ContractIntellectualPropertySerializer(serializers.ModelSerializer):
 
 
 class IntellectualPropertyCommercializationSerializer(serializers.ModelSerializer):
+    licenser = serializers.StringRelatedField(many = True)
 
     class Meta:
         model = IPCommercialization
