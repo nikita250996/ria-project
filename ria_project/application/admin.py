@@ -3,6 +3,10 @@ from application.models import *
 from django.utils.safestring import mark_safe
 
 
+class PageAdmin(admin.ModelAdmin):
+    # list_display = ('username', 'password', 'first_name', 'last_name', 'patronymic', 'email')
+    pass
+
 class CountryAdmin(admin.ModelAdmin):
     list_display = ('code', 'name')
 
@@ -23,9 +27,8 @@ class IntellectualPropertyTypeAdmin(admin.ModelAdmin):
     list_display = ('name', 'protection_document_name', 'validity', 'renewal', 'pay_period')
 
 
-# Нужно получать ещё name, surname, email
-class EmployeesAdmin(admin.ModelAdmin):
-    list_display = ('user', 'ground', 'patronymic', 'jobrole', 'jobrole', 'birth_date', 'mobile_phone', 'home_phone')
+class EmployeeInfoAdmin(admin.ModelAdmin):
+    list_display = ('user', 'ground', 'jobrole', 'birth_date', 'mobile_phone', 'home_phone')
 
 
 class RequestAdmin(admin.ModelAdmin):
@@ -142,12 +145,13 @@ class LegalPersonAdmin(admin.ModelAdmin):
 
 
 # Зарегистрированные модели
+admin.site.register(User, PageAdmin)
 admin.site.register(Country, CountryAdmin)
 admin.site.register(CommercializationType, CommercializationTypeAdmin)
 admin.site.register(ContractType, ContractTypeAdmin)
 admin.site.register(Ground, GroundAdmin)
 admin.site.register(IntellectualPropertyType, IntellectualPropertyTypeAdmin)
-admin.site.register(Employees, EmployeesAdmin)
+admin.site.register(EmployeeInfo, EmployeeInfoAdmin)
 admin.site.register(Request, RequestAdmin)
 admin.site.register(Duty, DutyAdmin)
 admin.site.register(IntellectualProperty, IntellectualPropertyAdmin)

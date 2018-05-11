@@ -1,2 +1,4 @@
 *.pyc
+.idea/*
+ria_project/ria_project/settings.py
 ria_project/application/migrations/*
