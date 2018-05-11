@@ -301,7 +301,8 @@ class IntellectualProperty(models.Model):
         duty_payments Оплаты пошлины
     """
 
-    # TODO: добавить поле ipc
+    ipc = models.CharField(max_length=1000, null=True, blank=True,
+                           verbose_name='МПК', help_text='Международная патентная классификация.')
     # TODO ВТОРИЧНОЙ важности help_text
     request_number = models.IntegerField(verbose_name='Номер заявки', help_text='Номер заявки ???. Например, ???')
     # TODO ВТОРИЧНОЙ важности help_text
@@ -323,7 +324,7 @@ class IntellectualProperty(models.Model):
     # TODO ВТОРИЧНОЙ важности help_text
     grant_date = models.DateField(verbose_name='Дата получения охранного документа', help_text='Дата получения охранного документа. Например, ???')
     # TODO ВТОРИЧНОЙ важности help_text
-    duty_payments = models.ManyToManyField(Duty, through='Payment', verbose_name='Оплаты пошлины', help_text='Оплаты пошлины ???. Например, ???')
+    duty_payments = models.ManyToManyField(Duty, through='Payment', verbose_name='Оплаты пошлин', help_text='Оплаты пошлин ???. Например, ???')
 
     class Meta:
         verbose_name = 'РИД'
@@ -334,7 +335,7 @@ class IntellectualProperty(models.Model):
 
 
 class Payment(models.Model):
-    """Оплата пошлин
+    """Оплаты пошлин
 
     Поля:
         duty Пошлина
@@ -360,11 +361,12 @@ class Payment(models.Model):
     paid_amount = models.FloatField(verbose_name='Сумма оплаты', help_text='Сумма оплаты ???. Например, ???')
     # TODO ВТОРИЧНОЙ важности help_text
     note = models.TextField(verbose_name='Примечание', help_text='Примечание ???. Например, ???')
+    check_scan = models.ImageField(verbose_name='Чек', help_text='Скан чека')
 
     class Meta:
         # TODO ВТОРИЧНОЙ важности
         verbose_name = '???'
-        verbose_name_plural = 'Оплата пошлин'
+        verbose_name_plural = 'Оплаты пошлин'
 
     def __str__(self):
         # TODO ВТОРИЧНОЙ важности Что возвращать?

@@ -14,3 +14,42 @@ class RequestSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth = 1
 
+
+class DutySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Payment
+        fields = '__all__'
+        depth = 1
+
+
+class IntellectualPropertySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = IntellectualProperty
+        fields = '__all__'
+        depth = 1
+
+
+class ContractIntellectualPropertySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ContractIntellectualProperties
+        fields = '__all__'
+        depth = 1
+
+
+class IntellectualPropertyCommercializationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = IPCommercialization
+        fields = '__all__'
+        depth = 1
+
+
+class IntangibleAssetSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = IntangibleAssets
+        fields = '__all__'
+        depth = 1

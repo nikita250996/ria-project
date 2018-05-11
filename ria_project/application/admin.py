@@ -1,5 +1,6 @@
 from django.contrib import admin
 from application.models import *
+from django.utils.safestring import mark_safe
 
 
 class CountryAdmin(admin.ModelAdmin):
@@ -73,11 +74,11 @@ class RequestAdmin(admin.ModelAdmin):
 
 
 class DutyAdmin(admin.ModelAdmin):
-    list_display = ('order_number', 'name', 'ip_types')
+    list_display = ('order_number', 'name', 'get_ip_types')
 
-    def ip_types(self, obj):
+    def get_ip_types(self, obj):
         return ", ".join([str(intellectual_property_type) for intellectual_property_type in obj.intellectual_property_type.all()])
-    ip_types.short_description = 'Типы РИД'
+    get_ip_types.short_description = 'Типы РИД'
 
 
 class PaymentInline(admin.TabularInline):
@@ -87,17 +88,26 @@ class PaymentInline(admin.TabularInline):
 
 class IntellectualPropertyAdmin(admin.ModelAdmin):
     inlines = (PaymentInline,)
-    list_display = ('request_number', 'protection_title', 'name', 'abridgement', 'ground', 'type_fk',
+    list_display = ('ipc', 'request_number', 'protection_title', 'name', 'abridgement', 'ground', 'type_fk',
                     'bulletin_number', 'bulletin_date', 'priority_date', 'grant_date', 'duty_payment')
 
     def duty_payment(self, obj):
         return ", ".join([str(duty_payment) for duty_payment in obj.duty_payments.all()])
-    duty_payment.short_description = 'Оплата пошлин'
+    duty_payment.short_description = 'Оплаты пошлин'
 
 
 class PaymentAdmin(admin.ModelAdmin):
     list_display = ('duty', 'intellectual_property', 'purchase_order_number', 'payment_date', 'posted_date',
-                    'paid_amount', 'note')
+                    'paid_amount', 'note', 'check_scan_image')
+
+    def check_scan_image(self, obj):
+        return mark_safe('<a href={url} target="_blank"><img src="{url}" width="{width}" height={height}"></a>'.format(
+            url=obj.check_scan.url,
+            width=64,
+            height=64,
+        )
+    )
+    check_scan_image.short_description = 'Скан чека'
 
 
 class ContractIntellectualPropertiesAdmin(admin.ModelAdmin):
