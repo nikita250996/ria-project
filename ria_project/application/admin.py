@@ -88,7 +88,7 @@ class PaymentInline(admin.TabularInline):
 
 class IntellectualPropertyAdmin(admin.ModelAdmin):
     inlines = (PaymentInline,)
-    list_display = ('request_number', 'protection_title', 'name', 'abridgement', 'ground', 'type_fk',
+    list_display = ('ipc', 'request_number', 'protection_title', 'name', 'abridgement', 'ground', 'type_fk',
                     'bulletin_number', 'bulletin_date', 'priority_date', 'grant_date', 'duty_payment')
 
     def duty_payment(self, obj):

@@ -301,7 +301,8 @@ class IntellectualProperty(models.Model):
         duty_payments Оплаты пошлины
     """
 
-    # TODO: добавить поле ipc
+    ipc = models.CharField(max_length=1000, null=True, blank=True,
+                           verbose_name='МПК', help_text='Международная патентная классификация.')
     # TODO ВТОРИЧНОЙ важности help_text
     request_number = models.IntegerField(verbose_name='Номер заявки', help_text='Номер заявки ???. Например, ???')
     # TODO ВТОРИЧНОЙ важности help_text
