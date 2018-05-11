@@ -1,17 +1,18 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
-class Employees(models.Model):
+
+class EmployeeInfo(models.Model):
     """Сотрудник УИС
 
     Поля:
-        user ???
         ground Код площадки СФУ
         # name Имя
         # surname Фамилия
-        patronymic Отчество
         jobrole Должность
         home_address Домашний адрес
         birth_date Дата рождения
@@ -20,12 +21,10 @@ class Employees(models.Model):
         home_phone Номер домашнего телефона
     """
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='???', help_text='???. Например, ???')
     ground = models.ForeignKey(to='Ground', on_delete=models.PROTECT, null=True, verbose_name='Код площадки СФУ', help_text='Код площадки СФУ ???. Например, 1')
-    patronymic = models.CharField(max_length=100, null=True, verbose_name='Отчество', help_text='Отчество сотрудника УИС. Например, Рамильевич')
+
     # TODO ВТОРИЧНОЙ важности job_title?
     jobrole = models.CharField(max_length=100, null=True, verbose_name='Должность', help_text='Должность сотрудника УИС. Например, ???')
-    # поменял на 200
     home_address = models.CharField(max_length=200, null=True, verbose_name='Домашний адрес', help_text='Домашний адрес сотрудника УИС. Например, ???')
     birth_date = models.DateField(null=True, verbose_name='Дата рождения', help_text='Дата рождения сотрудника УИС. Например, ???')
     mobile_phone = models.CharField(max_length=20, null=True, verbose_name='Номер мобильного телефона', help_text='Номер мобильного телефона сотрудника УИС. Например, +78005553535')
@@ -37,6 +36,10 @@ class Employees(models.Model):
 
     def __str__(self):
         return str(self.user)
+
+class User(AbstractUser):
+    employee_info = models.OneToOneField(EmployeeInfo, on_delete=models.CASCADE, related_name="user", blank=True, null=True, verbose_name='???', help_text='???. Например, ???')
+    patronymic = models.CharField(max_length=100, blank=True, null=True, verbose_name='Отчество', help_text='Отчество сотрудника УИС. Например, Рамильевич')
 
 
 class CommercializationType(models.Model):
@@ -584,3 +587,9 @@ class LegalPerson(Person):
 
     def __str__(self):
         return self.name
+
+@receiver(post_save, sender=User)
+def create_profile(sender, instance, created, **kwargs):
+    """Create a matching profile whenever a user object is created."""
+    if created:
+        profile, new = EmployeeInfo.objects.get_or_create(user=instance)
