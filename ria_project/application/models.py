@@ -444,7 +444,7 @@ class IPCommercialization(models.Model):
     commercialization_type = models.ForeignKey(to='CommercializationType', on_delete=models.PROTECT, verbose_name='Наименование вида/типа использования РИД', help_text='Наименование вида/типа использования РИД ???. Например, ???')
     # TODO ВТОРИЧНОЙ важности help_text
     licencee = models.CharField(max_length=200, verbose_name='Лицензиат - получатель лицензии', help_text='Лицензиат - получатель лицензии ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности verbose_name, help_text
+    # TODO ВТОРИЧНОЙ важности verbose_name, help_text (номер использования РИД)
     version_number = models.CharField(max_length=50, verbose_name='???', help_text='???. Например, ???')
     # TODO ВТОРИЧНОЙ важности help_text
     filing_date = models.DateField(verbose_name='Дата регистрации договора', help_text='Дата регистрации договора ???. Например, ???')
