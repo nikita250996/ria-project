@@ -7,6 +7,9 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
+class User(AbstractUser):
+    patronymic = models.CharField(max_length=100, blank=True, null=True, verbose_name='Отчество', help_text='Отчество сотрудника УИС. Например, Рамильевич')
+
 class EmployeeInfo(models.Model):
     """Сотрудник УИС
 
@@ -30,6 +33,7 @@ class EmployeeInfo(models.Model):
     birth_date = models.DateField(null=True, verbose_name='Дата рождения', help_text='Дата рождения сотрудника УИС. Например, ???')
     mobile_phone = models.CharField(max_length=20, null=True, verbose_name='Номер мобильного телефона', help_text='Номер мобильного телефона сотрудника УИС. Например, +78005553535')
     home_phone = models.CharField(max_length=20, null=True, verbose_name='Номер домашнего телефона', help_text='Номер домашнего телефона сотрудника УИС. Например, ???')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, verbose_name='???', help_text='???. Например, ???')
 
     class Meta:
         verbose_name = 'сотрудника УИС'
@@ -37,11 +41,6 @@ class EmployeeInfo(models.Model):
 
     def __str__(self):
         return str(self.user)
-
-class User(AbstractUser):
-    employee_info = models.OneToOneField(EmployeeInfo, on_delete=models.CASCADE, related_name="user", blank=True, null=True, verbose_name='???', help_text='???. Например, ???')
-    patronymic = models.CharField(max_length=100, blank=True, null=True, verbose_name='Отчество', help_text='Отчество сотрудника УИС. Например, Рамильевич')
-
 
 class CommercializationType(models.Model):
     """Тип коммерциализации РИД
