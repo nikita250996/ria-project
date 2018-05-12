@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.admin import AdminSite
 from application.models import *
 from django.utils.safestring import mark_safe
 
@@ -143,6 +144,11 @@ class PrivatePersonAdmin(admin.ModelAdmin):
 class LegalPersonAdmin(admin.ModelAdmin):
     list_display = ('name', 'address', 'phone', 'fax', 'site', 'email')
 
+
+admin.site.site_header = 'РИД СФУ'
+admin.site.index_template = './admin/index.html'
+admin.site.index_title = 'Главная'
+admin.site.site_title = 'Панель администратора'
 
 # Зарегистрированные модели
 admin.site.register(User, PageAdmin)

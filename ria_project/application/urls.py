@@ -1,6 +1,7 @@
 from django.urls import path
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
+from . import views
 
 
 urlpatterns = [
@@ -35,4 +36,9 @@ urlpatterns = [
     path('отчеты',
          login_required(TemplateView.as_view(template_name='statistics.html')),
          name='statistics'),
+]
+
+urlpatterns += [
+    path('заявки/добавить-заявку', views.RequestCreate.as_view(), name='request_create'),
+    path('заявки/<int:pk>/редактировать-заявку', views.RequestUpdate.as_view(), name='request_update'),
 ]
