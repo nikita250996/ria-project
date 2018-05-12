@@ -25,9 +25,9 @@ urlpatterns = [
          login_required(TemplateView.as_view(template_name='intangible_assets.html')),
          name='intangible_assets'),
 
-    path('пошлины',
-         login_required(TemplateView.as_view(template_name='duties.html')),
-         name='duties'),
+    path('оплаты-пошлин',
+         login_required(TemplateView.as_view(template_name='payments.html')),
+         name='payments'),
 
     path('коммерциализация',
          login_required(TemplateView.as_view(template_name='intellectual_properties_commercialization.html')),

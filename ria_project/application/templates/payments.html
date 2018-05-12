@@ -1,0 +1,71 @@
+{% extends "base_template.html" %}
+
+{% block title %}<title>Оплаты пошлин</title>{% endblock %}
+
+{% block nav %}
+<nav class="col-md-2 d-none d-md-block sidebar menu">
+    <div class="sidebar-sticky">
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link"        href="{% url 'index' %}">Заявки на РИД</a></li>
+            <li class="nav-item"><a class="nav-link"        href="{% url 'intellectual_properties' %}">РИД</a></li>
+            <li class="nav-item"><a class="nav-link"        href="{% url 'contract_intellectual_properties' %}">РИД по договорам</a></li>
+            <li class="nav-item"><a class="nav-link"        href="{% url 'protection_titles' %}">Охранные документы</a></li>
+            <li class="nav-item"><a class="nav-link"        href="{% url 'intangible_assets' %}">НМА</a></li>
+            <li class="nav-item"><a class="nav-link active" href="{% url 'payments' %}">Оплаты пошлин</a></li>
+            <li class="nav-item"><a class="nav-link"        href="{% url 'intellectual_properties_commercialization' %}">Коммерциализация РИД</a></li>
+            <li class="nav-item"><a class="nav-link"        href="{% url 'statistics' %}">Отчеты/Реестры</a></li>
+            {% if user.is_superuser %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">Панель администратора</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<h3 class="table-name">Оплаты</h3>
+<div class="table-responsive">
+    <table id="myTable" class="table table-striped table-sm" style="width:100%">
+    </table>
+</div>
+{% endblock %}
+
+{% block custom-js %}
+<script>
+    $(document).ready( function() {
+        $('#myTable').DataTable( {
+            ajax: {
+                url: 'http://127.0.0.1:8000/api/duty-payments/',
+                dataSrc: '',
+            },
+            language: languageSettings,
+            processing: true,
+            responsive: true,
+            columns: [
+                {data: 'id', title: '№'},
+                {data: 'duty.name', title: 'Пошлина'},
+                {data: 'intellectual_property.name', title: 'РИД'},
+                {data: 'purchase_order_number', title: 'Номер платежного поручения'},
+                {data: 'payment_date', title: 'Дата оплаты',
+                        render: function( data, type, row) {
+                            return formatDate(data);
+                        }
+                },
+                {data: 'posted_date', title: 'Дата внесения',
+                        render: function( data, type, row) {
+                            return formatDate(data);
+                        }
+                },
+                {data: 'paid_amount', title: 'Сумма оплаты'},
+                {data: 'note', title: 'Примечание'},
+                {data: 'check_scan', title: 'Чек',
+                        render: function (data, type, full, meta) {
+                                return "<a href=\"" + data + "\" target=\"_blank\"><img src=\"" + data + "\" height=\"64\" width=\"64\"/></a>";
+                        },
+
+        }
+            ],
+        } );
+    });
+</script>
+{% endblock %}

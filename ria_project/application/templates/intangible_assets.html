@@ -1,6 +1,6 @@
 {% extends "base_template.html" %}
 
-{% block title %}<title>НМА</title>{% endblock %}
+{% block title %}<title>Реестр НМА</title>{% endblock %}
 
 {% block nav %}
 <nav class="col-md-2 d-none d-md-block sidebar menu">
@@ -11,7 +11,7 @@
             <li class="nav-item"><a class="nav-link"        href="{% url 'contract_intellectual_properties' %}">РИД по договорам</a></li>
             <li class="nav-item"><a class="nav-link"        href="{% url 'protection_titles' %}">Охранные документы</a></li>
             <li class="nav-item"><a class="nav-link active" href="{% url 'intangible_assets' %}">НМА</a></li>
-            <li class="nav-item"><a class="nav-link"        href="{% url 'duties' %}">Пошлины</a></li>
+            <li class="nav-item"><a class="nav-link"        href="{% url 'payments' %}">Оплаты пошлин</a></li>
             <li class="nav-item"><a class="nav-link"        href="{% url 'intellectual_properties_commercialization' %}">Коммерциализация РИД</a></li>
             <li class="nav-item"><a class="nav-link"        href="{% url 'statistics' %}">Отчеты/Реестры</a></li>
             {% if user.is_superuser %}
@@ -22,3 +22,42 @@
 </nav>
 {% endblock %}
 
+{% block content %}
+<h3 class="table-name">НМА</h3>
+<div class="table-responsive">
+    <table id="myTable" class="table table-striped table-sm" style="width:100%">
+    </table>
+</div>
+{% endblock %}
+
+{% block custom-js %}
+<script>
+    $(document).ready( function() {
+        $('#myTable').DataTable( {
+            ajax: {
+                url: 'http://127.0.0.1:8000/api/intangible-assets/',
+                dataSrc: '',
+            },
+            language: languageSettings,
+            processing: true,
+            responsive: true,
+            columns: [
+                {data: 'id', title: '№'},
+                {data: 'intellectual_property.name', title: 'РИД'},
+                {data: 'date', title: 'Дата постановки на НМА',
+                        render: function( data, type, row) {
+                            return formatDate(data);
+                        }
+                },
+                {data: 'number', title: 'Номер акта'},
+                {data: 'book_value', title: 'Балансовая стоимость'},
+                {data: 'retirement_date', title: 'Дата списания',
+                        render: function( data, type, row) {
+                            return formatDate(data);
+                        }
+                },
+            ],
+        } );
+    });
+</script>
+{% endblock %}
