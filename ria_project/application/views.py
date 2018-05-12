@@ -5,20 +5,10 @@ from . import serializers
 from . import models
 
 
+# VIEW SETS FOR REST API
 class RequestViewSet(viewsets.ModelViewSet):
     queryset = models.Request.objects.all()
     serializer_class = serializers.RequestSerializer
-
-
-class RequestCreate(CreateView):
-    model = models.Request
-    fields = '__all__'
-
-
-class RequestUpdate(UpdateView):
-    model = models.Request
-    fields = '__all__'
-    success_url = reverse_lazy('index')
 
 
 class DutyPaymentViewSet(viewsets.ModelViewSet):
@@ -44,3 +34,76 @@ class IntellectualPropertyCommercializationViewSet(viewsets.ModelViewSet):
 class IntangibleAssetViewSet(viewsets.ModelViewSet):
     queryset = models.IntangibleAssets.objects.all()
     serializer_class = serializers.IntangibleAssetSerializer
+
+
+# FORMS
+class RequestCreate(CreateView):
+    model = models.Request
+    fields = '__all__'
+    success_url = reverse_lazy('index')
+
+
+class RequestUpdate(UpdateView):
+    model = models.Request
+    fields = '__all__'
+    success_url = reverse_lazy('index')
+
+
+class IPCreate(CreateView):
+    model = models.IntellectualProperty
+    fields = '__all__'
+    success_url = reverse_lazy('intellectual_properties')
+
+
+class IPUpdate(UpdateView):
+    model = models.IntellectualProperty
+    fields = '__all__'
+    success_url = reverse_lazy('intellectual_properties')
+
+
+class IPContractCreate(CreateView):
+    model = models.ContractIntellectualProperties
+    fields = '__all__'
+    success_url = reverse_lazy('contract_intellectual_properties')
+
+
+class IPContractUpdate(UpdateView):
+    model = models.ContractIntellectualProperties
+    fields = '__all__'
+    success_url = reverse_lazy('contract_intellectual_properties')
+
+
+class IntAssetCreate(CreateView):
+    model = models.IntangibleAssets
+    fields = '__all__'
+    success_url = reverse_lazy('intangible_assets')
+
+
+class IntAssetUpdate(UpdateView):
+    model = models.IntangibleAssets
+    fields = '__all__'
+    success_url = reverse_lazy('intangible_assets')
+
+
+class PaymentCreate(CreateView):
+    model = models.Payment
+    fields = '__all__'
+    success_url = reverse_lazy('payments')
+
+
+class PaymentUpdate(UpdateView):
+    model = models.Payment
+    fields = '__all__'
+    success_url = reverse_lazy('payments')
+
+
+class IPCommercializationCreate(CreateView):
+    model = models.IPCommercialization
+    fields = '__all__'
+    success_url = reverse_lazy('intellectual_properties_commercialization')
+
+
+class IPCommercializationUpdate(UpdateView):
+    model = models.IPCommercialization
+    fields = '__all__'
+    success_url = reverse_lazy('intellectual_properties_commercialization')

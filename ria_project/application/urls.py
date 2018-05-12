@@ -29,7 +29,7 @@ urlpatterns = [
          login_required(TemplateView.as_view(template_name='payments.html')),
          name='payments'),
 
-    path('коммерциализация',
+    path('коммерциализация-рид',
          login_required(TemplateView.as_view(template_name='intellectual_properties_commercialization.html')),
          name='intellectual_properties_commercialization'),
 
@@ -39,6 +39,32 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    path('заявки/добавить-заявку', views.RequestCreate.as_view(), name='request_create'),
-    path('заявки/<int:pk>/редактировать-заявку', views.RequestUpdate.as_view(), name='request_update'),
+    path('заявки/добавить', views.RequestCreate.as_view(), name='request_create'),
+    path('заявки/<int:pk>/редактировать', views.RequestUpdate.as_view(), name='request_update'),
 ]
+
+urlpatterns += [
+    path('рид/<int:pk>/редактировать/', views.IPUpdate.as_view(), name='intellectual_property_update'),
+    path('рид-по-договорам/<int:pk>/редактировать',
+         views.IPContractUpdate, name='contract_intellectual_property_update'),
+]
+
+urlpatterns += [
+    path('нематериальные-активы/добавить',
+         views.IntAssetCreate.as_view(), name='intangible_assets_create'),
+    path('нематериальные-активы/<int:pk>/редактировать',
+         views.IntAssetUpdate.as_view(), name='intangible_assets_update'),
+]
+
+urlpatterns += [
+    path('оплаты-пошлин/добавить', views.PaymentCreate.as_view(), name='payment_create'),
+    path('оплаты-пошлин/<int:pk>/редактировать', views.PaymentUpdate.as_view(), name='payment_update'),
+]
+
+urlpatterns += [
+    path('коммерциализация-рид/добавить',
+         views.IPCommercializationCreate.as_view(), name='intellectual_properties_commercialization_create'),
+    path('коммерциализация-рид/<int:pk>/редактировать',
+         views.IPCommercializationUpdate.as_view(), name='intellectual_properties_commercialization_update'),
+]
+
