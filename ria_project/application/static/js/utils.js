@@ -1,7 +1,7 @@
-const zeroPad = function( num,length=2 ) {
+const firstPad = function( num, length=2, char='0' ) {
     let strNum = num + "";
     while ( strNum.length < length ) {
-        strNum = "0" + strNum;
+        strNum = char + strNum;
     }
     return strNum;
 };
@@ -10,9 +10,10 @@ const formatBool = function( value, positive="Да", negative="Нет" ) {
     return value ? positive : negative;
 };
 
-const formatDate = function( dateFromString ) {
+const formatDate = function( dateFromString, sep="/" ) {
     let date = new Date(dateFromString);
-    return `${zeroPad( date.getDate() )}/${zeroPad( date.getMonth()+1 )}/${date.getFullYear()}`
+    let arrDate = [firstPad( date.getDate() ), firstPad( date.getMonth()+1 ), date.getFullYear()];
+    return arrDate.join(sep);
 };
 
 const languageSettings = {

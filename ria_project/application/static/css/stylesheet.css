@@ -54,8 +54,8 @@ table {
 
 body {
     font-size: .875rem;
-  color: rgb(102, 102, 102);;
-  font-family: "Open Sans", serif;
+    color: rgb(102, 102, 102);;
+    font-family: 'Roboto', sans-serif !important;
 }
 
 a {
@@ -90,6 +90,12 @@ a {
 .header.row {
     margin-left: 0;
     margin-right: 0;
+
+    font-size: 12.5px;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+
+    line-height: 40px;
 }
 
 .project-name {
@@ -107,35 +113,21 @@ a {
 }
 
 .staff-info {
-    font-size: 0;
+    text-align: right;
+    color: rgb(255, 255, 255);
+    text-transform: uppercase;
 }
 
-.employee,
 .ground,
 .logout {
-    display: inline-block;
-
-    font-size: 1rem;
-    font-weight: 600;
-    letter-spacing: .01em;
-
-    color: rgb(255, 255, 255);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-.employee span,
-.ground span {
-    margin-right: 10px;
-    padding-right: 10px;
-
-    border: none;
-    border-right: 1px solid rgb(255, 255, 255);
-}
-
-.logout a {
+.logout {
   color: #fff;
 }
 
-.logout a:hover {
+.logout:hover {
   color: #3a332f;
   transition: all 0.2s;
 }
@@ -143,8 +135,8 @@ a {
 
 /* MENU */
 .menu {
-  font-size: .9rem;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 400;
   background: linear-gradient(135deg, #3a332f 0%,#403935 100%);
 }
 
@@ -153,9 +145,12 @@ a {
 }
 
 .nav-link {
-  padding: 10px 20px 10px 40px;
-  color: rgb(255, 255, 255);
+    padding: 10px 20px 10px 40px;
+    color: rgb(255, 255, 255);
+
+    letter-spacing: .5px;
 }
+
 
 .nav-link:hover {
   color: #f60;
@@ -175,6 +170,7 @@ a {
 }
 
 .table-name {
+    font-size: 22px;
     margin-top: 22px;
     margin-bottom: 22px;
 }

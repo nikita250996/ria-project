@@ -202,7 +202,7 @@ class Request(models.Model):
                                verbose_name='Площадка СФУ', help_text='Номер площадки СФУ.')
     ip_type = models.ForeignKey(to='IntellectualPropertyType', on_delete=models.PROTECT,
                                 verbose_name='Тип', help_text='Тип РИД.')
-    ipc = models.CharField(max_length=1000, null=True, blank=True,
+    ipc = models.CharField(max_length=1000, null=True, blank=True, default='',
                            verbose_name='МПК', help_text='Международная патентная классификация.')
     priority_date = models.DateTimeField(verbose_name='Дата приоритета',
                                          help_text='Дата регистрации РИДа в ОФАП.')
@@ -301,7 +301,8 @@ class IntellectualProperty(models.Model):
         duty_payments Оплаты пошлины
     """
 
-    # TODO: добавить поле ipc
+    ipc = models.CharField(max_length=1000, null=True, blank=True, default='',
+                           verbose_name='МПК', help_text='Международная патентная классификация.')
     # TODO ВТОРИЧНОЙ важности help_text
     request_number = models.IntegerField(verbose_name='Номер заявки', help_text='Номер заявки ???. Например, ???')
     # TODO ВТОРИЧНОЙ важности help_text
