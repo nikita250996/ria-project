@@ -17,11 +17,16 @@
                 dataSrc: '',
             },
             language: languageSettings,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'excel', 'pdf'
+            ],
             processing: true,
             responsive: true,
             columns: [
                 {data: 'id', title: '№'},
                 {data: 'number', title: 'Номер заявки'},
+                {data: 'ip_name', title: 'Название'},
                 {data: 'protection_title', title: 'Охранный документ'},
                 {data: 'abridgement', title: 'Реферат'},
                 {data: 'ground.ground_code', title: 'Номер площадки'},
@@ -53,10 +58,11 @@
                             return formatDate(data);
                         }
                 },
-                {data: 'is_contracted', title: 'Договор',
-                        render: function( data, type, row ) {
-                            return formatBool(data);
-                        }
+                {
+                    data: 'is_contracted', title: 'Договор',
+                    render: function (data, type, row) {
+                        return (data == true) ? '<img src="/static/admin/img/icon-yes.svg" alt="True">' : '<img src="/static/admin/img/icon-no.svg" alt="False">';
+                    }
                 },
                 {data: 'contract_number', title: 'Номер договора'},
                 {data: 'contract_date', title: 'Дата заключения договора',

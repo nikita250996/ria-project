@@ -1,4 +1,12 @@
 *.pyc
-.idea/*
-ria_project/ria_project/settings.py
 ria_project/application/migrations/*
+ria_project/media/*
+ria_project/ria_project/settings.py
+*.ico
+*.jpg
+.idea/ria-project.iml
+.idea/modules.xml
+.idea/misc.xml
+.idea/vcs.xml
+.idea/workspace.xml
+ria_project/.DS_Store
