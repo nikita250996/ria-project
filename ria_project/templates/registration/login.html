@@ -20,7 +20,11 @@
             {% csrf_token %}
 
             {% if form.errors %}
-                <p>Your username and password didn't match. Please try again.</p>
+                <p class="error">
+                    <span>Не удается войти.</span> <br>
+                    Пожалуйста, проверьте правильность написания <span>логина</span> и <span>пароля</span>.
+                </p>
+                <br>
             {% endif %}
 
             <div class="form-group">
