@@ -8,6 +8,8 @@ class RequestSerializer(serializers.ModelSerializer):
     creators = serializers.StringRelatedField(many=True)
     provider = serializers.StringRelatedField()
     commissioner = serializers.StringRelatedField()
+    contract_type = serializers.StringRelatedField()
+    ip_type = serializers.StringRelatedField()
 
     class Meta:
         model = Request

@@ -224,14 +224,14 @@ class Request(models.Model):
     # Договор
     is_contracted = models.BooleanField(verbose_name='Договор', blank=True, default=False,
                                         help_text='Выполнено ли договору?.')
-    contract_number = models.CharField(max_length=50, blank=True,
+    contract_number = models.CharField(max_length=50, blank=True, null=True,
                                        verbose_name='Номер договора',
                                        help_text='Номер договора.')
-    contract_type = models.ForeignKey(to='ContractType', blank=True,
+    contract_type = models.ForeignKey(to='ContractType', blank=True, null=True,
                                       verbose_name='Вид договора', help_text='Вид договора.',
                                       on_delete=models.PROTECT)
-    contract_date = models.DateTimeField(verbose_name='Дата заключения договора', blank=True,
-                                         help_text='Дата заключения договора.')
+    contract_date = models.DateTimeField(verbose_name='Дата заключения договора', null=True,
+                                         blank=True, help_text='Дата заключения договора.')
 
     text = models.TextField(verbose_name='Тема', help_text='Тема. ')
     number_policy_measure = models.CharField(max_length=50, verbose_name='Номер программного мероприятия',

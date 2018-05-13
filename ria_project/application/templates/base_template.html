@@ -105,7 +105,8 @@
     <script src="{% static 'datatables/datatables.min.js' %}"></script>
 
     <script src="{% static 'js/utils.js' %}"></script>
-    <script language="JavaScript">
+    <script language="javascript">
+        const getSelectObjectId = () => $('tr.selected .id').text();
         const API_URLS = {
             'api-root': '{%  url "api-root" %}',
             'requests-list': '{% url "request-list" %}',
@@ -114,6 +115,11 @@
             'intellectual-property-list': '{% url "intellectual-property-list" %}',
             'contract-intellectual-property-list': '{% url "contract-intellectual-property-list" %}',
             'intellectual-property-commercialization-list':'{% url "intellectual-property-commercialization-list" %}',
+        };
+
+        const FORM_URLS = {
+            'request-create': '{% url "request_create" %}',
+            'request-update': '{% url "request_update" pk=1234567890 %}',
         };
     </script>
 
