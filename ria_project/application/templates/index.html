@@ -13,13 +13,33 @@
     $(document).ready( function() {
         $('#myTable').DataTable( {
             ajax: {
-                url: URL + 'api/requests/',
+                url: API_URLS['requests-list'],
                 dataSrc: '',
             },
             language: languageSettings,
-            dom: 'Bfrtip',
+            dom: 'lfrtip<"table-buttons"B>',
             buttons: [
-                'copy', 'excel', 'pdf'
+               {
+                    text: 'Добавить новую запись',
+                    className: '',
+                    action: function ( e, dt, node, config ) {
+                        alert( 'Button activated' );
+                    }
+                },
+                {
+                    text: 'Перевести в РИД',
+                    className: '',
+                    action: function ( e, dt, node, config ) {
+                        alert( 'Button activated' );
+                    }
+                },
+                {
+                    text: 'Редактировать запись',
+                    className: '',
+                    action: function ( e, dt, node, config ) {
+                        alert( 'Button activated' );
+                    }
+                },
             ],
             processing: true,
             responsive: true,

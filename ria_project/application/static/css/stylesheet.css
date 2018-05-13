@@ -175,10 +175,14 @@ a {
     margin-bottom: 22px;
 }
 
-.table {
+.table thead tr th {
+    white-space: nowrap;
+}
+
+.table-responsive {
     font-size: .8rem;
 }
 
-.table thead tr th {
-    white-space: nowrap;
+.table-buttons {
+    clear: both;
 }

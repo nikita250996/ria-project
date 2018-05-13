@@ -35,7 +35,7 @@
     $(document).ready( function() {
         $('#myTable').DataTable( {
             ajax: {
-                url: URL + 'api/intellectual-properties/',
+                url: API_URLS['intellectual-property-list'],
                 dataSrc: '',
             },
             language: languageSettings,

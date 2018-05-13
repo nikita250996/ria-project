@@ -35,7 +35,7 @@
     $(document).ready( function() {
         $('#myTable').DataTable( {
             ajax: {
-                url: URL + 'api/intangible-assets/',
+                url: API_URLS['intangible-asset-list'],
                 dataSrc: '',
             },
             language: languageSettings,

@@ -35,7 +35,7 @@
     $(document).ready( function() {
         $('#myTable').DataTable( {
             ajax: {
-                url: URL + 'api/duty-payments/',
+                url: API_URLS['duty-payment-list'],
                 dataSrc: '',
             },
             language: languageSettings,
