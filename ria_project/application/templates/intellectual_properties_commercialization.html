@@ -38,11 +38,34 @@
                 url: API_URLS['intellectual-property-commercialization-list'],
                 dataSrc: '',
             },
-            language: languageSettings,
             processing: true,
             responsive: true,
+            dom: 'lfrtip<"table-buttons"B>',
+            select: 'single',
+            language: languageSettings,
+            buttons: [
+               {
+                    text: 'Добавить новую запись',
+                    className: '',
+                    action: function ( e, dt, node, config ) {
+                        redirectTo(FORM_URLS['intellectual-properties-commercialization-create']);
+                    }
+                },
+                {
+                    text: 'Редактировать запись',
+                    className: '',
+                    action: function ( e, dt, node, config ) {
+                        let selectedId = getSelectObjectId();
+                        if (selectedId) {
+                            let path = FORM_URLS['intellectual-properties-commercialization-update']
+                                .replace( '1234567890', selectedId );
+                            redirectTo(path);
+                        }
+                    }
+                },
+            ],
             columns: [
-                {data: 'id', title: '№'},
+                {data: 'id', title: '№', className: 'id'},
                 {data: 'intellectual_property.name', title: 'РИД'},
                 {data: 'reference_number', title: 'Номер дела'},
                 {data: 'send_date', title: 'Дата отправки на регистрацию',
@@ -52,8 +75,7 @@
                 },
                 {data: 'commercialization_type.name', title: 'Наименование вида/типа использования РИД'},
                 {data: 'licencee', title: 'Лицензиат - получатель лицензии'},
-                //TODO исправить title (номер использования РИД)
-                {data: 'version_number', title: '???'},
+                {data: 'version_number', title: 'Номер использования'},
                 {data: 'filing_date', title: 'Дата регистрации договора',
                         render: function( data, type, row) {
                             return formatDate(data);

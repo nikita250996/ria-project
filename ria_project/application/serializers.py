@@ -45,7 +45,7 @@ class ContractIntellectualPropertySerializer(serializers.ModelSerializer):
 
 
 class IntellectualPropertyCommercializationSerializer(serializers.ModelSerializer):
-    licenser = serializers.StringRelatedField(many = True)
+    licenser = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = IPCommercialization
