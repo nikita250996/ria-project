@@ -35,14 +35,30 @@
     $(document).ready( function() {
         $('#myTable').DataTable( {
             ajax: {
-                url: 'http://127.0.0.1:8000/api/contract-intellectual-properties/',
+                url: API_URLS['contract-intellectual-property-list'],
                 dataSrc: '',
             },
-            language: languageSettings,
             processing: true,
             responsive: true,
+            dom: 'lfrtip<"table-buttons"B>',
+            select: 'single',
+            language: languageSettings,
+            buttons: [
+                {
+                    text: 'Редактировать запись',
+                    className: '',
+                    action: function ( e, dt, node, config ) {
+                        let selectedId = getSelectObjectId();
+                        if (selectedId) {
+                            let path = FORM_URLS['contract-intellectual-property-update']
+                                .replace( '1234567890', selectedId );
+                            redirectTo(path);
+                        }
+                    }
+                },
+            ],
             columns: [
-                {data: 'id', title: '№'},
+                {data: 'id', title: '№', className: 'id'},
                 {data: 'intellectual_property.name', title: 'РИД'},
                 {data: 'number', title: 'Номер договора'},
                 {data: 'date', title: 'Дата подписания договора',

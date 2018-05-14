@@ -13,24 +13,52 @@
     $(document).ready( function() {
         $('#myTable').DataTable( {
             ajax: {
-                url: 'http://127.0.0.1:8000/api/requests/',
+                url: API_URLS['requests-list'],
                 dataSrc: '',
             },
-            language: languageSettings,
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'excel', 'pdf'
-            ],
             processing: true,
             responsive: true,
+            dom: 'lfrtip<"table-buttons"B>',
+            select: 'single',
+            language: languageSettings,
+            buttons: [
+               {
+                    text: 'Добавить новую запись',
+                    className: '',
+                    action: function ( e, dt, node, config ) {
+                        redirectTo(FORM_URLS['request-create']);
+                    }
+                },
+                {
+                    text: 'Перевести в РИД',
+                    className: '',
+                    action: function ( e, dt, node, config ) {
+                        let selectedId = getSelectObjectId();
+                        if (selectedId) {
+                            alert('На кнопочку нажал');
+                        }
+                    }
+                },
+                {
+                    text: 'Редактировать запись',
+                    className: '',
+                    action: function ( e, dt, node, config ) {
+                        let selectedId = getSelectObjectId();
+                        if (selectedId) {
+                            let path = FORM_URLS['request-update'].replace( '1234567890', selectedId );
+                            redirectTo(path);
+                        }
+                    }
+                },
+            ],
             columns: [
-                {data: 'id', title: '№'},
+                {data: 'id', title: '№', className: 'id'},
                 {data: 'number', title: 'Номер заявки'},
                 {data: 'ip_name', title: 'Название'},
                 {data: 'protection_title', title: 'Охранный документ'},
                 {data: 'abridgement', title: 'Реферат'},
                 {data: 'ground.ground_code', title: 'Номер площадки'},
-                {data: 'ip_type.name', title: 'Тип РИД'},
+                {data: 'ip_type', title: 'Тип РИД'},
                 {data: 'ipc', title: 'МПК'},
                 {data: 'bulletin_number', title: 'Номер бюллетеня'},
                 {data: 'bulletin_date', title: 'Дата публикации бюллетеня',
@@ -61,7 +89,8 @@
                 {
                     data: 'is_contracted', title: 'Договор',
                     render: function (data, type, row) {
-                        return (data == true) ? '<img src="/static/admin/img/icon-yes.svg" alt="True">' : '<img src="/static/admin/img/icon-no.svg" alt="False">';
+                        return (data == true) ? '<img src="/static/admin/img/icon-yes.svg" alt="True">'
+                            : '<img src="/static/admin/img/icon-no.svg" alt="False">';
                     }
                 },
                 {data: 'contract_number', title: 'Номер договора'},
@@ -73,7 +102,7 @@
                 {data: 'text', title: 'Тема'},
                 {data: 'number_policy_measure', title: 'Номер программного мероприятия'},
                 {data: 'note', title: 'Примечание'},
-                {data: 'contract_type.name', title: 'Вид договора'},
+                {data: 'contract_type', title: 'Вид договора'},
                 {data: 'provider', title: 'Исполнитель'},
                 {data: 'commissioner', title: 'Руководитель'},
                 {data: 'owners', title: 'Патентообладатели',
