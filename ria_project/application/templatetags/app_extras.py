@@ -1,8 +1,8 @@
 from django import template
-from application.models import EmployeeInfo
-from django.contrib.auth.models import User
+from application.models import EmployeeInfo, Request
 
 register = template.Library()
+
 
 @register.simple_tag
 def ground(user):
@@ -10,3 +10,9 @@ def ground(user):
         emp = EmployeeInfo.objects.get(user=user.id)
         return emp.ground.ground_code
     return 0
+
+
+@register.simple_tag
+def get_latest_created_requests_number(user):
+    last_login = user.last_seen
+    return Request.objects.filter(created_at__gte=last_login).count()

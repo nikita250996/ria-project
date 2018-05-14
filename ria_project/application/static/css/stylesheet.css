@@ -118,7 +118,54 @@ a {
     text-transform: uppercase;
 }
 
-.ground,
+.user {
+    display: inline-block;
+    position: relative;
+}
+
+.user:after,
+.ground:after {
+    content: "/";
+}
+
+.user-notifications {
+    display: none;
+    position: absolute;
+    top: 80%;
+    left: 0;
+    width: auto;
+
+    padding: 14px 16px;
+
+    font-size: 12px;
+    background: linear-gradient(#49708f, #293f50);;
+
+    text-transform: none;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+
+    overflow: hidden;
+    z-index: 1;
+}
+
+.username:hover ~ .user-notifications {
+    cursor: pointer;
+    display: block;
+}
+
+.notification {
+    display: block;
+}
+
+.username {
+    font-weight: 500;
+}
+
+.ground {
+    display: inline-block;
+}
+
+.username,
+.ground-number,
 .logout {
     border-bottom: 1px solid rgba(255, 255, 255, 0.5);
 }
@@ -131,6 +178,7 @@ a {
   color: #3a332f;
   transition: all 0.2s;
 }
+
 
 
 /* MENU */

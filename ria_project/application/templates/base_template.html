@@ -52,12 +52,21 @@
 		<!-- Сотрудник и номер площадки -->
 		<section class="col-sm-4 text-center my-auto staff-info">
 			<!-- Сотрудник -->
-            Здравствуйте, <strong>{{ user.get_full_name }}</strong>
-            /
+            <div class="user">
+                Здравствуйте, <span class="username">{{ user.get_full_name }}</span>
+                {% if user.is_superuser %}
+                <div class="user-notifications">
+                    С момента вашего последнего входа было добавлено
+                    {% get_latest_created_requests_number user %} заявок.
+
+                </div>
+                {% endif %}
+            </div>
 			<!-- Номер площадки -->
             {% if not user.is_superuser %}
-                <span class="ground">Площадка № {% ground user %}</span>
-                /
+            <div class="ground">
+                <span class="ground-number">Площадка № {% ground user %}</span>
+            </div>
             {% endif %}
             <!-- Завершение работы -->
             <a class="logout" href="{% url 'logout' %}">Выйти</a>

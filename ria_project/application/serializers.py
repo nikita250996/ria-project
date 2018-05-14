@@ -14,6 +14,7 @@ class RequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Request
         fields = '__all__'
+        excluded = ('created_at', 'updated_at')
         depth = 1
 
 

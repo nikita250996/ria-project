@@ -3,12 +3,17 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
 
+from django.utils.timezone import now
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.contrib.auth.signals import user_logged_out
 
 
 class User(AbstractUser):
-    patronymic = models.CharField(max_length=100, blank=True, null=True, verbose_name='Отчество', help_text='Отчество сотрудника УИС. Например, Рамильевич')
+    patronymic = models.CharField(max_length=100, blank=True, null=True, verbose_name='Отчество',
+                                  help_text='Отчество сотрудника УИС. Например, Рамильевич')
+    last_seen = models.DateTimeField(null=True, default=now)
+
 
 class EmployeeInfo(models.Model):
     """Сотрудник УИС
@@ -25,15 +30,20 @@ class EmployeeInfo(models.Model):
         home_phone Номер домашнего телефона
     """
 
-    ground = models.ForeignKey(to='Ground', on_delete=models.PROTECT, null=True, verbose_name='Код площадки СФУ', help_text='Код площадки СФУ ???. Например, 1')
-
-    # TODO ВТОРИЧНОЙ важности job_title?
-    jobrole = models.CharField(max_length=100, null=True, verbose_name='Должность', help_text='Должность сотрудника УИС. Например, ???')
-    home_address = models.CharField(max_length=200, null=True, verbose_name='Домашний адрес', help_text='Домашний адрес сотрудника УИС. Например, ???')
-    birth_date = models.DateField(null=True, verbose_name='Дата рождения', help_text='Дата рождения сотрудника УИС. Например, ???')
-    mobile_phone = models.CharField(max_length=20, null=True, verbose_name='Номер мобильного телефона', help_text='Номер мобильного телефона сотрудника УИС. Например, +78005553535')
-    home_phone = models.CharField(max_length=20, null=True, verbose_name='Номер домашнего телефона', help_text='Номер домашнего телефона сотрудника УИС. Например, ???')
-    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, verbose_name='???', help_text='???. Например, ???')
+    ground = models.ForeignKey(to='Ground', on_delete=models.PROTECT, null=True, verbose_name='Код площадки СФУ',
+                               help_text='Укажите номер площадки, где работает сотрудник.')
+    jobrole = models.CharField(max_length=100, null=True, verbose_name='Должность',
+                               help_text='Введите должность сотрудника.')
+    home_address = models.CharField(max_length=200, null=True, verbose_name='Домашний адрес',
+                                    help_text='Укажите домашний адрес сотрудника.')
+    birth_date = models.DateField(null=True, verbose_name='Дата рождения',
+                                  help_text='')
+    mobile_phone = models.CharField(max_length=20, null=True, verbose_name='Номер мобильного телефона',
+                                    help_text='Номер мобильного телефона сотрудника УИС. Например, +78005553535')
+    home_phone = models.CharField(max_length=20, null=True, verbose_name='Номер домашнего телефона',
+                                  help_text='Номер домашнего телефона сотрудника УИС.')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Юзернейм',
+                                help_text='Укажите пользователя, к которому привязан сотрудник.')
 
     class Meta:
         verbose_name = 'сотрудника УИС'
@@ -41,6 +51,7 @@ class EmployeeInfo(models.Model):
 
     def __str__(self):
         return str(self.user)
+
 
 class CommercializationType(models.Model):
     """Тип коммерциализации РИД
@@ -249,15 +260,15 @@ class Request(models.Model):
     countries = models.ManyToManyField(Country, verbose_name='Страны',
                                      help_text='Название выдавшей патент страны.')
 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     class Meta:
         verbose_name = 'заявку на РИД'
         verbose_name_plural = 'Заявки на РИД'
 
     def __str__(self):
         return 'Заявка на РИД №' + str(self.number)
-
-
-        # Вторичные задачи
 
 
 class Duty(models.Model):
@@ -270,14 +281,14 @@ class Duty(models.Model):
         intellectual_property_type Типы РИД
     """
 
-    # TODO ВТОРИЧНОЙ важности help_text
-    order_number = models.CharField(max_length=50, null=True, verbose_name='Номер перечня', help_text='Номер перечня ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    name = models.CharField(max_length=250, null=True, verbose_name='Наименование', help_text='Наименование пошлины. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    size = models.FloatField(null=True, verbose_name='Размер', help_text='Размер пошлины. Например, ???')
-    # TODO ВТОРИЧНОЙ важности intellectual_property_types?, help_text
-    intellectual_property_type = models.ManyToManyField(IntellectualPropertyType, verbose_name='Типы РИД', help_text='Типы РИД ???. Например, ???')
+    order_number = models.CharField(max_length=50, null=True, verbose_name='Номер перечня',
+                                    help_text='Введите номер перечня.')
+    name = models.CharField(max_length=250, null=True, verbose_name='Наименование',
+                            help_text='Введите наименование пошлины.')
+    size = models.FloatField(null=True, verbose_name='Размер', help_text='Размер пошлины.')
+    intellectual_property_type = models.ManyToManyField(IntellectualPropertyType,
+                                                        verbose_name='Типы РИД',
+                                                        help_text='Типы РИД, к которым относится пошлина.')
 
     class Meta:
         verbose_name = 'пошлину'
@@ -306,28 +317,28 @@ class IntellectualProperty(models.Model):
 
     ipc = models.CharField(max_length=1000, null=True, blank=True, default='',
                            verbose_name='МПК', help_text='Международная патентная классификация.')
-    # TODO ВТОРИЧНОЙ важности help_text
-    request_number = models.IntegerField(verbose_name='Номер заявки', help_text='Номер заявки ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    protection_title = models.CharField(max_length=40, verbose_name='Охранный документ', help_text='Охранный документ ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    name = models.CharField(max_length=200, blank=False, verbose_name='Название', help_text='Название РИД. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    abridgement = models.TextField(verbose_name='Реферат', help_text='Реферат РИД. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    ground = models.ForeignKey(to='Ground', on_delete=models.PROTECT, verbose_name='Номер площадки СФУ', help_text='Номер площадки СФУ ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    type_fk = models.ForeignKey(to='IntellectualPropertyType', on_delete=models.PROTECT, verbose_name='Тип', help_text='Тип РИД. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    bulletin_number = models.IntegerField(verbose_name='Номер бюллетеня', help_text='Номер бюллетеня ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    bulletin_date = models.DateField(verbose_name='Дата публикации бюллетеня', help_text='Дата публикации бюллетеня ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    priority_date = models.DateField(verbose_name='Дата приоритета', help_text='Дата приоритета ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    grant_date = models.DateField(verbose_name='Дата получения охранного документа', help_text='Дата получения охранного документа. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    duty_payments = models.ManyToManyField(Duty, through='Payment', verbose_name='Оплаты пошлин', help_text='Оплаты пошлин ???. Например, ???')
+    request_number = models.IntegerField(verbose_name='Номер',
+                                         help_text='Номер заявки РИД.')
+    protection_title = models.CharField(max_length=40, verbose_name='Охранный документ',
+                                        help_text='Номер охранного документа.')
+    name = models.CharField(max_length=200, blank=False, verbose_name='Название',
+                            help_text='Название РИД.')
+    abridgement = models.TextField(verbose_name='Реферат.',
+                                   help_text='Реферат РИД.')
+    ground = models.ForeignKey(to='Ground', on_delete=models.PROTECT, verbose_name='Площадка СФУ',
+                               help_text='Введите номер площадки СФУ.')
+    type_fk = models.ForeignKey(to='IntellectualPropertyType', on_delete=models.PROTECT,
+                                verbose_name='Тип', help_text='Введите тип РИД.')
+    bulletin_number = models.IntegerField(verbose_name='Номер бюллетеня',
+                                          help_text='Номер официального бюллетеня «Изобретения. Полезные модели».')
+    bulletin_date = models.DateField(verbose_name='Дата публикации бюллетеня',
+                                     help_text='Дата публикации официального бюллетеня «Изобретения. Полезные модели».')
+    priority_date = models.DateField(verbose_name='Дата приоритета',
+                                     help_text='Дата регистрации РИДа в ОФАП.')
+    grant_date = models.DateField(verbose_name='Дата получения охранного документа',
+                                  help_text='Дата выдачи ФИПСом охранного документа на РИД.')
+    duty_payments = models.ManyToManyField(Duty, through='Payment', verbose_name='Оплаты пошлин',
+                                           help_text='Пошлины к оплате за РИД.')
 
     class Meta:
         verbose_name = 'РИД'
@@ -350,29 +361,26 @@ class Payment(models.Model):
         note Примечание
     """
 
-    # TODO ВТОРИЧНОЙ важности help_text
-    duty = models.ForeignKey(Duty, on_delete=models.PROTECT, verbose_name='Пошлина', help_text='Пошлина ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    intellectual_property = models.ForeignKey(IntellectualProperty, on_delete=models.PROTECT, verbose_name='РИД', help_text='РИД ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    purchase_order_number = models.IntegerField(verbose_name='Номер платежного поручения', help_text='Номер платежного поручения ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    payment_date = models.DateField(verbose_name='Дата оплаты', help_text='Дата оплаты ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    posted_date = models.DateField(verbose_name='Дата внесения', help_text='Дата внесения ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    paid_amount = models.FloatField(verbose_name='Сумма оплаты', help_text='Сумма оплаты ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    note = models.TextField(verbose_name='Примечание', help_text='Примечание ???. Например, ???')
+    duty = models.ForeignKey(Duty, on_delete=models.PROTECT, verbose_name='Пошлина',
+                             help_text='Пошлина, за которую производится оплата.')
+    intellectual_property = models.ForeignKey(IntellectualProperty, on_delete=models.PROTECT,
+                                              verbose_name='РИД', help_text='РИД, за который производится оплата.')
+    purchase_order_number = models.IntegerField(verbose_name='Номер платежного поручения',
+                                                help_text='Номер платежного поручения.')
+    payment_date = models.DateField(verbose_name='Дата оплаты',
+                                    help_text='')
+    posted_date = models.DateField(verbose_name='Дата внесения',
+                                   help_text='')
+    paid_amount = models.FloatField(verbose_name='Сумма оплаты',
+                                    help_text='')
+    note = models.TextField(verbose_name='Примечание', help_text='')
     check_scan = models.ImageField(verbose_name='Чек', help_text='Скан чека')
 
     class Meta:
-        # TODO ВТОРИЧНОЙ важности
-        verbose_name = '???'
+        verbose_name = 'Оплата пошлин'
         verbose_name_plural = 'Оплаты пошлин'
 
     def __str__(self):
-        # TODO ВТОРИЧНОЙ важности Что возвращать?
         return str(self.purchase_order_number)
 
 
@@ -391,31 +399,28 @@ class ContractIntellectualProperties(models.Model):
         commissioner Руководитель
     """
 
-    # TODO ВТОРИЧНОЙ важности help_text
-    intellectual_property = models.ForeignKey(to='IntellectualProperty', on_delete=models.PROTECT, verbose_name='РИД', help_text='РИД ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    number = models.CharField(max_length=50, verbose_name='Номер договора', help_text='Номер договора ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    date = models.DateField(verbose_name='Дата подписания договора', help_text='Дата подписания договора ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    text = models.TextField(verbose_name='Тема', help_text='Тема ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    number_policy_measure = models.CharField(max_length=50, verbose_name='Номер программного мероприятия', help_text='Номер программного мероприятия ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    note = models.TextField(verbose_name='Примечание', help_text='Примечание ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    contract_type = models.ForeignKey(to='ContractType', on_delete=models.PROTECT, verbose_name='Вид договора', help_text='Вид договора ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    provider = models.ForeignKey(to='Person', on_delete=models.PROTECT, related_name='prov', verbose_name='Исполнитель', help_text='Исполнитель ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    commissioner = models.ForeignKey(to='Person', on_delete=models.PROTECT, related_name='comm', verbose_name='Руководитель', help_text='Руководитель ???. Например, ???')
+    intellectual_property = models.ForeignKey(to='IntellectualProperty', on_delete=models.PROTECT, verbose_name='РИД',
+                                              help_text='')
+    number = models.CharField(max_length=50, verbose_name='Номер договора',
+                              help_text='')
+    date = models.DateField(verbose_name='Дата подписания договора',
+                            help_text='')
+    text = models.TextField(verbose_name='Тема', help_text='')
+    number_policy_measure = models.CharField(max_length=50, verbose_name='Номер программного мероприятия',
+                                             help_text='')
+    note = models.TextField(verbose_name='Примечание', help_text='')
+    contract_type = models.ForeignKey(to='ContractType', on_delete=models.PROTECT,
+                                      verbose_name='Вид договора', help_text='')
+    provider = models.ForeignKey(to='Person', on_delete=models.PROTECT, related_name='prov',
+                                 verbose_name='Исполнитель', help_text='')
+    commissioner = models.ForeignKey(to='Person', on_delete=models.PROTECT, related_name='comm',
+                                     verbose_name='Руководитель', help_text='')
 
     class Meta:
         verbose_name = 'РИД, выполненный по гранту'
         verbose_name_plural = 'РИД, выполненные по гранту'
 
     def __str__(self):
-        # TODO ВТОРИЧНОЙ важности Что возвращать?
         return str(self.intellectual_property)
 
 
@@ -437,38 +442,35 @@ class IPCommercialization(models.Model):
         licenser Лицензиары
     """
 
-    # TODO ВТОРИЧНОЙ важности help_text
-    intellectual_property = models.ForeignKey(to='IntellectualProperty', on_delete=models.PROTECT, verbose_name='РИД', help_text='РИД ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    reference_number = models.IntegerField(verbose_name='Номер дела', help_text='Номер дела ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    send_date = models.DateField(verbose_name='Дата отправки на регистрацию', help_text='Дата отправки на регистрацию ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    commercialization_type = models.ForeignKey(to='CommercializationType', on_delete=models.PROTECT, verbose_name='Наименование вида/типа использования РИД', help_text='Наименование вида/типа использования РИД ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    licencee = models.CharField(max_length=200, verbose_name='Лицензиат - получатель лицензии', help_text='Лицензиат - получатель лицензии ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности verbose_name, help_text (номер использования РИД)
-    version_number = models.CharField(max_length=50, verbose_name='???', help_text='???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    filing_date = models.DateField(verbose_name='Дата регистрации договора', help_text='Дата регистрации договора ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    acceptance_delivery_acr = models.BooleanField(verbose_name='Акт сдачи-приемки', help_text='Акт сдачи-приемки ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    contract_duration = models.CharField(max_length=100, verbose_name='Срок действия договора', help_text='Срок действия договора ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    agreement_terms = models.TextField(verbose_name='Условия договора', help_text='Условия договора ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    note = models.TextField(verbose_name='Примечание', help_text='Примечание ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности licencers?, help_text
-    licenser = models.ManyToManyField(Person, verbose_name='Лицензиары', help_text='Лицензиары ???. Например, ???')
+    intellectual_property = models.ForeignKey(to='IntellectualProperty', on_delete=models.PROTECT,
+                                              verbose_name='РИД', help_text='')
+    reference_number = models.IntegerField(verbose_name='Номер дела', help_text='')
+    send_date = models.DateField(verbose_name='Дата отправки на регистрацию',
+                                 help_text='')
+    commercialization_type = models.ForeignKey(to='CommercializationType', on_delete=models.PROTECT,
+                                               verbose_name='Наименование вида/типа использования РИД',
+                                               help_text='')
+    licencee = models.CharField(max_length=200, verbose_name='Лицензиат - получатель лицензии',
+                                help_text='')
+    version_number = models.CharField(max_length=50, verbose_name='Номер лицензионного договора на использование РИД',
+                                      help_text='')
+    filing_date = models.DateField(verbose_name='Дата регистрации договора',
+                                   help_text='')
+    acceptance_delivery_acr = models.BooleanField(verbose_name='Акт сдачи-приемки',
+                                                  help_text='')
+    contract_duration = models.CharField(max_length=100, verbose_name='Срок действия договора',
+                                         help_text='')
+    agreement_terms = models.TextField(verbose_name='Условия договора',
+                                       help_text='')
+    note = models.TextField(verbose_name='Примечание', help_text='')
+    licenser = models.ManyToManyField(Person, verbose_name='Лицензиары',
+                                      help_text='')
 
     class Meta:
-        # TODO ВТОРИЧНОЙ важности
-        verbose_name = '???'
+        verbose_name = 'Коммерциализация РИД'
         verbose_name_plural = 'Коммерциализация РИД'
 
     def __str__(self):
-        # TODO ВТОРИЧНОЙ важности Что возвращать?
         return str(self.intellectual_property)
 
 
@@ -483,24 +485,21 @@ class IntangibleAssets(models.Model):
         retirement_date Дата списания
     """
 
-    # TODO ВТОРИЧНОЙ важности help_text
-    intellectual_property = models.ForeignKey(to='IntellectualProperty', on_delete=models.PROTECT, verbose_name='РИД', help_text='РИД ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности verbose_name, help_text
-    date = models.DateField(verbose_name='Дата постановки на НМА ???', help_text='Дата постановки на НМА ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    number = models.CharField(max_length=10, verbose_name='Номер акта', help_text='Номер акта ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    book_value = models.FloatField(verbose_name='Балансовая стоимость', help_text='Балансовая стоимость ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    retirement_date = models.DateField(verbose_name='Дата списания', help_text='Дата списания ???. Например, ???')
+    intellectual_property = models.ForeignKey(to='IntellectualProperty', on_delete=models.PROTECT,
+                                              verbose_name='РИД', help_text='')
+    date = models.DateField(verbose_name='Дата постановки на НМА',
+                            help_text='')
+    number = models.CharField(max_length=10, verbose_name='Номер акта',
+                              help_text='')
+    book_value = models.FloatField(verbose_name='Балансовая стоимость',
+                                   help_text='')
+    retirement_date = models.DateField(verbose_name='Дата списания', help_text='')
 
     class Meta:
-        # TODO ВТОРИЧНОЙ важности
-        verbose_name = '???'
+        verbose_name = 'Реестр НМА'
         verbose_name_plural = 'Реестр НМА'
 
     def __str__(self):
-        # TODO ВТОРИЧНОЙ важности Что возвращать?
         return str(self.intellectual_property)
 
 
@@ -514,14 +513,13 @@ class CardRegister(models.Model):
         note Примечание
     """
 
-    # TODO ВТОРИЧНОЙ важности help_text
-    intellectual_property = models.ForeignKey(to='IntellectualProperty', on_delete=models.PROTECT, verbose_name='РИД', help_text='РИД ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    status = models.CharField(max_length=200, verbose_name='Статус', help_text='Статус ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    refusal_date = models.DateField(verbose_name='Дата отказа поддержки', help_text='Дата отказа поддержки ???. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    note = models.TextField(verbose_name='Примечание', help_text='Примечание ???. Например, ???')
+    intellectual_property = models.ForeignKey(to='IntellectualProperty', on_delete=models.PROTECT,
+                                              verbose_name='РИД', help_text='')
+    status = models.CharField(max_length=200, verbose_name='Статус',
+                              help_text='')
+    refusal_date = models.DateField(verbose_name='Дата отказа поддержки',
+                                    help_text='')
+    note = models.TextField(verbose_name='Примечание', help_text='')
 
     class Meta:
         verbose_name = 'Картотека'
@@ -541,12 +539,15 @@ class PrivatePerson(Person):
         work_place Подразделения СФУ: место работы автора (авторов РИД)
     """
 
-    name = models.CharField(max_length=100, blank=False, verbose_name='Имя', help_text='Имя физического лица. Например, Никита')
-    surname = models.CharField(max_length=100, blank=False, verbose_name='Фамилия', help_text='Фамилия физического лица. Например, Нурлыгаянов')
-    patronymic = models.CharField(max_length=100, verbose_name='Отчество', help_text='Отчество физического лица. Например, Рамильевич')
-    # TODO ВТОРИЧНОЙ важности help_text
-    work_place = models.CharField(max_length=100, blank=False, verbose_name='Подразделения СФУ: место работы автора (авторов РИД)',
-                                  help_text='Подразделения СФУ: место работы автора (авторов РИД) ???. Например, ???')
+    name = models.CharField(max_length=100, blank=False, verbose_name='Имя',
+                            help_text='Имя физического лица. Например, Никита')
+    surname = models.CharField(max_length=100, blank=False, verbose_name='Фамилия',
+                               help_text='Фамилия физического лица. Например, Нурлыгаянов')
+    patronymic = models.CharField(max_length=100, verbose_name='Отчество',
+                                  help_text='Отчество физического лица. Например, Рамильевич')
+    work_place = models.CharField(max_length=100, blank=False,
+                                  verbose_name='Подразделения СФУ: место работы автора (авторов РИД)',
+                                  help_text='Подразделения СФУ: место работы автора (авторов РИД). Например, ИКИТ.')
 
     class Meta:
         verbose_name = 'физическое лицо'
@@ -571,15 +572,18 @@ class LegalPerson(Person):
         email Адрес электронной почты
     """
 
-    # TODO ВТОРИЧНОЙ важности help_text
-    name = models.CharField(max_length=200, blank=False, null=True, verbose_name='Наименование', help_text='Наименование юридического лица. Например, ???')
-    # TODO ВТОРИЧНОЙ важности help_text
-    address = models.CharField(max_length=200, blank=False, null=True, verbose_name='Физический адрес', help_text='Физический адрес юридического лица. Например, ???')
-    phone = models.CharField(max_length=100, blank=False, null=True, verbose_name='Телефонный номер', help_text='Телефонный номер юридического лица. Например, +78005553535')
-    # TODO ВТОРИЧНОЙ важности help_text
-    fax = models.CharField(max_length=100, blank=False, null=True, verbose_name='Факс', help_text='Факс юридического лица. Например, ???')
-    site = models.CharField(max_length=100, blank=False, null=True, verbose_name='Адрес сайта', help_text='Адрес сайта юридического лица. Например, nikita.ru')
-    email = models.CharField(max_length=100, blank=False, null=True, verbose_name='Адрес электронной почты', help_text='Адрес электронной почты юридического лица. Например, nikita25@mail.ru')
+    name = models.CharField(max_length=200, blank=False, null=True, verbose_name='Наименование',
+                            help_text='')
+    address = models.CharField(max_length=200, blank=False, null=True, verbose_name='Физический адрес',
+                               help_text='')
+    phone = models.CharField(max_length=100, blank=False, null=True, verbose_name='Телефонный номер',
+                             help_text='Телефонный номер юридического лица. Например, +78005553535')
+    fax = models.CharField(max_length=100, blank=False, null=True, verbose_name='Факс',
+                           help_text='')
+    site = models.CharField(max_length=100, blank=False, null=True, verbose_name='Адрес сайта',
+                            help_text='Адрес сайта юридического лица.')
+    email = models.CharField(max_length=100, blank=False, null=True, verbose_name='Адрес электронной почты',
+                             help_text='Адрес электронной почты юридического лица.')
 
     class Meta:
         verbose_name = 'юридическое лицо'
@@ -588,8 +592,16 @@ class LegalPerson(Person):
     def __str__(self):
         return self.name
 
+
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     """Create a matching profile whenever a user object is created."""
     if created:
         profile, new = EmployeeInfo.objects.get_or_create(user=instance)
+
+
+# @receiver(user_logged_out, sender=User)
+# def set_last_seen(sender, request, user, **kwargs):
+#     if user.is_superuser:
+#         user.last_seen = now()
+
