@@ -35,4 +35,12 @@ const languageSettings = {
         "next":       "Следующая",
         "previous":   "Предыдущая"
     },
+    select: {
+        rows: {
+            _: "",
+            1: "Выбрана строка"
+        }
+    }
 };
+
+const redirectTo = path => window.location.href = path;

@@ -1,12 +1,13 @@
 from django.contrib import admin
-from django.contrib.admin import AdminSite
 from application.models import *
 from django.utils.safestring import mark_safe
+from django.contrib.auth.admin import UserAdmin
 
 
-class PageAdmin(admin.ModelAdmin):
+class PageAdmin(UserAdmin):
     # list_display = ('username', 'password', 'first_name', 'last_name', 'patronymic', 'email')
     pass
+
 
 class CountryAdmin(admin.ModelAdmin):
     list_display = ('code', 'name')
@@ -33,28 +34,6 @@ class EmployeeInfoAdmin(admin.ModelAdmin):
 
 
 class RequestAdmin(admin.ModelAdmin):
-    # fieldsets = (
-    #     ('Библиографические данные', {
-    #         'classes': ('extrapretty'),
-    #         'fields': (
-    #             ('number', 'protection_title',),
-    #             ('send_date', 'priority_date',), ('grant_date', 'receipt_date',),
-    #             ('provider', 'commissioner'),
-    #             ('creators', 'owners', 'countries')
-    #         )
-    #     }),
-    #     ('Описание', {
-    #         'classes': (),
-    #         'fields': (
-    #             ()
-    #         ),
-    #     }),
-    #     ('Договор', {
-    #         'classes': ('collapse',),
-    #         'fields': ('is_contracted', 'contract_number', 'contract_type', 'contract_date',)
-    #     }),
-    # )
-
     list_display = [
         'number', 'protection_title', 'ip_name', 'abridgement', 'ground', 'ip_type', 'ipc',
         'bulletin_number', 'bulletin_date', 'priority_date', 'send_date', 'receipt_date', 'grant_date',
