@@ -5,6 +5,32 @@
     <title>Вход</title>
 
     {% load static %}
+    <style>
+        @font-face {
+            font-family: 'Roboto';
+            src: url('{% static 'fonts/Roboto/Roboto-Light.ttf' %}');
+            font-weight: 300;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Roboto';
+            src: url('{% static 'fonts/Roboto/Roboto-Regular.ttf' %}');
+            font-weight: 400;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Roboto';
+            src: url('{% static 'fonts/Roboto/Roboto-Medium.ttf' %}');
+            font-weight: 500;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Roboto';
+            src: url('{% static 'fonts/Roboto/Roboto-Bold.ttf' %}');
+            font-weight: 700;
+            font-style: normal;
+        }
+    </style>
     <link rel="stylesheet" href="{% static 'css/stylesheet.css' %}">
     <link rel="stylesheet" href="{% static 'css/login_styles.css' %}">
 </head>
@@ -20,7 +46,11 @@
             {% csrf_token %}
 
             {% if form.errors %}
-                <p>Your username and password didn't match. Please try again.</p>
+                <p class="error">
+                    <span>Не удается войти.</span> <br>
+                    Пожалуйста, проверьте правильность написания <span>логина</span> и <span>пароля</span>.
+                </p>
+                <br>
             {% endif %}
 
             <div class="form-group">

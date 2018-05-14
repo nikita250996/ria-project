@@ -8,10 +8,13 @@ class RequestSerializer(serializers.ModelSerializer):
     creators = serializers.StringRelatedField(many=True)
     provider = serializers.StringRelatedField()
     commissioner = serializers.StringRelatedField()
+    contract_type = serializers.StringRelatedField()
+    ip_type = serializers.StringRelatedField()
 
     class Meta:
         model = Request
         fields = '__all__'
+        excluded = ('created_at', 'updated_at')
         depth = 1
 
 
@@ -43,7 +46,7 @@ class ContractIntellectualPropertySerializer(serializers.ModelSerializer):
 
 
 class IntellectualPropertyCommercializationSerializer(serializers.ModelSerializer):
-    licenser = serializers.StringRelatedField(many = True)
+    licenser = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = IPCommercialization

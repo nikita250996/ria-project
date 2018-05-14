@@ -46,3 +46,11 @@
     font-weight: bold;
     background: linear-gradient(#49708f, #293f50);
 }
+
+.error {
+    line-height: 150%;
+}
+
+.error span {
+    font-weight: 600;
+}

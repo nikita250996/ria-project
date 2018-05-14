@@ -4,13 +4,42 @@
 	<meta charset="utf-8">
     {% block title %}<title>Заявки на РИД</title>{% endblock %}
 
-    {% load app_extras %}
     {% load static %}
-	<link rel="stylesheet" href="{% static 'css/stylesheet.css' %}">
+    {% load app_extras %}
+
+    <style>
+        @font-face {
+            font-family: 'Roboto';
+            src: url('{% static 'fonts/Roboto/Roboto-Light.ttf' %}');
+            font-weight: 300;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Roboto';
+            src: url('{% static 'fonts/Roboto/Roboto-Regular.ttf' %}');
+            font-weight: 400;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Roboto';
+            src: url('{% static 'fonts/Roboto/Roboto-Medium.ttf' %}');
+            font-weight: 500;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Roboto';
+            src: url('{% static 'fonts/Roboto/Roboto-Bold.ttf' %}');
+            font-weight: 700;
+            font-style: normal;
+        }
+    </style>
+
+    <link rel="stylesheet" href="{% static 'css/stylesheet.css' %}">
 	<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
 
     <link rel="stylesheet" href="{% static 'datatables/datatables.min.css' %}">
-<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'datatables/buttons/css/buttons.dataTables.min.css' %}">
+
 </head>
 <body>
 	<!-- Шапка -->
@@ -23,12 +52,21 @@
 		<!-- Сотрудник и номер площадки -->
 		<section class="col-sm-4 text-center my-auto staff-info">
 			<!-- Сотрудник -->
-            Здравствуйте, <strong>{{ user.get_full_name }}</strong>
-            /
+            <div class="user">
+                Здравствуйте, <span class="username">{{ user.get_full_name }}</span>
+                {% if user.is_superuser %}
+                <div class="user-notifications">
+                    С момента вашего последнего входа было добавлено
+                    {% get_latest_created_requests_number user %} заявок.
+
+                </div>
+                {% endif %}
+            </div>
 			<!-- Номер площадки -->
             {% if not user.is_superuser %}
-                <span class="ground">Площадка № {% ground user %}</span>
-                /
+            <div class="ground">
+                <span class="ground-number">Площадка № {% ground user %}</span>
+            </div>
             {% endif %}
             <!-- Завершение работы -->
             <a class="logout" href="{% url 'logout' %}">Выйти</a>
@@ -73,10 +111,37 @@
     <script src="{% static 'js/popperjs/popper.min.js' %}"></script>
 
     <script src="{% static 'js/vuejs/vuejs.js' %}"></script>
-    <script type="text/javascript" src="{% static 'datatables/datatables.min.js' %}"></script>
+    <script src="{% static 'datatables/datatables.min.js' %}"></script>
 
-    <script type="text/javascript" src="{% static 'js/utils.js' %}"></script>
-    <script>URL = 'http://127.0.0.1:8000/'</script>
+    <script src="{% static 'js/utils.js' %}"></script>
+    <script language="javascript">
+        const getSelectObjectId = () => $('tr.selected .id').text();
+        const API_URLS = {
+            'api-root': '{%  url "api-root" %}',
+            'requests-list': '{% url "request-list" %}',
+            'duty-payment-list': '{% url "duty-payment-list" %}',
+            'intangible-asset-list': '{% url "intangible-asset-list" %}',
+            'intellectual-property-list': '{% url "intellectual-property-list" %}',
+            'contract-intellectual-property-list': '{% url "contract-intellectual-property-list" %}',
+            'intellectual-property-commercialization-list':'{% url "intellectual-property-commercialization-list" %}',
+        };
+
+        const FORM_URLS = {
+            'request-create': '{% url "request_create" %}',
+            'request-update': '{% url "request_update" pk=1234567890 %}',
+            'intellectual-property-update': '{% url "intellectual_property_update" pk=1234567890 %}',
+            'contract-intellectual-property_update': '{% url "contract_intellectual_property_update" pk=1234567890 %}',
+            'intangible-assets-create': '{% url "intangible_assets_create" %}',
+            'intangible-assets-update': '{% url "intangible_assets_update" pk=1234567890 %}',
+            'payment-create': '{% url "payment_create" %}',
+            'payment-update': '{% url "payment_update" pk=1234567890 %}',
+            'intellectual-properties-commercialization-create':
+                '{% url "intellectual_properties_commercialization_create" %}',
+            'intellectual-properties-commercialization-update':
+                '{% url "intellectual_properties_commercialization_update" pk=1234567890 %}',
+        };
+    </script>
+
     {% block custom-js %}
     {% endblock %}
 </body>

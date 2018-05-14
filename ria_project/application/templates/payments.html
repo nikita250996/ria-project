@@ -35,14 +35,36 @@
     $(document).ready( function() {
         $('#myTable').DataTable( {
             ajax: {
-                url: URL + 'api/duty-payments/',
+                url: API_URLS['duty-payment-list'],
                 dataSrc: '',
             },
-            language: languageSettings,
             processing: true,
             responsive: true,
+            dom: 'lfrtip<"table-buttons"B>',
+            select: 'single',
+            language: languageSettings,
+            buttons: [
+               {
+                    text: 'Добавить новую запись',
+                    className: '',
+                    action: function ( e, dt, node, config ) {
+                        redirectTo(FORM_URLS['payment-create']);
+                    }
+                },
+                {
+                    text: 'Редактировать запись',
+                    className: '',
+                    action: function ( e, dt, node, config ) {
+                        let selectedId = getSelectObjectId();
+                        if (selectedId) {
+                            let path = FORM_URLS['payment-update'].replace( '1234567890', selectedId );
+                            redirectTo(path);
+                        }
+                    }
+                },
+            ],
             columns: [
-                {data: 'id', title: '№'},
+                {data: 'id', title: '№', className: 'id'},
                 {data: 'duty.name', title: 'Пошлина'},
                 {data: 'intellectual_property.name', title: 'РИД'},
                 {data: 'purchase_order_number', title: 'Номер платежного поручения'},
