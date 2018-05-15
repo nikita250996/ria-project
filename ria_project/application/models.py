@@ -8,11 +8,16 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.signals import user_logged_out
 
+NOTIFICATION_TYPE_CHOICES = (
+    ('delete', 'Удаление'),
+    ('update', 'Редактирование'),
+    ('create', 'Добавление'),
+)
+
 
 class User(AbstractUser):
     patronymic = models.CharField(max_length=100, blank=True, null=True, verbose_name='Отчество',
                                   help_text='Отчество сотрудника УИС. Например, Рамильевич')
-    last_seen = models.DateTimeField(null=True, default=now)
 
 
 class EmployeeInfo(models.Model):
@@ -205,31 +210,31 @@ class Request(models.Model):
     """
 
     number = models.IntegerField(verbose_name='Номер',
-                                 help_text='Номер заявки на РИД.', validators=[MinValueValidator(0)])
+                                 help_text='Номер заявки', validators=[MinValueValidator(0)])
     protection_title = models.CharField(max_length=40, blank=False,
-                                        verbose_name='Охранный документ', help_text='Номер охранного документа.')
+                                        verbose_name='Охранный документ', help_text='Номер охранного документа')
     ip_name = models.CharField(max_length=200, blank=False,
-                               verbose_name='Название', help_text='Название РИД.')
+                               verbose_name='Название', help_text='Название РИД')
     abridgement = models.TextField(verbose_name='Реферат', null=True, blank=True,
-                                   help_text='Реферат РИД.')
+                                   help_text='Реферат РИД')
     ground = models.ForeignKey(to='Ground', on_delete=models.PROTECT,
                                verbose_name='Площадка СФУ', help_text='Номер площадки СФУ.')
     ip_type = models.ForeignKey(to='IntellectualPropertyType', on_delete=models.PROTECT,
                                 verbose_name='Тип', help_text='Тип РИД.')
     ipc = models.CharField(max_length=1000, null=True, blank=True, default='',
                            verbose_name='МПК', help_text='Международная патентная классификация.')
-    priority_date = models.DateTimeField(verbose_name='Дата приоритета',
+    priority_date = models.DateField(verbose_name='Дата приоритета',
                                          help_text='Дата регистрации РИДа в ОФАП.')
-    send_date = models.DateTimeField(verbose_name='Дата подачи заявки',
+    send_date = models.DateField(verbose_name='Дата подачи заявки',
                                      help_text='Дата подачи заявки.')
-    grant_date = models.DateTimeField(verbose_name='Дата выдачи патента',
+    grant_date = models.DateField(verbose_name='Дата выдачи патента',
                                       help_text='Дата выдачи ФИПСом охранного документа на РИД.')
-    receipt_date = models.DateTimeField(verbose_name='Дата получения охранного документа',
+    receipt_date = models.DateField(verbose_name='Дата получения охранного документа',
                                         help_text='Дата получения охранного документа отделом УИС.')
     bulletin_number = models.IntegerField(verbose_name='Номер бюллетеня', null=True, blank=True,
                                           validators=[MinValueValidator(1), MaxValueValidator(100)],
                                           help_text='Номер официального бюллетеня «Изобретения. Полезные модели»')
-    bulletin_date = models.DateTimeField(verbose_name='Дата публикации бюллетеня', null=True, blank=True,
+    bulletin_date = models.DateField(verbose_name='Дата публикации бюллетеня', null=True, blank=True,
                                          help_text='Дата публикации официального бюллетеня '
                                                    '«Изобретения. Полезные модели»')
     # Договор
@@ -241,7 +246,7 @@ class Request(models.Model):
     contract_type = models.ForeignKey(to='ContractType', blank=True, null=True,
                                       verbose_name='Вид договора', help_text='Вид договора.',
                                       on_delete=models.PROTECT)
-    contract_date = models.DateTimeField(verbose_name='Дата заключения договора', null=True,
+    contract_date = models.DateField(verbose_name='Дата заключения договора', null=True,
                                          blank=True, help_text='Дата заключения договора.')
 
     text = models.TextField(verbose_name='Тема', help_text='Тема. ')
@@ -260,8 +265,8 @@ class Request(models.Model):
     countries = models.ManyToManyField(Country, verbose_name='Страны',
                                      help_text='Название выдавшей патент страны.')
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
 
     class Meta:
         verbose_name = 'заявку на РИД'
@@ -593,6 +598,13 @@ class LegalPerson(Person):
         return self.name
 
 
+class Notification(models.Model):
+    time = models.DateTimeField(verbose_name="Время произошедшего события")
+    type = models.CharField(verbose_name='Тип события', max_length=100, choices=NOTIFICATION_TYPE_CHOICES)
+    description = models.TextField(verbose_name='Описание события')
+    read = models.BooleanField(verbose_name='Просмотрено ли событие', default=False)
+
+
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     """Create a matching profile whenever a user object is created."""
@@ -604,4 +616,3 @@ def create_profile(sender, instance, created, **kwargs):
 # def set_last_seen(sender, request, user, **kwargs):
 #     if user.is_superuser:
 #         user.last_seen = now()
-

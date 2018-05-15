@@ -156,6 +156,11 @@ a {
     display: block;
 }
 
+.mark-as-read-link {
+    font-size: 10px;
+    color: #b1dfbb;
+}
+
 .username {
     font-weight: 500;
 }
@@ -233,4 +238,16 @@ a {
 
 .table-buttons {
     clear: both;
+}
+
+.form-container {
+    margin-top: 1rem;
+
+    padding: 1.5rem;
+    border: 3px solid #f7f7f9;
+
+    font-size: 1rem;
+    font-weight: 400;
+    text-align: left;
+    line-height: 1.5;
 }
