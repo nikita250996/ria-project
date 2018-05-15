@@ -367,18 +367,18 @@ class Payment(models.Model):
     """
 
     duty = models.ForeignKey(Duty, on_delete=models.PROTECT, verbose_name='Пошлина',
-                             help_text='Пошлина, за которую производится оплата.')
+                             help_text='Пошлина, за которую производится оплата')
     intellectual_property = models.ForeignKey(IntellectualProperty, on_delete=models.PROTECT,
-                                              verbose_name='РИД', help_text='РИД, за который производится оплата.')
+                                              verbose_name='РИД', help_text='РИД, за который производится оплата')
     purchase_order_number = models.IntegerField(verbose_name='Номер платежного поручения',
-                                                help_text='Номер платежного поручения.')
+                                                help_text='Номер платежного поручения')
     payment_date = models.DateField(verbose_name='Дата оплаты',
-                                    help_text='')
+                                    help_text='Дата оплаты в формате гггг-мм-дд')
     posted_date = models.DateField(verbose_name='Дата внесения',
-                                   help_text='')
+                                   help_text='Дата внесения в формате гггг-мм-дд')
     paid_amount = models.FloatField(verbose_name='Сумма оплаты',
-                                    help_text='')
-    note = models.TextField(verbose_name='Примечание', help_text='')
+                                    help_text='Сумма оплаты')
+    note = models.TextField(verbose_name='Примечание', help_text='Примечание')
     check_scan = models.ImageField(verbose_name='Чек', help_text='Скан чека')
 
     class Meta:
