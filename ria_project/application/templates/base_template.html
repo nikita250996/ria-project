@@ -55,10 +55,13 @@
             <div class="user">
                 Здравствуйте, <span class="username">{{ user.get_full_name }}</span>
                 {% if user.is_superuser %}
-                <div class="user-notifications">
-                    С момента вашего последнего входа было добавлено
-                    {% get_latest_created_requests_number user %} заявок.
-
+                <div  id="notification">
+                    <ul>
+                        <li v-for="(message, index) in notifications">
+                            ${message.description} |
+                            <a class="mark-as-read-link" v-on:click="markAsRead(message.id, index)">Пометить как прочитанное</a>
+                        </li>
+                    </ul>
                 </div>
                 {% endif %}
             </div>
@@ -140,6 +143,38 @@
             'intellectual-properties-commercialization-update':
                 '{% url "intellectual_properties_commercialization_update" pk=1234567890 %}',
         };
+
+        {% if user.is_superuser %}
+        let formData = new FormData();
+        formData.append('read', true);
+
+        const notificationApp = new Vue({
+            el: '#notification',
+            data: {
+                notifications: [],
+            },
+            delimiters: ['${', '}'],
+            methods: {
+              markAsRead: function ( id, index ) {
+                fetch('{% url "notification-detail" pk=1234567890 %}'.replace('1234567890', id), {
+                    method: 'PATCH',
+                    body: formData,
+                }).then( response => {
+                    if ( response.ok ) {
+                        this.notifications.splice( index, 1 );
+                    }
+                });
+              },
+            },
+            created () {
+                fetch('{% url "notification-list" %}' + '?read=False')
+                    .then(response => response.json())
+                    .then(json => {
+                        this.notifications = json;
+                    })
+            },
+        });
+        {% endif %}
     </script>
 
     {% block custom-js %}

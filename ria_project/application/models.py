@@ -8,6 +8,12 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.signals import user_logged_out
 
+NOTIFICATION_TYPE_CHOICES = (
+    ('delete', 'Удаление'),
+    ('update', 'Редактирование'),
+    ('create', 'Добавление'),
+)
+
 
 class User(AbstractUser):
     patronymic = models.CharField(max_length=100, blank=True, null=True, verbose_name='Отчество',
@@ -204,13 +210,13 @@ class Request(models.Model):
     """
 
     number = models.IntegerField(verbose_name='Номер',
-                                 help_text='Номер заявки на РИД.', validators=[MinValueValidator(0)])
+                                 help_text='Номер заявки', validators=[MinValueValidator(0)])
     protection_title = models.CharField(max_length=40, blank=False,
-                                        verbose_name='Охранный документ', help_text='Номер охранного документа.')
+                                        verbose_name='Охранный документ', help_text='Номер охранного документа')
     ip_name = models.CharField(max_length=200, blank=False,
-                               verbose_name='Название', help_text='Название РИД.')
+                               verbose_name='Название', help_text='Название РИД')
     abridgement = models.TextField(verbose_name='Реферат', null=True, blank=True,
-                                   help_text='Реферат РИД.')
+                                   help_text='Реферат РИД')
     ground = models.ForeignKey(to='Ground', on_delete=models.PROTECT,
                                verbose_name='Площадка СФУ', help_text='Номер площадки СФУ.')
     ip_type = models.ForeignKey(to='IntellectualPropertyType', on_delete=models.PROTECT,
@@ -590,6 +596,13 @@ class LegalPerson(Person):
 
     def __str__(self):
         return self.name
+
+
+class Notification(models.Model):
+    time = models.DateTimeField(verbose_name="Время произошедшего события")
+    type = models.CharField(verbose_name='Тип события', max_length=100, choices=NOTIFICATION_TYPE_CHOICES)
+    description = models.TextField(verbose_name='Описание события')
+    read = models.BooleanField(verbose_name='Просмотрено ли событие', default=False)
 
 
 @receiver(post_save, sender=User)

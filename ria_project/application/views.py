@@ -3,12 +3,22 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from rest_framework import viewsets
 from . import serializers
 from . import models
+from . import forms
 
 
 # VIEW SETS FOR REST API
 class RequestViewSet(viewsets.ModelViewSet):
     queryset = models.Request.objects.all()
     serializer_class = serializers.RequestSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = models.Request.objects.all()
+
+        if not user.is_superuser:
+            queryset = queryset.filter(ground__ground_code=user.employeeinfo.ground.ground_code)
+
+        return queryset
 
 
 class DutyPaymentViewSet(viewsets.ModelViewSet):
@@ -36,10 +46,24 @@ class IntangibleAssetViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.IntangibleAssetSerializer
 
 
+class NotificationViewSet(viewsets.ModelViewSet):
+    queryset = models.Notification.objects.all()
+    serializer_class = serializers.NotificationSerializer
+
+    def get_queryset(self):
+        queryset = models.Notification.objects.all()
+
+        read_param = self.request.query_params.get('read', None)
+        if read_param:
+            queryset = queryset.filter(read=read_param)
+
+        return queryset
+
+
 # FORMS
 class RequestCreate(CreateView):
     model = models.Request
-    fields = '__all__'
+    form_class = forms.RequestForm
     success_url = reverse_lazy('index')
 
 
