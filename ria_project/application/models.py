@@ -12,7 +12,6 @@ from django.contrib.auth.signals import user_logged_out
 class User(AbstractUser):
     patronymic = models.CharField(max_length=100, blank=True, null=True, verbose_name='Отчество',
                                   help_text='Отчество сотрудника УИС. Например, Рамильевич')
-    last_seen = models.DateTimeField(null=True, default=now)
 
 
 class EmployeeInfo(models.Model):
