@@ -13,7 +13,7 @@
     $(document).ready( function() {
         $('#myTable').DataTable( {
             ajax: {
-                url: API_URLS['requests-list'],
+                url: API_URLS['intellectual-property-list'],
                 dataSrc: '',
             },
             processing: true,
@@ -54,11 +54,11 @@
             columns: [
                 {data: 'id', title: '№', className: 'id'},
                 {data: 'number', title: 'Номер заявки'},
-                {data: 'ip_name', title: 'Название'},
+                {data: 'name', title: 'Название'},
                 {data: 'protection_title', title: 'Охранный документ'},
                 {data: 'abridgement', title: 'Реферат'},
                 {data: 'ground.ground_code', title: 'Номер площадки'},
-                {data: 'ip_type', title: 'Тип РИД'},
+                {data: 'type_fk', title: 'Тип РИД'},
                 {data: 'ipc', title: 'МПК'},
                 {data: 'bulletin_number', title: 'Номер бюллетеня'},
                 {data: 'bulletin_date', title: 'Дата публикации бюллетеня',

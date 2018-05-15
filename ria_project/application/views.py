@@ -7,18 +7,18 @@ from . import forms
 
 
 # VIEW SETS FOR REST API
-class RequestViewSet(viewsets.ModelViewSet):
-    queryset = models.Request.objects.all()
-    serializer_class = serializers.RequestSerializer
-
-    def get_queryset(self):
-        user = self.request.user
-        queryset = models.Request.objects.all()
-
-        if not user.is_superuser:
-            queryset = queryset.filter(ground__ground_code=user.employeeinfo.ground.ground_code)
-
-        return queryset
+# class RequestViewSet(viewsets.ModelViewSet):
+#     queryset = models.Request.objects.all()
+#     serializer_class = serializers.RequestSerializer
+#
+#     def get_queryset(self):
+#         user = self.request.user
+#         queryset = models.Request.objects.all()
+#
+#         if not user.is_superuser:
+#             queryset = queryset.filter(ground__ground_code=user.employeeinfo.ground.ground_code)
+#
+#         return queryset
 
 
 class DutyPaymentViewSet(viewsets.ModelViewSet):
@@ -31,9 +31,9 @@ class IntellectualPropertyViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.IntellectualPropertySerializer
 
 
-class ContractIntellectualPropertyViewSet(viewsets.ModelViewSet):
-    queryset = models.ContractIntellectualProperties.objects.all()
-    serializer_class = serializers.ContractIntellectualPropertySerializer
+# class ContractIntellectualPropertyViewSet(viewsets.ModelViewSet):
+#     queryset = models.ContractIntellectualProperties.objects.all()
+#     serializer_class = serializers.ContractIntellectualPropertySerializer
 
 
 class IntellectualPropertyCommercializationViewSet(viewsets.ModelViewSet):
@@ -61,16 +61,16 @@ class NotificationViewSet(viewsets.ModelViewSet):
 
 
 # FORMS
-class RequestCreate(CreateView):
-    model = models.Request
-    form_class = forms.RequestForm
-    success_url = reverse_lazy('index')
-
-
-class RequestUpdate(UpdateView):
-    model = models.Request
-    fields = '__all__'
-    success_url = reverse_lazy('index')
+# class RequestCreate(CreateView):
+#     model = models.Request
+#     form_class = forms.RequestForm
+#     success_url = reverse_lazy('index')
+#
+#
+# class RequestUpdate(UpdateView):
+#     model = models.Request
+#     fields = '__all__'
+#     success_url = reverse_lazy('index')
 
 
 class IPCreate(CreateView):
@@ -85,16 +85,16 @@ class IPUpdate(UpdateView):
     success_url = reverse_lazy('intellectual_properties')
 
 
-class IPContractCreate(CreateView):
-    model = models.ContractIntellectualProperties
-    fields = '__all__'
-    success_url = reverse_lazy('contract_intellectual_properties')
-
-
-class IPContractUpdate(UpdateView):
-    model = models.ContractIntellectualProperties
-    fields = '__all__'
-    success_url = reverse_lazy('contract_intellectual_properties')
+# class IPContractCreate(CreateView):
+#     model = models.ContractIntellectualProperties
+#     fields = '__all__'
+#     success_url = reverse_lazy('contract_intellectual_properties')
+#
+#
+# class IPContractUpdate(UpdateView):
+#     model = models.ContractIntellectualProperties
+#     fields = '__all__'
+#     success_url = reverse_lazy('contract_intellectual_properties')
 
 
 class IntAssetCreate(CreateView):

@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'ria_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ria_db',
+        'NAME': 'ria_db_mirror',
         'USER': 'ria_user',
         'PASSWORD': 'ria_user',
         'HOST': 'localhost',

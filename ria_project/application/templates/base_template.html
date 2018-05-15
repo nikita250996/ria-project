@@ -85,7 +85,7 @@
                     <ul class="nav flex-column">
                         <li class="nav-item"><a class="nav-link active" href="{% url 'index' %}">Заявки на РИД</a></li>
                         <li class="nav-item"><a class="nav-link"        href="{% url 'intellectual_properties' %}">РИД</a></li>
-                        <li class="nav-item"><a class="nav-link"        href="{% url 'contract_intellectual_properties' %}">РИД по договорам</a></li>
+                        <li class="nav-item"><a class="nav-link"        href="">РИД по договорам</a></li>
                         <li class="nav-item"><a class="nav-link"        href="{% url 'protection_titles' %}">Охранные документы</a></li>
                         <li class="nav-item"><a class="nav-link"        href="{% url 'intangible_assets' %}">НМА</a></li>
                         <li class="nav-item"><a class="nav-link"        href="{% url 'payments' %}">Оплаты пошлин</a></li>
@@ -121,19 +121,18 @@
         const getSelectObjectId = () => $('tr.selected .id').text();
         const API_URLS = {
             'api-root': '{%  url "api-root" %}',
-            'requests-list': '{% url "request-list" %}',
+
             'duty-payment-list': '{% url "duty-payment-list" %}',
             'intangible-asset-list': '{% url "intangible-asset-list" %}',
             'intellectual-property-list': '{% url "intellectual-property-list" %}',
-            'contract-intellectual-property-list': '{% url "contract-intellectual-property-list" %}',
+
             'intellectual-property-commercialization-list':'{% url "intellectual-property-commercialization-list" %}',
         };
 
         const FORM_URLS = {
-            'request-create': '{% url "request_create" %}',
-            'request-update': '{% url "request_update" pk=1234567890 %}',
+
             'intellectual-property-update': '{% url "intellectual_property_update" pk=1234567890 %}',
-            'contract-intellectual-property_update': '{% url "contract_intellectual_property_update" pk=1234567890 %}',
+
             'intangible-assets-create': '{% url "intangible_assets_create" %}',
             'intangible-assets-update': '{% url "intangible_assets_update" pk=1234567890 %}',
             'payment-create': '{% url "payment_create" %}',
