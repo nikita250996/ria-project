@@ -218,18 +218,18 @@ class Request(models.Model):
                                 verbose_name='Тип', help_text='Тип РИД.')
     ipc = models.CharField(max_length=1000, null=True, blank=True, default='',
                            verbose_name='МПК', help_text='Международная патентная классификация.')
-    priority_date = models.DateTimeField(verbose_name='Дата приоритета',
+    priority_date = models.DateField(verbose_name='Дата приоритета',
                                          help_text='Дата регистрации РИДа в ОФАП.')
-    send_date = models.DateTimeField(verbose_name='Дата подачи заявки',
+    send_date = models.DateField(verbose_name='Дата подачи заявки',
                                      help_text='Дата подачи заявки.')
-    grant_date = models.DateTimeField(verbose_name='Дата выдачи патента',
+    grant_date = models.DateField(verbose_name='Дата выдачи патента',
                                       help_text='Дата выдачи ФИПСом охранного документа на РИД.')
-    receipt_date = models.DateTimeField(verbose_name='Дата получения охранного документа',
+    receipt_date = models.DateField(verbose_name='Дата получения охранного документа',
                                         help_text='Дата получения охранного документа отделом УИС.')
     bulletin_number = models.IntegerField(verbose_name='Номер бюллетеня', null=True, blank=True,
                                           validators=[MinValueValidator(1), MaxValueValidator(100)],
                                           help_text='Номер официального бюллетеня «Изобретения. Полезные модели»')
-    bulletin_date = models.DateTimeField(verbose_name='Дата публикации бюллетеня', null=True, blank=True,
+    bulletin_date = models.DateField(verbose_name='Дата публикации бюллетеня', null=True, blank=True,
                                          help_text='Дата публикации официального бюллетеня '
                                                    '«Изобретения. Полезные модели»')
     # Договор
@@ -241,7 +241,7 @@ class Request(models.Model):
     contract_type = models.ForeignKey(to='ContractType', blank=True, null=True,
                                       verbose_name='Вид договора', help_text='Вид договора.',
                                       on_delete=models.PROTECT)
-    contract_date = models.DateTimeField(verbose_name='Дата заключения договора', null=True,
+    contract_date = models.DateField(verbose_name='Дата заключения договора', null=True,
                                          blank=True, help_text='Дата заключения договора.')
 
     text = models.TextField(verbose_name='Тема', help_text='Тема. ')
@@ -260,8 +260,8 @@ class Request(models.Model):
     countries = models.ManyToManyField(Country, verbose_name='Страны',
                                      help_text='Название выдавшей патент страны.')
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
 
     class Meta:
         verbose_name = 'заявку на РИД'
@@ -604,4 +604,3 @@ def create_profile(sender, instance, created, **kwargs):
 # def set_last_seen(sender, request, user, **kwargs):
 #     if user.is_superuser:
 #         user.last_seen = now()
-
