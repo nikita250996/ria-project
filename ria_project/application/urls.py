@@ -38,15 +38,15 @@ urlpatterns = [
          name='statistics'),
 ]
 
-urlpatterns += [
-    path('заявки/добавить', views.RequestCreate.as_view(), name='request_create'),
-    path('заявки/<int:pk>/редактировать', views.RequestUpdate.as_view(), name='request_update'),
-]
+# urlpatterns += [
+#     path('заявки/добавить', views.RequestCreate.as_view(), name='request_create'),
+#     path('заявки/<int:pk>/редактировать', views.RequestUpdate.as_view(), name='request_update'),
+# ]
 
 urlpatterns += [
     path('рид/<int:pk>/редактировать/', views.IPUpdate.as_view(), name='intellectual_property_update'),
-    path('рид-по-договорам/<int:pk>/редактировать',
-         views.IPContractUpdate, name='contract_intellectual_property_update'),
+    # path('рид-по-договорам/<int:pk>/редактировать',
+    #      views.IPContractUpdate, name='contract_intellectual_property_update'),
 ]
 
 urlpatterns += [
@@ -67,4 +67,3 @@ urlpatterns += [
     path('коммерциализация-рид/<int:pk>/редактировать',
          views.IPCommercializationUpdate.as_view(), name='intellectual_properties_commercialization_update'),
 ]
-

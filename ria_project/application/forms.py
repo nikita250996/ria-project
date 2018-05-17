@@ -1,5 +1,5 @@
 from django import forms
-from application.models import Request
+# from application.models import Request
 
 
 class RequestForm(forms.ModelForm):
@@ -19,3 +19,4 @@ class RequestForm(forms.ModelForm):
     class Meta:
         model = Request
         fields = '__all__'
+

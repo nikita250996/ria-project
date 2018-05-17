@@ -8,6 +8,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.signals import user_logged_out
 
+
 NOTIFICATION_TYPE_CHOICES = (
     ('delete', 'Удаление'),
     ('update', 'Редактирование'),
@@ -178,104 +179,6 @@ class Country(models.Model):
         return self.code
 
 
-class Request(models.Model):
-    """Заявка на РИД
-
-    Поля:
-        number Номер
-        protection_title Охранный документ
-        ip_name Название
-        abridgement Реферат
-        ground Площадка СФУ
-        ip_type Тип
-        ipc Международная классификация
-        bulletin_number Номер бюллетеня
-        bulletin_date Дата публикации бюллетеня
-        priority_date Дата приоритета - дата регистрации РИДа в ОФАП
-        send_date Дата отправки запроса
-        receipt_date Дата получения охранного документа
-        grant_date Дата выдачи ФИПСом охранного документа на РИД
-        is_contracted Выполнено ли договору?
-        contract_number Номер договора
-        contract_date Дата заключения договора
-        text Тема
-        number_policy_measure Номер программного мероприятия
-        note Примечание
-        contract_type Вид договора
-        provider Исполнитель
-        commissioner Руководитель
-        owner Патентообладатели
-        creator Авторы
-        country Страны
-    """
-
-    number = models.IntegerField(verbose_name='Номер',
-                                 help_text='Номер заявки', validators=[MinValueValidator(0)])
-    protection_title = models.CharField(max_length=40, blank=False,
-                                        verbose_name='Охранный документ', help_text='Номер охранного документа')
-    ip_name = models.CharField(max_length=200, blank=False,
-                               verbose_name='Название', help_text='Название РИД')
-    abridgement = models.TextField(verbose_name='Реферат', null=True, blank=True,
-                                   help_text='Реферат РИД')
-    ground = models.ForeignKey(to='Ground', on_delete=models.PROTECT,
-                               verbose_name='Площадка СФУ', help_text='Номер площадки СФУ.')
-    ip_type = models.ForeignKey(to='IntellectualPropertyType', on_delete=models.PROTECT,
-                                verbose_name='Тип', help_text='Тип РИД.')
-    ipc = models.CharField(max_length=1000, null=True, blank=True, default='',
-                           verbose_name='МПК', help_text='Международная патентная классификация.')
-    priority_date = models.DateField(verbose_name='Дата приоритета',
-                                         help_text='Дата регистрации РИДа в ОФАП.')
-    send_date = models.DateField(verbose_name='Дата подачи заявки',
-                                     help_text='Дата подачи заявки.')
-    grant_date = models.DateField(verbose_name='Дата выдачи патента',
-                                      help_text='Дата выдачи ФИПСом охранного документа на РИД.')
-    receipt_date = models.DateField(verbose_name='Дата получения охранного документа',
-                                        help_text='Дата получения охранного документа отделом УИС.')
-    bulletin_number = models.IntegerField(verbose_name='Номер бюллетеня', null=True, blank=True,
-                                          validators=[MinValueValidator(1), MaxValueValidator(100)],
-                                          help_text='Номер официального бюллетеня «Изобретения. Полезные модели»')
-    bulletin_date = models.DateField(verbose_name='Дата публикации бюллетеня', null=True, blank=True,
-                                         help_text='Дата публикации официального бюллетеня '
-                                                   '«Изобретения. Полезные модели»')
-    # Договор
-    is_contracted = models.BooleanField(verbose_name='Договор', blank=True, default=False,
-                                        help_text='Выполнено ли договору?.')
-    contract_number = models.CharField(max_length=50, blank=True, null=True,
-                                       verbose_name='Номер договора',
-                                       help_text='Номер договора.')
-    contract_type = models.ForeignKey(to='ContractType', blank=True, null=True,
-                                      verbose_name='Вид договора', help_text='Вид договора.',
-                                      on_delete=models.PROTECT)
-    contract_date = models.DateField(verbose_name='Дата заключения договора', null=True,
-                                         blank=True, help_text='Дата заключения договора.')
-
-    text = models.TextField(verbose_name='Тема', help_text='Тема. ')
-    number_policy_measure = models.CharField(max_length=50, verbose_name='Номер программного мероприятия',
-                                             help_text='Номер программного мероприятия.')
-    note = models.TextField(verbose_name='Примечание',
-                            help_text='Дополнительная информация.')
-    provider = models.ForeignKey(to='Person', on_delete=models.PROTECT, related_name='provider',
-                                 verbose_name='Исполнитель', help_text='Исполнитель.')
-    commissioner = models.ForeignKey(to='Person', on_delete=models.PROTECT, related_name='commissioner',
-                                     verbose_name='Руководитель', help_text='Руководитель ???. Например, ???')
-    owners = models.ManyToManyField(Person, related_name='ip_owner', verbose_name='Патентообладатели',
-                                    help_text='Патентообладатели.')
-    creators = models.ManyToManyField(Person, verbose_name='Авторы',
-                                      help_text='Перечислите авторов.')
-    countries = models.ManyToManyField(Country, verbose_name='Страны',
-                                     help_text='Название выдавшей патент страны.')
-
-    created_at = models.DateField(auto_now_add=True)
-    updated_at = models.DateField(auto_now=True)
-
-    class Meta:
-        verbose_name = 'заявку на РИД'
-        verbose_name_plural = 'Заявки на РИД'
-
-    def __str__(self):
-        return 'Заявка на РИД №' + str(self.number)
-
-
 class Duty(models.Model):
     """Пошлина
 
@@ -320,36 +223,48 @@ class IntellectualProperty(models.Model):
         duty_payments Оплаты пошлины
     """
 
-    ipc = models.CharField(max_length=1000, null=True, blank=True, default='',
-                           verbose_name='МПК', help_text='Международная патентная классификация.')
-    request_number = models.IntegerField(verbose_name='Номер',
-                                         help_text='Номер заявки РИД.')
-    protection_title = models.CharField(max_length=40, verbose_name='Охранный документ',
-                                        help_text='Номер охранного документа.')
-    name = models.CharField(max_length=200, blank=False, verbose_name='Название',
-                            help_text='Название РИД.')
-    abridgement = models.TextField(verbose_name='Реферат.',
-                                   help_text='Реферат РИД.')
-    ground = models.ForeignKey(to='Ground', on_delete=models.PROTECT, verbose_name='Площадка СФУ',
-                               help_text='Введите номер площадки СФУ.')
-    type_fk = models.ForeignKey(to='IntellectualPropertyType', on_delete=models.PROTECT,
-                                verbose_name='Тип', help_text='Введите тип РИД.')
-    bulletin_number = models.IntegerField(verbose_name='Номер бюллетеня',
-                                          help_text='Номер официального бюллетеня «Изобретения. Полезные модели».')
-    bulletin_date = models.DateField(verbose_name='Дата публикации бюллетеня',
-                                     help_text='Дата публикации официального бюллетеня «Изобретения. Полезные модели».')
-    priority_date = models.DateField(verbose_name='Дата приоритета',
-                                     help_text='Дата регистрации РИДа в ОФАП.')
-    grant_date = models.DateField(verbose_name='Дата получения охранного документа',
-                                  help_text='Дата выдачи ФИПСом охранного документа на РИД.')
-    duty_payments = models.ManyToManyField(Duty, through='Payment', verbose_name='Оплаты пошлин',
-                                           help_text='Пошлины к оплате за РИД.')
+    # Заявка
+    is_request = models.BooleanField(default=True)
+    request_number = models.IntegerField(verbose_name='Номер', help_text='Номер заявки РИД.', validators=[MinValueValidator(0)])
+
+    # Договор
+    is_contracted = models.BooleanField(verbose_name='Договор', blank=True, default=False, help_text='Выполнено ли договору?.')
+    contract_number = models.CharField(max_length=50, blank=True, null=True, verbose_name='Номер договора', help_text='Номер договора.')
+    contract_type = models.ForeignKey(to='ContractType', blank=True, null=True, verbose_name='Вид договора', help_text='Вид договора.', on_delete=models.PROTECT)
+    contract_date = models.DateField(verbose_name='Дата заключения договора', null=True, blank=True, help_text='Дата заключения договора.')
+    provider = models.ForeignKey(to='Person', on_delete=models.PROTECT, related_name='provider', verbose_name='Исполнитель', help_text='Исполнитель.')
+    commissioner = models.ForeignKey(to='Person', on_delete=models.PROTECT, related_name='commissioner', verbose_name='Руководитель', help_text='Руководитель ???. Например, ???')
+    text = models.TextField(verbose_name='Тема', help_text='Тема. ')
+    number_policy_measure = models.CharField(max_length=50, verbose_name='Номер программного мероприятия', help_text='Номер программного мероприятия.')
+    note = models.TextField(verbose_name='Примечание', help_text='Дополнительная информация.')
+
+    protection_title = models.CharField(max_length=40, blank=False, verbose_name='Охранный документ', help_text='Номер охранного документа.')
+    name = models.CharField(max_length=200, blank=False, verbose_name='Название', help_text='Название РИД.')
+    abridgement = models.TextField(verbose_name='Реферат', null=True, blank=True, help_text='Реферат РИД.')
+    ground = models.ForeignKey(to='Ground', on_delete=models.PROTECT, verbose_name='Площадка СФУ', help_text='Номер площадки СФУ.')
+    type_fk = models.ForeignKey(to='IntellectualPropertyType', on_delete=models.PROTECT, verbose_name='Тип', help_text='Тип РИД.')
+    owners = models.ManyToManyField(Person, related_name='ip_owner', verbose_name='Патентообладатели', help_text='Патентообладатели.')
+    creators = models.ManyToManyField(Person, verbose_name='Авторы', help_text='Перечислите авторов.')
+    countries = models.ManyToManyField(Country, verbose_name='Страны', help_text='Название выдавшей патент страны.')
+    ipc = models.CharField(max_length=1000, null=True, blank=True, default='', verbose_name='МПК', help_text='Международная патентная классификация.')
+    priority_date = models.DateField(verbose_name='Дата приоритета', help_text='Дата регистрации РИДа в ОФАП.')
+    send_date = models.DateField(verbose_name='Дата подачи заявки', help_text='Дата подачи заявки.')
+    grant_date = models.DateField(verbose_name='Дата выдачи патента', help_text='Дата выдачи ФИПСом охранного документа на РИД.')
+    receipt_date = models.DateField(verbose_name='Дата получения охранного документа', help_text='Дата получения охранного документа отделом УИС.')
+    bulletin_number = models.IntegerField(verbose_name='Номер бюллетеня', null=True, blank=True, validators=[MinValueValidator(1), MaxValueValidator(100)], help_text='Номер официального бюллетеня «Изобретения. Полезные модели»')
+    bulletin_date = models.DateField(verbose_name='Дата публикации бюллетеня', null=True, blank=True, help_text='Дата публикации официального бюллетеня')
+    duty_payments = models.ManyToManyField(Duty, through='Payment', verbose_name='Оплаты пошлин', help_text='Пошлины к оплате за РИД.')
+
+    commercialization_index = models.BooleanField(default=False)
+    balance_value = models.FloatField(default=0)
 
     class Meta:
         verbose_name = 'РИД'
         verbose_name_plural = 'РИД'
 
     def __str__(self):
+        if self.is_request:
+            return 'Заявка на РИД №' + str(self.request_number)
         return self.name
 
 
@@ -387,46 +302,6 @@ class Payment(models.Model):
 
     def __str__(self):
         return str(self.purchase_order_number)
-
-
-class ContractIntellectualProperties(models.Model):
-    """РИД, выполненный по гранту
-
-    Поля:
-        intellectual_property РИД
-        number Номер договора
-        date Дата подписания договора
-        text Тема
-        number_policy_measure Номер программного мероприятия
-        note Примечание
-        contract_type Вид договора
-        provider Исполнитель
-        commissioner Руководитель
-    """
-
-    intellectual_property = models.ForeignKey(to='IntellectualProperty', on_delete=models.PROTECT, verbose_name='РИД',
-                                              help_text='')
-    number = models.CharField(max_length=50, verbose_name='Номер договора',
-                              help_text='')
-    date = models.DateField(verbose_name='Дата подписания договора',
-                            help_text='')
-    text = models.TextField(verbose_name='Тема', help_text='')
-    number_policy_measure = models.CharField(max_length=50, verbose_name='Номер программного мероприятия',
-                                             help_text='')
-    note = models.TextField(verbose_name='Примечание', help_text='')
-    contract_type = models.ForeignKey(to='ContractType', on_delete=models.PROTECT,
-                                      verbose_name='Вид договора', help_text='')
-    provider = models.ForeignKey(to='Person', on_delete=models.PROTECT, related_name='prov',
-                                 verbose_name='Исполнитель', help_text='')
-    commissioner = models.ForeignKey(to='Person', on_delete=models.PROTECT, related_name='comm',
-                                     verbose_name='Руководитель', help_text='')
-
-    class Meta:
-        verbose_name = 'РИД, выполненный по гранту'
-        verbose_name_plural = 'РИД, выполненные по гранту'
-
-    def __str__(self):
-        return str(self.intellectual_property)
 
 
 class IPCommercialization(models.Model):
