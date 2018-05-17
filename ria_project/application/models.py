@@ -613,8 +613,11 @@ def create_profile(sender, instance, created, **kwargs):
         profile, new = EmployeeInfo.objects.get_or_create(user=instance)
 
 
-# @receiver(user_logged_out, sender=User)
-# def set_last_seen(sender, request, user, **kwargs):
-#     if user.is_superuser:
-#         user.last_seen = now()
+@receiver(post_save, sender=Request)
+def on_create_request(sender, instance, created, **kwargs):
+    notification = Notification(
+        time=now(), type=NOTIFICATION_TYPE_CHOICES[0],
+        description='Заявка номер {0}'.format(instance.number)
+    )
+    notification.save()
 
