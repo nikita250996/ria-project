@@ -53,15 +53,13 @@
 		<section class="col-sm-4 text-center my-auto staff-info">
 			<!-- Сотрудник -->
             <div class="user">
-                Здравствуйте, <span class="username">{{ user.get_full_name }}</span>
+                Здравствуйте, <span class="username" id="username">{{ user.get_full_name }}</span>
                 {% if user.is_superuser %}
-                <div  id="notification">
-                    <ul>
-                        <li v-for="(message, index) in notifications">
-                            ${message.description} |
-                            <a class="mark-as-read-link" v-on:click="markAsRead(message.id, index)">Пометить как прочитанное</a>
-                        </li>
-                    </ul>
+                <div class="user-notifications" id="notification">
+                    <div class="message" v-for="(message, index) in notifications">
+                        ${message.description} |
+                        <a class="mark-as-read-link" v-on:click="markAsRead(message.id, index)">Отметить как прочитанное</a>
+                    </div>
                 </div>
                 {% endif %}
             </div>

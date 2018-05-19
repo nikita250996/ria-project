@@ -14,6 +14,7 @@ class RequestForm(forms.ModelForm):
             }
 
         self.fields['priority_date'].widget.attrs['type'] = 'date'
+        self.fields['is_contracted'].widget.attrs['class'] = 'form-check-input'
 
     class Meta:
         model = Request
