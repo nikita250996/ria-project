@@ -84,7 +84,6 @@
                         <li class="nav-item"><a class="nav-link active" href="{% url 'index' %}">Заявки на РИД</a></li>
                         <li class="nav-item"><a class="nav-link"        href="{% url 'intellectual_properties' %}">РИД</a></li>
                         <li class="nav-item"><a class="nav-link"        href="">РИД по договорам</a></li>
-                        <li class="nav-item"><a class="nav-link"        href="{% url 'protection_titles' %}">Охранные документы</a></li>
                         <li class="nav-item"><a class="nav-link"        href="{% url 'intangible_assets' %}">НМА</a></li>
                         <li class="nav-item"><a class="nav-link"        href="{% url 'payments' %}">Оплаты пошлин</a></li>
                         <li class="nav-item"><a class="nav-link"        href="{% url 'intellectual_properties_commercialization' %}">Коммерциализация РИД</a></li>
@@ -128,8 +127,11 @@
         };
 
         const FORM_URLS = {
+            'request-intellectual-property-create': '{% url "request_intellectual_property_create" %}',
+            'request-intellectual-property-update': '{% url "request_intellectual_property_update" pk=1234567890 %}',
 
             'intellectual-property-update': '{% url "intellectual_property_update" pk=1234567890 %}',
+            'contract-intellectual-property-update': '{% url "contract_intellectual_property_update" pk=1234567890 %}',
 
             'intangible-assets-create': '{% url "intangible_assets_create" %}',
             'intangible-assets-update': '{% url "intangible_assets_update" pk=1234567890 %}',

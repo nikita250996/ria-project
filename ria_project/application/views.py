@@ -61,40 +61,32 @@ class NotificationViewSet(viewsets.ModelViewSet):
 
 
 # FORMS
-# class RequestCreate(CreateView):
-#     model = models.Request
-#     form_class = forms.RequestForm
-#     success_url = reverse_lazy('index')
-#
-#
-# class RequestUpdate(UpdateView):
-#     model = models.Request
-#     fields = '__all__'
-#     success_url = reverse_lazy('index')
-
-
-class IPCreate(CreateView):
+class RequestCreate(CreateView):
     model = models.IntellectualProperty
-    fields = '__all__'
-    success_url = reverse_lazy('intellectual_properties')
+    form_class = forms.RequestIntellectualPropertyForm
+    success_url = reverse_lazy('index')
+    template_name = 'application/request_form.html'
+
+
+class RequestUpdate(UpdateView):
+    model = models.IntellectualProperty
+    form_class = forms.RequestIntellectualPropertyForm
+    success_url = reverse_lazy('index')
+    template_name = 'application/request_form.html'
 
 
 class IPUpdate(UpdateView):
     model = models.IntellectualProperty
-    fields = '__all__'
+    form_class = forms.IntellectualPropertyForm
     success_url = reverse_lazy('intellectual_properties')
+    template_name = 'application/intellectual_property_form.html'
 
 
-# class IPContractCreate(CreateView):
-#     model = models.ContractIntellectualProperties
-#     fields = '__all__'
-#     success_url = reverse_lazy('contract_intellectual_properties')
-#
-#
-# class IPContractUpdate(UpdateView):
-#     model = models.ContractIntellectualProperties
-#     fields = '__all__'
-#     success_url = reverse_lazy('contract_intellectual_properties')
+class IPContractUpdate(UpdateView):
+    model = models.IntellectualProperty
+    form_class = forms.ContractIntellectualPropertyForm
+    success_url = reverse_lazy('contract_intellectual_properties')
+    template_name = 'application/contract_intellectual_property_form.html'
 
 
 class IntAssetCreate(CreateView):

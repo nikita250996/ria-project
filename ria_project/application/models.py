@@ -1,7 +1,7 @@
 # coding: utf-8
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator, MinLengthValidator
 
 from django.utils.timezone import now
 from django.db.models.signals import post_save
@@ -225,7 +225,8 @@ class IntellectualProperty(models.Model):
 
     # Заявка
     is_request = models.BooleanField(default=True)
-    request_number = models.IntegerField(verbose_name='Номер', help_text='Номер заявки РИД.', validators=[MinValueValidator(0)])
+    request_number = models.IntegerField(verbose_name='Номер', null=True, blank=True,
+                                         help_text='Номер заявки РИД.', validators=[MinValueValidator(0)])
 
     # Договор
     is_contracted = models.BooleanField(verbose_name='Договор', blank=True, default=False, help_text='Выполнено ли договору?.')
@@ -428,6 +429,8 @@ class PrivatePerson(Person):
     work_place = models.CharField(max_length=100, blank=False,
                                   verbose_name='Подразделения СФУ: место работы автора (авторов РИД)',
                                   help_text='Подразделения СФУ: место работы автора (авторов РИД). Например, ИКИТ.')
+    passport_data = models.CharField(max_length=30, verbose_name='Паспортные данные', unique=True,
+                                     help_text='Номер и серия паспорта', validators=[MinLengthValidator(10)])
 
     class Meta:
         verbose_name = 'физическое лицо'
@@ -487,7 +490,7 @@ def create_profile(sender, instance, created, **kwargs):
         profile, new = EmployeeInfo.objects.get_or_create(user=instance)
 
 
-@receiver(post_save, sender=Request)
+@receiver(post_save, sender=IntellectualProperty)
 def on_create_request(sender, instance, created, **kwargs):
     notification = Notification(
         time=now(), type=NOTIFICATION_TYPE_CHOICES[0],
