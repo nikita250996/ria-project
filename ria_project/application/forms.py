@@ -1,5 +1,5 @@
 from django import forms
-from application.models import Request, Payment
+from application.models import Request
 
 
 class RequestForm(forms.ModelForm):
@@ -14,26 +14,8 @@ class RequestForm(forms.ModelForm):
             }
 
         self.fields['priority_date'].widget.attrs['type'] = 'date'
+        self.fields['is_contracted'].widget.attrs['class'] = 'form-check-input'
 
     class Meta:
         model = Request
-        fields = '__all__'
-
-
-class PaymentForm(forms.ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        super(PaymentForm, self).__init__(*args, **kwargs)
-
-        for _, field in self.fields.items():
-            field.widget.attrs = {
-                'class': 'form-control',
-                'placeholder': field.help_text,
-            }
-
-        self.fields['payment_date'].widget.attrs['type']='date'
-        self.fields['posted_date'].widget.attrs['type'] = 'date'
-
-    class Meta:
-        model = Payment
         fields = '__all__'

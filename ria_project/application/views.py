@@ -111,7 +111,7 @@ class IntAssetUpdate(UpdateView):
 
 class PaymentCreate(CreateView):
     model = models.Payment
-    form_class = forms.PaymentForm
+    fields = '__all__'
     success_url = reverse_lazy('payments')
 
 
