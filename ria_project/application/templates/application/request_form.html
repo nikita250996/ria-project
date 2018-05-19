@@ -1,0 +1,239 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="form-container">
+<form action="" method="post">
+    {% csrf_token %}
+    {#  ошибки  #}
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.number.id_for_label }}">
+            {{ form.number.label }}
+        </label>
+        <div class="col-sm-5">
+            {{ form.number }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.protection_title.id_for_label }}">
+            {{ form.protection_title.label }}
+        </label>
+        <div class="col-sm-5">
+            {{ form.protection_title }}
+        </div>
+    </div>
+
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.ip_name.id_for_label }}">
+            {{ form.ip_name.label }}
+        </label>
+        <div class="col-sm-5">
+            {{ form.ip_name }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.ip_type.id_for_label }}">
+            {{ form.ip_type.label }}
+        </label>
+        <div class="col-sm-5">
+            {{ form.ip_type }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.abridgement.id_for_label }}">
+            {{ form.abridgement.label }}
+        </label>
+        <div class="col-md-5">
+            {{ form.abridgement }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.ground.id_for_label }}">
+            {{ form.ground.label }}
+        </label>
+        <div class="col-md-5">
+            {{ form.ground }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.ipc.id_for_label }}">
+            {{ form.ipc.label }}
+        </label>
+        <div class="col-md-5">
+            {{ form.ipc }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.priority_date.id_for_label }}">
+            {{ form.priority_date.label }}
+        </label>
+        <div class="col-md-5">
+            {{ form.priority_date }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.send_date.id_for_label }}">
+            {{ form.send_date.label }}
+        </label>
+        <div class="col-md-5">
+            {{ form.send_date }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.grant_date.id_for_label }}">
+            {{ form.grant_date.label }}
+        </label>
+        <div class="col-md-5">
+            {{ form.grant_date }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.receipt_date.id_for_label }}">
+            {{ form.receipt_date.label }}
+        </label>
+        <div class="col-md-5">
+            {{ form.receipt_date }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.bulletin_number.id_for_label }}">
+            {{ form.bulletin_number.label }}
+        </label>
+        <div class="col-md-5">
+            {{ form.bulletin_number }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.bulletin_date.id_for_label }}">
+            {{ form.bulletin_date.label }}
+        </label>
+        <div class="col-md-5">
+            {{ form.bulletin_date }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-2"> {{ form.is_contracted.label }}</div>
+        <div class="col-sm-5">
+            <div class="form-check">
+                {{ form.is_contracted }}
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.contract_type.id_for_label }}">
+            {{ form.contract_type.label }}
+        </label>
+        <div class="col-md-5">
+            {{ form.contract_type }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.contract_number.id_for_label }}">
+            {{ form.contract_number.label }}
+        </label>
+        <div class="col-md-5">
+            {{ form.contract_number }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.contract_date.id_for_label }}">
+            {{ form.contract_date.label }}
+        </label>
+        <div class="col-md-5">
+            {{ form.contract_date }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.text.id_for_label }}">
+            {{ form.text.label }}
+        </label>
+        <div class="col-md-5">
+            {{ form.text }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.number_policy_measure.id_for_label }}">
+            {{ form.number_policy_measure.label }}
+        </label>
+        <div class="col-md-5">
+            {{ form.number_policy_measure }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.note.id_for_label }}">
+            {{ form.note.label }}
+        </label>
+        <div class="col-md-5">
+            {{ form.note }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.provider.id_for_label }}">
+            {{ form.provider.label }}
+        </label>
+        <div class="col-md-5">
+            {{ form.provider }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.commissioner.id_for_label }}">
+            {{ form.commissioner.label }}
+        </label>
+        <div class="col-md-5">
+            {{ form.commissioner }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.owners.id_for_label }}">
+            {{ form.owners.label }}
+        </label>
+        <div class="col-md-5">
+            {{ form.owners }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.creators.id_for_label }}">
+            {{ form.creators.label }}
+        </label>
+        <div class="col-md-5">
+            {{ form.creators }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.countries.id_for_label }}">
+            {{ form.countries.label }}
+        </label>
+        <div class="col-md-5">
+            {{ form.countries }}
+        </div>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+
+</form>
+</div>
+{% endblock %}

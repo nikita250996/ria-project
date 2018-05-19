@@ -1,7 +1,7 @@
 # coding: utf-8
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator, MinLengthValidator
 
 from django.utils.timezone import now
 from django.db.models.signals import post_save
@@ -65,7 +65,7 @@ class CommercializationType(models.Model):
         name Наименование
     """
     name = models.CharField(max_length=100, blank=False, verbose_name='Наименование',
-                            help_text='Тип коммерциализации РИД.')
+                            help_text='Тип коммерциализации РИД')
 
     class Meta:
         verbose_name = 'тип коммерциализации РИД'
@@ -83,7 +83,7 @@ class ContractType(models.Model):
     """
 
     name = models.CharField(max_length=100, blank=False, verbose_name='Наименование',
-                            help_text='Тип договора на РИД.')
+                            help_text='Тип договора на РИД')
 
     class Meta:
         verbose_name = 'тип договора на РИД'
@@ -109,7 +109,7 @@ class Ground(models.Model):
     index = models.CharField(max_length=20, null=True, verbose_name='Индекс',
                              help_text='Индекс площадки СФУ. Например, 660074')
     address = models.CharField(max_length=100, blank=False, null=True, verbose_name='Физический адрес',
-                               help_text='Физический адрес площадки СФУ. Например, пр. Свободный 79.')
+                               help_text='Физический адрес площадки СФУ. Например, пр. Свободный, д. 79')
 
     class Meta:
         verbose_name = 'площадку СФУ'
@@ -210,7 +210,7 @@ class Request(models.Model):
     """
 
     number = models.IntegerField(verbose_name='Номер',
-                                 help_text='Номер заявки', validators=[MinValueValidator(0)])
+                                 help_text='Номер заявки', validators=[MinValueValidator(0)], null=True, blank=True)
     protection_title = models.CharField(max_length=40, blank=False,
                                         verbose_name='Охранный документ', help_text='Номер охранного документа')
     ip_name = models.CharField(max_length=200, blank=False,
@@ -218,19 +218,19 @@ class Request(models.Model):
     abridgement = models.TextField(verbose_name='Реферат', null=True, blank=True,
                                    help_text='Реферат РИД')
     ground = models.ForeignKey(to='Ground', on_delete=models.PROTECT,
-                               verbose_name='Площадка СФУ', help_text='Номер площадки СФУ.')
+                               verbose_name='Площадка СФУ', help_text='Номер площадки СФУ')
     ip_type = models.ForeignKey(to='IntellectualPropertyType', on_delete=models.PROTECT,
-                                verbose_name='Тип', help_text='Тип РИД.')
+                                verbose_name='Тип', help_text='Тип РИД')
     ipc = models.CharField(max_length=1000, null=True, blank=True, default='',
-                           verbose_name='МПК', help_text='Международная патентная классификация.')
+                           verbose_name='МПК', help_text='Международная патентная классификация')
     priority_date = models.DateField(verbose_name='Дата приоритета',
-                                         help_text='Дата регистрации РИДа в ОФАП.')
+                                         help_text='Дата регистрации РИДа в ОФАП')
     send_date = models.DateField(verbose_name='Дата подачи заявки',
-                                     help_text='Дата подачи заявки.')
+                                     help_text='Дата подачи заявки')
     grant_date = models.DateField(verbose_name='Дата выдачи патента',
-                                      help_text='Дата выдачи ФИПСом охранного документа на РИД.')
+                                      help_text='Дата выдачи ФИПСом охранного документа на РИД')
     receipt_date = models.DateField(verbose_name='Дата получения охранного документа',
-                                        help_text='Дата получения охранного документа отделом УИС.')
+                                        help_text='Дата получения охранного документа отделом УИС')
     bulletin_number = models.IntegerField(verbose_name='Номер бюллетеня', null=True, blank=True,
                                           validators=[MinValueValidator(1), MaxValueValidator(100)],
                                           help_text='Номер официального бюллетеня «Изобретения. Полезные модели»')
@@ -239,31 +239,31 @@ class Request(models.Model):
                                                    '«Изобретения. Полезные модели»')
     # Договор
     is_contracted = models.BooleanField(verbose_name='Договор', blank=True, default=False,
-                                        help_text='Выполнено ли договору?.')
+                                        help_text='Выполнено ли договору?')
     contract_number = models.CharField(max_length=50, blank=True, null=True,
                                        verbose_name='Номер договора',
-                                       help_text='Номер договора.')
+                                       help_text='Номер договора')
     contract_type = models.ForeignKey(to='ContractType', blank=True, null=True,
-                                      verbose_name='Вид договора', help_text='Вид договора.',
+                                      verbose_name='Вид договора', help_text='Вид договора',
                                       on_delete=models.PROTECT)
     contract_date = models.DateField(verbose_name='Дата заключения договора', null=True,
-                                         blank=True, help_text='Дата заключения договора.')
+                                         blank=True, help_text='Дата заключения договора')
 
-    text = models.TextField(verbose_name='Тема', help_text='Тема. ')
+    text = models.TextField(verbose_name='Тема', help_text='Тема')
     number_policy_measure = models.CharField(max_length=50, verbose_name='Номер программного мероприятия',
-                                             help_text='Номер программного мероприятия.')
+                                             help_text='Номер программного мероприятия')
     note = models.TextField(verbose_name='Примечание',
-                            help_text='Дополнительная информация.')
+                            help_text='Дополнительная информация')
     provider = models.ForeignKey(to='Person', on_delete=models.PROTECT, related_name='provider',
-                                 verbose_name='Исполнитель', help_text='Исполнитель.')
+                                 verbose_name='Исполнитель', help_text='Исполнитель')
     commissioner = models.ForeignKey(to='Person', on_delete=models.PROTECT, related_name='commissioner',
                                      verbose_name='Руководитель', help_text='Руководитель ???. Например, ???')
     owners = models.ManyToManyField(Person, related_name='ip_owner', verbose_name='Патентообладатели',
-                                    help_text='Патентообладатели.')
+                                    help_text='Патентообладатели')
     creators = models.ManyToManyField(Person, verbose_name='Авторы',
-                                      help_text='Перечислите авторов.')
+                                      help_text='Перечислите авторов')
     countries = models.ManyToManyField(Country, verbose_name='Страны',
-                                     help_text='Название выдавшей патент страны.')
+                                     help_text='Название выдавшей патент страны')
 
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
@@ -367,18 +367,18 @@ class Payment(models.Model):
     """
 
     duty = models.ForeignKey(Duty, on_delete=models.PROTECT, verbose_name='Пошлина',
-                             help_text='Пошлина, за которую производится оплата.')
+                             help_text='Пошлина, за которую производится оплата')
     intellectual_property = models.ForeignKey(IntellectualProperty, on_delete=models.PROTECT,
-                                              verbose_name='РИД', help_text='РИД, за который производится оплата.')
+                                              verbose_name='РИД', help_text='РИД, за который производится оплата')
     purchase_order_number = models.IntegerField(verbose_name='Номер платежного поручения',
-                                                help_text='Номер платежного поручения.')
+                                                help_text='Номер платежного поручения')
     payment_date = models.DateField(verbose_name='Дата оплаты',
-                                    help_text='')
+                                    help_text='Дата оплаты в формате гггг-мм-дд')
     posted_date = models.DateField(verbose_name='Дата внесения',
-                                   help_text='')
+                                   help_text='Дата внесения в формате гггг-мм-дд')
     paid_amount = models.FloatField(verbose_name='Сумма оплаты',
-                                    help_text='')
-    note = models.TextField(verbose_name='Примечание', help_text='')
+                                    help_text='Сумма оплаты')
+    note = models.TextField(verbose_name='Примечание', help_text='Примечание')
     check_scan = models.ImageField(verbose_name='Чек', help_text='Скан чека')
 
     class Meta:
@@ -535,7 +535,7 @@ class CardRegister(models.Model):
 
 
 class PrivatePerson(Person):
-    """Физическое лицо
+    """Автор
 
     Поля:
         name Имя
@@ -545,18 +545,20 @@ class PrivatePerson(Person):
     """
 
     name = models.CharField(max_length=100, blank=False, verbose_name='Имя',
-                            help_text='Имя физического лица. Например, Никита')
+                            help_text='Имя автора. Например, Никита')
     surname = models.CharField(max_length=100, blank=False, verbose_name='Фамилия',
-                               help_text='Фамилия физического лица. Например, Нурлыгаянов')
+                               help_text='Фамилия автора. Например, Нурлыгаянов')
     patronymic = models.CharField(max_length=100, verbose_name='Отчество',
-                                  help_text='Отчество физического лица. Например, Рамильевич')
+                                  help_text='Отчество автора. Например, Рамильевич')
     work_place = models.CharField(max_length=100, blank=False,
                                   verbose_name='Подразделения СФУ: место работы автора (авторов РИД)',
-                                  help_text='Подразделения СФУ: место работы автора (авторов РИД). Например, ИКИТ.')
+                                  help_text='Подразделения СФУ: место работы автора (авторов РИД). Например, ИКИТ')
+    passport_data = models.CharField(verbose_name='Паспортные данные', help_text='Номер и серия паспорта',
+                                     validators=[MinLengthValidator(10)], max_length=30, unique=True)
 
     class Meta:
-        verbose_name = 'физическое лицо'
-        verbose_name_plural = 'Физические лица'
+        verbose_name = 'автор'
+        verbose_name_plural = 'Авторы'
 
     def __str__(self):
         return self.full_name() + ", " + self.work_place
