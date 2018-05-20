@@ -59,7 +59,7 @@ ROOT_URLCONF = 'ria_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['./templates',],
+        'DIRS': ['./templates', './templates/application'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
