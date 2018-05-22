@@ -34,6 +34,10 @@ class IntellectualPropertyViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.IntellectualPropertySerializer
 
 
+# class ContractIntellectualPropertyViewSet(viewsets.ModelViewSet):
+#     queryset = models.ContractIntellectualProperties.objects.all()
+#     serializer_class = serializers.ContractIntellectualPropertySerializer
+
 # коммерциализация РИД
 class IntellectualPropertyCommercializationViewSet(viewsets.ModelViewSet):
     queryset = models.IPCommercialization.objects.all()
@@ -98,7 +102,7 @@ class IntAssetCreate(CreateView):
     model = models.IntangibleAssets
     form_class = forms.IntangibleAssetForm
     success_url = reverse_lazy('intangible_assets')
-    template_name = 'application/intangibleassets_form.html'
+    template_name = 'application/intangible_assets_form.html'
 
 
 # редактировать запись реестра НМА
@@ -106,7 +110,7 @@ class IntAssetUpdate(UpdateView):
     model = models.IntangibleAssets
     form_class = forms.IntangibleAssetForm
     success_url = reverse_lazy('intangible_assets')
-    template_name = 'application/intangibleassets_form.html'
+    template_name = 'application/intangible_assets_form.html'
 
 
 # добавить оплату пошлины
@@ -130,7 +134,7 @@ class IPCommercializationCreate(CreateView):
     model = models.IPCommercialization
     form_class = forms.IPCommercializationForm
     success_url = reverse_lazy('intellectual_properties_commercialization')
-    template_name = 'application/ipcommercialization_form.html'
+    template_name = 'application/ip_commercialization_form.html'
 
 
 # редактировать коммерциализацию РИД
@@ -138,4 +142,4 @@ class IPCommercializationUpdate(UpdateView):
     model = models.IPCommercialization
     form_class = forms.IPCommercializationForm
     success_url = reverse_lazy('intellectual_properties_commercialization')
-    template_name = 'application/ipcommercialization_form.html'
+    template_name = 'application/ip_commercialization_form.html'
