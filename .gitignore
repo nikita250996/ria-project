@@ -10,3 +10,5 @@ ria_project/media/*
 .idea/vcs.xml
 .idea/workspace.xml
 ria_project/.DS_Store
+.idea/encodings.xml
+ria_project/application/.DS_Store

@@ -40,7 +40,8 @@ urlpatterns += [
     path('заявки/<int:pk>/редактировать/', views.RequestUpdate.as_view(), name='request_intellectual_property_update'),
 
     path('рид/<int:pk>/редактировать/', views.IPUpdate.as_view(), name='intellectual_property_update'),
-    path('рид-по-договорам/<int:pk>/редактировать/', views.IPUpdate.as_view(),
+
+    path('рид-по-договорам/<int:pk>/редактировать/', views.IPContractUpdate.as_view(),
          name='contract_intellectual_property_update'),
 ]
 

@@ -58,18 +58,14 @@
             ],
             columns: [
                 {data: 'id', title: '№', className: 'id'},
-                {data: 'intellectual_property.name', title: 'РИД'},
-                {data: 'number', title: 'Номер договора'},
-                {data: 'date', title: 'Дата подписания договора',
+                {data: 'name', title: 'Название'},
+                {data: 'contract_number', title: 'Номер договора'},
+                {data: 'contract_type', title: 'Вид договора'},
+                {data: 'contract_date', title: 'Дата заключения договора',
                         render: function( data, type, row) {
                             return formatDate(data);
                         }
                 },
-                {data: 'text', title: 'Тема'},
-                {data: 'number_policy_measure', title: 'Номер программного мероприятия'},
-                {data: 'note', title: 'Примечание'},
-                {data: 'provider', title: 'Исполнитель'},
-                {data: 'commissioner', title: 'Руководитель'},
             ],
         } );
     });

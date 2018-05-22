@@ -65,14 +65,14 @@
             ],
             columns: [
                 {data: 'id', title: '№', className: 'id'},
-                {data: 'intellectual_property.name', title: 'РИД'},
+                {data: 'intellectual_property', title: 'РИД'},
                 {data: 'reference_number', title: 'Номер дела'},
                 {data: 'send_date', title: 'Дата отправки на регистрацию',
                         render: function( data, type, row) {
                             return formatDate(data);
                         }
                 },
-                {data: 'commercialization_type.name', title: 'Наименование вида/типа использования РИД'},
+                {data: 'commercialization_type', title: 'Наименование вида/типа использования РИД'},
                 {data: 'licencee', title: 'Лицензиат - получатель лицензии'},
                 {data: 'version_number', title: 'Номер использования'},
                 {data: 'filing_date', title: 'Дата регистрации договора',

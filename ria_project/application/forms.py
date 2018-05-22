@@ -1,5 +1,5 @@
 from django import forms
-from application.models import IntellectualProperty, Payment
+from application.models import IntellectualProperty, Payment, IntangibleAssets, IPCommercialization
 
 
 class RequestIntellectualPropertyForm(forms.ModelForm):
@@ -75,4 +75,36 @@ class PaymentForm(forms.ModelForm):
 
     class Meta:
         model = Payment
+        fields = '__all__'
+
+
+class IntangibleAssetForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(IntangibleAssetForm, self).__init__(*args, **kwargs)
+
+        for _, field in self.fields.items():
+            field.widget.attrs = {
+                'class': 'form-control',
+                'placeholder': field.help_text,
+            }
+
+    class Meta:
+        model = IntangibleAssets
+        fields = '__all__'
+
+
+class IPCommercializationForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(IPCommercializationForm, self).__init__(*args, **kwargs)
+
+        for _, field in self.fields.items():
+            field.widget.attrs = {
+                'class': 'form-control',
+                'placeholder': field.help_text,
+            }
+
+    class Meta:
+        model = IPCommercialization
         fields = '__all__'

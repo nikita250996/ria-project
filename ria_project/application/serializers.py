@@ -1,3 +1,4 @@
+# coding: utf-8
 from rest_framework import serializers
 from .models import *
 
@@ -32,6 +33,8 @@ class IntellectualPropertySerializer(serializers.ModelSerializer):
 
 
 class IntellectualPropertyCommercializationSerializer(serializers.ModelSerializer):
+    intellectual_property = serializers.StringRelatedField()
+    commercialization_type = serializers.StringRelatedField()
     licenser = serializers.StringRelatedField(many=True)
 
     class Meta:

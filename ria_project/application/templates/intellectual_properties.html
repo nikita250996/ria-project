@@ -58,21 +58,59 @@
             ],
             columns: [
                 {data: 'id', title: '№', className: 'id'},
-                {data: 'ipc', title: 'Международная патентная классификация'},
-                {data: 'request_number', title: 'Номер заявки'},
-                {data: 'protection_title', title: 'Охранный документ'},
                 {data: 'name', title: 'Название'},
-                {data: 'abridgement', title: 'Реферат'},
-                {data: 'ground.ground_code', title: 'Номер площадки СФУ'},
-                {data: 'type_fk.name', title: 'Тип'},
-                {data: 'bulletin_number', title: 'Номер бюллетеня'},
-                {data: 'bulletin_date', title: 'Дата публикации бюллетеня',
+                {data: 'is_request', title: 'Заявка',
+                        render: function (data, type, row) {
+                            return (data == true) ? '<img src="/static/admin/img/icon-yes.svg" alt="True">'
+                            : '<img src="/static/admin/img/icon-no.svg" alt="False">';
+                        }
+                },
+                {data: 'request_number', title: 'Номер заявки'},
+                {data: 'is_contracted', title: 'Договор',
+                        render: function (data, type, row) {
+                            return (data == true) ? '<img src="/static/admin/img/icon-yes.svg" alt="True">'
+                            : '<img src="/static/admin/img/icon-no.svg" alt="False">';
+                        }
+                },
+                {data: 'contract_number', title: 'Номер договора'},
+                {data: 'contract_type', title: 'Вид договора'},
+                {data: 'contract_date', title: 'Дата заключения договора',
                         render: function( data, type, row) {
                             return formatDate(data);
                         }
                 },
+                {data: 'provider', title: 'Исполнитель'},
+                {data: 'commissioner', title: 'Руководитель'},
+                {data: 'text', title: 'Тема'},
+                {data: 'number_policy_measure', title: 'Номер программного мероприятия'},
+                {data: 'note', title: 'Примечание'},
+                {data: 'protection_title', title: 'Охранный документ'},
+                {data: 'abridgement', title: 'Реферат'},
+                {data: 'ground', title: 'Площадка СФУ'},
+                {data: 'type_fk', title: 'Тип'},
+                {data: 'owners', title: 'Патентообладатели',
+                        render: function (data, type, row) {
+                            return data.join('; ');
+                        }
+                },
+                {data: 'creators', title: 'Авторы',
+                        render: function (data, type, row) {
+                            return data.join('; ');
+                        }
+                },
+                {data: 'countries', title: 'Страны',
+                        render: function (data, type, row) {
+                            return data.join('; ');
+                        }
+                },
+                {data: 'ipc', title: 'МПК'},
                 {data: 'priority_date', title: 'Дата приоритета',
                         render: function( data, type, row) {
+                            return formatDate(data);
+                        }
+                },
+                {data: 'send_date', title: 'Дата подачи заявки',
+                        render: function(data, type, row) {
                             return formatDate(data);
                         }
                 },
@@ -81,9 +119,26 @@
                             return formatDate(data);
                         }
                 },
+                {data: 'receipt_date',  title: 'Дата получения охранного документа',
+                        render: function( data, type, row) {
+                            return formatDate(data);
+                        }
+                },
+                {data: 'bulletin_number', title: 'Номер бюллетеня'},
+                {data: 'bulletin_date', title: 'Дата публикации бюллетеня',
+                        render: function( data, type, row) {
+                            return formatDate(data);
+                        }
+                },
                 {data: 'duty_payments', title: 'Оплаты пошлин',
                         render: function (data, type, row) {
                             return data.join('; ');
+                        }
+                },
+                {data: 'is_supported', title: 'Статус',
+                        render: function (data, type, row) {
+                            return (data == true) ? '<img src="/static/admin/img/icon-yes.svg" alt="True">'
+                            : '<img src="/static/admin/img/icon-no.svg" alt="False">';
                         }
                 },
             ],
