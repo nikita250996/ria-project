@@ -1,7 +1,7 @@
 *.pyc
 ria_project/application/migrations/*
 ria_project/media/*
-ria_project/ria_project/settings.py
+**/settings.py
 *.ico
 *.jpg
 .idea/ria-project.iml
