@@ -55,7 +55,7 @@
             <div class="user">
                 Здравствуйте, <span class="username" id="username">{{ user.get_full_name }}</span>
                 {% if user.is_superuser %}
-                <div class="user-notifications" id="notification">
+                <div class="user-notifications" id="notification" v-if="notifications.length">
                     <div class="message" v-for="(message, index) in notifications">
                         ${message.description} |
                         <a class="mark-as-read-link" v-on:click="markAsRead(message.id, index)">Отметить как прочитанное</a>
@@ -83,7 +83,7 @@
                     <ul class="nav flex-column">
                         <li class="nav-item"><a class="nav-link active" href="{% url 'index' %}">Заявки на РИД</a></li>
                         <li class="nav-item"><a class="nav-link"        href="{% url 'intellectual_properties' %}">РИД</a></li>
-                        <li class="nav-item"><a class="nav-link"        href="">РИД по договорам</a></li>
+                        <li class="nav-item"><a class="nav-link"        href="{% url 'contract_intellectual_properties' %}">РИД по договорам</a></li>
                         <li class="nav-item"><a class="nav-link"        href="{% url 'intangible_assets' %}">НМА</a></li>
                         <li class="nav-item"><a class="nav-link"        href="{% url 'payments' %}">Оплаты пошлин</a></li>
                         <li class="nav-item"><a class="nav-link"        href="{% url 'intellectual_properties_commercialization' %}">Коммерциализация РИД</a></li>

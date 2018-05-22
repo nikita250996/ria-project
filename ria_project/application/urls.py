@@ -38,8 +38,7 @@ urlpatterns = [
 
 urlpatterns += [
     path('заявки/добавить', views.RequestCreate.as_view(), name='request_intellectual_property_create'),
-    path('заявки/<int:pk>/редактировать/', views.RequestUpdate.as_view(),
-         name='request_intellectual_property_update'),
+    path('заявки/<int:pk>/редактировать/', views.RequestUpdate.as_view(), name='request_intellectual_property_update'),
 
     path('рид/<int:pk>/редактировать/', views.IPUpdate.as_view(), name='intellectual_property_update'),
 
