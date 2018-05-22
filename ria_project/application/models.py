@@ -19,9 +19,10 @@ NOTIFICATION_TYPE_CHOICES = (
 class User(AbstractUser):
     """Пользователь
 
-        Поля:
-            patronymic Отчество
-        """
+    Поля:
+        patronymic Отчество
+    """
+
     patronymic = models.CharField(max_length=100, blank=True, null=True, verbose_name='Отчество',
                                   help_text='Отчество сотрудника УИС. Например, Рамильевич')
 
