@@ -8,20 +8,6 @@ from . import forms
 
 
 # VIEW SETS FOR REST API
-# class RequestViewSet(viewsets.ModelViewSet):
-#     queryset = models.Request.objects.all()
-#     serializer_class = serializers.RequestSerializer
-#
-#     def get_queryset(self):
-#         user = self.request.user
-#         queryset = models.Request.objects.all()
-#
-#         if not user.is_superuser:
-#             queryset = queryset.filter(ground__ground_code=user.employeeinfo.ground.ground_code)
-#
-#         return queryset
-
-
 # оплаты пошлин
 class DutyPaymentViewSet(viewsets.ModelViewSet):
     queryset = models.Payment.objects.all()
@@ -33,10 +19,23 @@ class IntellectualPropertyViewSet(viewsets.ModelViewSet):
     queryset = models.IntellectualProperty.objects.all()
     serializer_class = serializers.IntellectualPropertySerializer
 
+    def get_queryset(self):
+        user = self.request.user
+        queryset = models.IntellectualProperty.objects.all()
 
-# class ContractIntellectualPropertyViewSet(viewsets.ModelViewSet):
-#     queryset = models.ContractIntellectualProperties.objects.all()
-#     serializer_class = serializers.ContractIntellectualPropertySerializer
+        if user.is_authenticated and not user.is_superuser:
+            queryset = queryset.filter(ground__ground_code=user.employeeinfo.ground.ground_code)
+
+        is_request_param = self.request.query_params.get('request', None)
+        if is_request_param:
+            queryset = queryset.filter(is_request=is_request_param)
+
+        is_contracted_param = self.request.query_params.get('contracted', None)
+        if is_contracted_param:
+            queryset = queryset.filter(is_contracted=is_contracted_param)
+
+        return queryset
+
 
 # коммерциализация РИД
 class IntellectualPropertyCommercializationViewSet(viewsets.ModelViewSet):
@@ -50,6 +49,7 @@ class IntangibleAssetViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.IntangibleAssetSerializer
 
 
+# уведомления
 class NotificationViewSet(viewsets.ModelViewSet):
     queryset = models.Notification.objects.all()
     serializer_class = serializers.NotificationSerializer
