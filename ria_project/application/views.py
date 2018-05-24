@@ -1,3 +1,4 @@
+# coding: utf-8
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from rest_framework import viewsets
@@ -7,40 +8,43 @@ from . import forms
 
 
 # VIEW SETS FOR REST API
-class RequestViewSet(viewsets.ModelViewSet):
-    queryset = models.Request.objects.all()
-    serializer_class = serializers.RequestSerializer
+# class RequestViewSet(viewsets.ModelViewSet):
+#     queryset = models.Request.objects.all()
+#     serializer_class = serializers.RequestSerializer
+#
+#     def get_queryset(self):
+#         user = self.request.user
+#         queryset = models.Request.objects.all()
+#
+#         if not user.is_superuser:
+#             queryset = queryset.filter(ground__ground_code=user.employeeinfo.ground.ground_code)
+#
+#         return queryset
 
-    def get_queryset(self):
-        user = self.request.user
-        queryset = models.Request.objects.all()
 
-        if not user.is_superuser:
-            queryset = queryset.filter(ground__ground_code=user.employeeinfo.ground.ground_code)
-
-        return queryset
-
-
+# оплаты пошлин
 class DutyPaymentViewSet(viewsets.ModelViewSet):
     queryset = models.Payment.objects.all()
     serializer_class = serializers.DutySerializer
 
 
+# РИД
 class IntellectualPropertyViewSet(viewsets.ModelViewSet):
     queryset = models.IntellectualProperty.objects.all()
     serializer_class = serializers.IntellectualPropertySerializer
 
 
-class ContractIntellectualPropertyViewSet(viewsets.ModelViewSet):
-    queryset = models.ContractIntellectualProperties.objects.all()
-    serializer_class = serializers.ContractIntellectualPropertySerializer
+# class ContractIntellectualPropertyViewSet(viewsets.ModelViewSet):
+#     queryset = models.ContractIntellectualProperties.objects.all()
+#     serializer_class = serializers.ContractIntellectualPropertySerializer
 
-
+# коммерциализация РИД
 class IntellectualPropertyCommercializationViewSet(viewsets.ModelViewSet):
     queryset = models.IPCommercialization.objects.all()
     serializer_class = serializers.IntellectualPropertyCommercializationSerializer
 
 
+# реестр НМА
 class IntangibleAssetViewSet(viewsets.ModelViewSet):
     queryset = models.IntangibleAssets.objects.all()
     serializer_class = serializers.IntangibleAssetSerializer
@@ -61,73 +65,81 @@ class NotificationViewSet(viewsets.ModelViewSet):
 
 
 # FORMS
+# добавить заявку
 class RequestCreate(CreateView):
-    model = models.Request
-    form_class = forms.RequestForm
-    success_url = reverse_lazy('index')
-
-
-class RequestUpdate(UpdateView):
-    model = models.Request
-    fields = '__all__'
-    success_url = reverse_lazy('index')
-
-
-class IPCreate(CreateView):
     model = models.IntellectualProperty
-    fields = '__all__'
-    success_url = reverse_lazy('intellectual_properties')
+    form_class = forms.RequestIntellectualPropertyForm
+    success_url = reverse_lazy('index')
+    template_name = 'application/request_form.html'
 
 
+# редактировать заявку
+class RequestUpdate(UpdateView):
+    model = models.IntellectualProperty
+    form_class = forms.RequestIntellectualPropertyForm
+    success_url = reverse_lazy('index')
+    template_name = 'application/request_form.html'
+
+
+# редактировать РИД
 class IPUpdate(UpdateView):
     model = models.IntellectualProperty
-    fields = '__all__'
+    form_class = forms.IntellectualPropertyForm
     success_url = reverse_lazy('intellectual_properties')
+    template_name = 'application/intellectual_property_form.html'
 
 
-class IPContractCreate(CreateView):
-    model = models.ContractIntellectualProperties
-    fields = '__all__'
-    success_url = reverse_lazy('contract_intellectual_properties')
-
-
+# редактировать РИД по договору
 class IPContractUpdate(UpdateView):
-    model = models.ContractIntellectualProperties
-    fields = '__all__'
+    model = models.IntellectualProperty
+    form_class = forms.ContractIntellectualPropertyForm
     success_url = reverse_lazy('contract_intellectual_properties')
+    template_name = 'application/contract_intellectual_property_form.html'
 
 
+# добавить запись реестра НМА
 class IntAssetCreate(CreateView):
     model = models.IntangibleAssets
-    fields = '__all__'
+    form_class = forms.IntangibleAssetForm
     success_url = reverse_lazy('intangible_assets')
+    template_name = 'application/intangible_assets_form.html'
 
 
+# редактировать запись реестра НМА
 class IntAssetUpdate(UpdateView):
     model = models.IntangibleAssets
-    fields = '__all__'
+    form_class = forms.IntangibleAssetForm
     success_url = reverse_lazy('intangible_assets')
+    template_name = 'application/intangible_assets_form.html'
 
 
+# добавить оплату пошлины
 class PaymentCreate(CreateView):
     model = models.Payment
-    fields = '__all__'
+    form_class = forms.PaymentForm
     success_url = reverse_lazy('payments')
+    template_name = 'application/payment_form.html'
 
 
+# редактировать оплату пошлины
 class PaymentUpdate(UpdateView):
     model = models.Payment
-    fields = '__all__'
+    form_class = forms.PaymentForm
     success_url = reverse_lazy('payments')
+    template_name = 'application/payment_form.html'
 
 
+# добавить коммерциализацию РИд
 class IPCommercializationCreate(CreateView):
     model = models.IPCommercialization
-    fields = '__all__'
+    form_class = forms.IPCommercializationForm
     success_url = reverse_lazy('intellectual_properties_commercialization')
+    template_name = 'application/ip_commercialization_form.html'
 
 
+# редактировать коммерциализацию РИД
 class IPCommercializationUpdate(UpdateView):
     model = models.IPCommercialization
-    fields = '__all__'
+    form_class = forms.IPCommercializationForm
     success_url = reverse_lazy('intellectual_properties_commercialization')
+    template_name = 'application/ip_commercialization_form.html'

@@ -1,21 +1,6 @@
+# coding: utf-8
 from rest_framework import serializers
 from .models import *
-
-
-class RequestSerializer(serializers.ModelSerializer):
-    countries = serializers.StringRelatedField(many=True)
-    owners = serializers.StringRelatedField(many=True)
-    creators = serializers.StringRelatedField(many=True)
-    provider = serializers.StringRelatedField()
-    commissioner = serializers.StringRelatedField()
-    contract_type = serializers.StringRelatedField()
-    ip_type = serializers.StringRelatedField()
-
-    class Meta:
-        model = Request
-        fields = '__all__'
-        excluded = ('created_at', 'updated_at')
-        depth = 1
 
 
 class DutySerializer(serializers.ModelSerializer):
@@ -27,25 +12,29 @@ class DutySerializer(serializers.ModelSerializer):
 
 
 class IntellectualPropertySerializer(serializers.ModelSerializer):
-    duty_payments = serializers.StringRelatedField(many = True)
+    # duty_payments = serializers.StringRelatedField(many = True)
+    # countries = serializers.StringRelatedField(many=True)
+    # owners = serializers.StringRelatedField(many=True)
+    # creators = serializers.StringRelatedField(many=True)
+    # provider = serializers.StringRelatedField()
+    # commissioner = serializers.StringRelatedField()
+    # contract_type = serializers.StringRelatedField()
+    # type_fk = serializers.StringRelatedField()
 
     class Meta:
         model = IntellectualProperty
-        fields = '__all__'
-        depth = 1
-
-
-class ContractIntellectualPropertySerializer(serializers.ModelSerializer):
-    provider = serializers.StringRelatedField()
-    commissioner = serializers.StringRelatedField()
-
-    class Meta:
-        model = ContractIntellectualProperties
-        fields = '__all__'
+        fields = (
+            'id',
+            'name',
+            'request_number',
+            'protection_title',
+        )
         depth = 1
 
 
 class IntellectualPropertyCommercializationSerializer(serializers.ModelSerializer):
+    intellectual_property = serializers.StringRelatedField()
+    commercialization_type = serializers.StringRelatedField()
     licenser = serializers.StringRelatedField(many=True)
 
     class Meta:

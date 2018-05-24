@@ -13,7 +13,7 @@
     $(document).ready( function() {
         $('#myTable').DataTable( {
             ajax: {
-                url: API_URLS['requests-list'],
+                url: API_URLS['intellectual-property-list'],
                 dataSrc: '',
             },
             processing: true,
@@ -26,7 +26,7 @@
                     text: 'Добавить новую запись',
                     className: '',
                     action: function ( e, dt, node, config ) {
-                        redirectTo(FORM_URLS['request-create']);
+                        redirectTo(FORM_URLS['request-intellectual-property-create']);
                     }
                 },
                 {
@@ -45,7 +45,7 @@
                     action: function ( e, dt, node, config ) {
                         let selectedId = getSelectObjectId();
                         if (selectedId) {
-                            let path = FORM_URLS['request-update'].replace( '1234567890', selectedId );
+                            let path = FORM_URLS['request-intellectual-property-update'].replace( '1234567890', selectedId );
                             redirectTo(path);
                         }
                     }
@@ -53,73 +53,73 @@
             ],
             columns: [
                 {data: 'id', title: '№', className: 'id'},
-                {data: 'number', title: 'Номер заявки'},
-                {data: 'ip_name', title: 'Название'},
+                {data: 'name', title: 'Название'},
+                {data: 'request_number', title: 'Номер заявки'},
                 {data: 'protection_title', title: 'Охранный документ'},
-                {data: 'abridgement', title: 'Реферат'},
-                {data: 'ground.ground_code', title: 'Номер площадки'},
-                {data: 'ip_type', title: 'Тип РИД'},
-                {data: 'ipc', title: 'МПК'},
-                {data: 'bulletin_number', title: 'Номер бюллетеня'},
-                {data: 'bulletin_date', title: 'Дата публикации бюллетеня',
-                        render: function( data, type, row) {
-                            return formatDate(data);
-                        }
-                },
-                {data: 'priority_date', title: 'Дата приоритета',
-                        render: function( data, type, row) {
-                            return formatDate(data);
-                        }
-                },
-                {data: 'send_date', title: 'Дата отправки запроса',
-                        render: function( data, type, row) {
-                            return formatDate(data);
-                        }
-                },
-                {data: 'receipt_date', title: 'Дата получения\n охранного документа',
-                        render: function( data, type, row) {
-                            return formatDate(data);
-                        }
-                },
-                {data: 'grant_date', title: 'Дата выдачи ФИПСом охранного документа на РИД',
-                        render: function( data, type, row) {
-                            return formatDate(data);
-                        }
-                },
-                {
-                    data: 'is_contracted', title: 'Договор',
-                    render: function (data, type, row) {
-                        return (data == true) ? '<img src="/static/admin/img/icon-yes.svg" alt="True">'
-                            : '<img src="/static/admin/img/icon-no.svg" alt="False">';
-                    }
-                },
-                {data: 'contract_number', title: 'Номер договора'},
-                {data: 'contract_date', title: 'Дата заключения договора',
-                        render: function( data, type, row) {
-                            return formatDate(data);
-                        }
-                },
-                {data: 'text', title: 'Тема'},
-                {data: 'number_policy_measure', title: 'Номер программного мероприятия'},
-                {data: 'note', title: 'Примечание'},
-                {data: 'contract_type', title: 'Вид договора'},
-                {data: 'provider', title: 'Исполнитель'},
-                {data: 'commissioner', title: 'Руководитель'},
-                {data: 'owners', title: 'Патентообладатели',
-                        render: function(data, type, row) {
-                            return data.join('; ');
-                        }
-                },
-                {data: 'creators', title: 'Авторы',
-                        render: function(data, type, row) {
-                            return data.join('; ');
-                        }
-                },
-                {data: 'countries', title: 'Страны',
-                        render: function(data, type, row) {
-                            return data.join(', ');
-                        }
-                },
+{#                {data: 'abridgement', title: 'Реферат'},#}
+{#                {data: 'ground.ground_code', title: 'Номер площадки'},#}
+{#                {data: 'type_fk', title: 'Тип РИД'},#}
+{#                {data: 'ipc', title: 'МПК'},#}
+{#                {data: 'bulletin_number', title: 'Номер бюллетеня'},#}
+{#                {data: 'bulletin_date', title: 'Дата публикации бюллетеня',#}
+{#                        render: function( data, type, row) {#}
+{#                            return formatDate(data);#}
+{#                        }#}
+{#                },#}
+{#                {data: 'priority_date', title: 'Дата приоритета',#}
+{#                        render: function( data, type, row) {#}
+{#                            return formatDate(data);#}
+{#                        }#}
+{#                },#}
+{#                {data: 'send_date', title: 'Дата отправки запроса',#}
+{#                        render: function( data, type, row) {#}
+{#                            return formatDate(data);#}
+{#                        }#}
+{#                },#}
+{#                {data: 'receipt_date', title: 'Дата получения\n охранного документа',#}
+{#                        render: function( data, type, row) {#}
+{#                            return formatDate(data);#}
+{#                        }#}
+{#                },#}
+{#                {data: 'grant_date', title: 'Дата выдачи ФИПСом охранного документа на РИД',#}
+{#                        render: function( data, type, row) {#}
+{#                            return formatDate(data);#}
+{#                        }#}
+{#                },#}
+{#                {#}
+{#                    data: 'is_contracted', title: 'Договор',#}
+{#                    render: function (data, type, row) {#}
+{#                        return (data == true) ? '<img src="/static/admin/img/icon-yes.svg" alt="True">'#}
+{#                            : '<img src="/static/admin/img/icon-no.svg" alt="False">';#}
+{#                    }#}
+{#                },#}
+{#                {data: 'contract_number', title: 'Номер договора'},#}
+{#                {data: 'contract_date', title: 'Дата заключения договора',#}
+{#                        render: function( data, type, row) {#}
+{#                            return formatDate(data);#}
+{#                        }#}
+{#                },#}
+{#                {data: 'text', title: 'Тема'},#}
+{#                {data: 'number_policy_measure', title: 'Номер программного мероприятия'},#}
+{#                {data: 'note', title: 'Примечание'},#}
+{#                {data: 'contract_type', title: 'Вид договора'},#}
+{#                {data: 'provider', title: 'Исполнитель'},#}
+{#                {data: 'commissioner', title: 'Руководитель'},#}
+{#                {data: 'owners', title: 'Патентообладатели',#}
+{#                        render: function(data, type, row) {#}
+{#                            return data.join('; ');#}
+{#                        }#}
+{#                },#}
+{#                {data: 'creators', title: 'Авторы',#}
+{#                        render: function(data, type, row) {#}
+{#                            return data.join('; ');#}
+{#                        }#}
+{#                },#}
+{#                {data: 'countries', title: 'Страны',#}
+{#                        render: function(data, type, row) {#}
+{#                            return data.join(', ');#}
+{#                        }#}
+{#                },#}
             ],
         } );
     });

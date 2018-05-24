@@ -1,3 +1,4 @@
+# coding: utf-8
 from django.urls import path
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
@@ -17,10 +18,6 @@ urlpatterns = [
          login_required(TemplateView.as_view(template_name='contract_intellectual_properties.html')),
          name='contract_intellectual_properties'),
 
-    path('охранные-документы',
-         login_required(TemplateView.as_view(template_name='protection_titles.html')),
-         name='protection_titles'),
-
     path('нематериальные-активы',
          login_required(TemplateView.as_view(template_name='intangible_assets.html')),
          name='intangible_assets'),
@@ -38,15 +35,15 @@ urlpatterns = [
          name='statistics'),
 ]
 
-urlpatterns += [
-    path('заявки/добавить', views.RequestCreate.as_view(), name='request_create'),
-    path('заявки/<int:pk>/редактировать', views.RequestUpdate.as_view(), name='request_update'),
-]
 
 urlpatterns += [
+    path('заявки/добавить', views.RequestCreate.as_view(), name='request_intellectual_property_create'),
+    path('заявки/<int:pk>/редактировать/', views.RequestUpdate.as_view(), name='request_intellectual_property_update'),
+
     path('рид/<int:pk>/редактировать/', views.IPUpdate.as_view(), name='intellectual_property_update'),
-    path('рид-по-договорам/<int:pk>/редактировать',
-         views.IPContractUpdate, name='contract_intellectual_property_update'),
+
+    path('рид-по-договорам/<int:pk>/редактировать/', views.IPContractUpdate.as_view(),
+         name='contract_intellectual_property_update'),
 ]
 
 urlpatterns += [
@@ -67,4 +64,3 @@ urlpatterns += [
     path('коммерциализация-рид/<int:pk>/редактировать',
          views.IPCommercializationUpdate.as_view(), name='intellectual_properties_commercialization_update'),
 ]
-
