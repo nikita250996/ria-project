@@ -1,6 +1,6 @@
+# coding: utf-8
 from rest_framework import serializers
 from .models import *
-
 
 
 class DutySerializer(serializers.ModelSerializer):
@@ -12,8 +12,8 @@ class DutySerializer(serializers.ModelSerializer):
 
 
 class IntellectualPropertySerializer(serializers.ModelSerializer):
-    duty_payments = serializers.StringRelatedField(many = True)
-    countries = serializers.StringRelatedField(many=True)
+    # duty_payments = serializers.StringRelatedField(many = True)
+    # countries = serializers.StringRelatedField(many=True)
     # owners = serializers.StringRelatedField(many=True)
     # creators = serializers.StringRelatedField(many=True)
     # provider = serializers.StringRelatedField()
@@ -25,13 +25,16 @@ class IntellectualPropertySerializer(serializers.ModelSerializer):
         model = IntellectualProperty
         fields = (
             'id',
-            'duty_payments',
-            'countries',
+            'name',
+            'request_number',
+            'protection_title',
         )
         depth = 1
 
 
 class IntellectualPropertyCommercializationSerializer(serializers.ModelSerializer):
+    intellectual_property = serializers.StringRelatedField()
+    commercialization_type = serializers.StringRelatedField()
     licenser = serializers.StringRelatedField(many=True)
 
     class Meta:

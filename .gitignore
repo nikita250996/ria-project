@@ -1,7 +1,7 @@
 *.pyc
 ria_project/application/migrations/*
 ria_project/media/*
-ria_project/ria_project/settings.py
+**/settings.py
 *.ico
 *.jpg
 .idea/ria-project.iml
@@ -10,3 +10,5 @@ ria_project/ria_project/settings.py
 .idea/vcs.xml
 .idea/workspace.xml
 ria_project/.DS_Store
+.idea/encodings.xml
+ria_project/application/.DS_Store
