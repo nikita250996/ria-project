@@ -79,7 +79,7 @@ a {
 
 /* HEADER */
 .header {
-  padding: 10px 20px 10px 15px;
+  padding: 10px 5px 10px 15px;
 
   background: #ff6000;
   background: -moz-linear-gradient(-45deg, #ff8700 0%, #ff6000 100%);
@@ -132,12 +132,12 @@ a {
     display: none;
     position: absolute;
     top: 75%;
-    left: 0;
-    width: 300px;
+    right: 2%;
+    width: 400px;
 
     padding: 14px 16px;
 
-    font-size: 10px;
+    font-size: 12px;
     background: #fff;
 
     text-transform: none;
@@ -161,12 +161,12 @@ a {
 }
 
 .message {
-    width: auto;
+    text-align: left;
     color: #000;
 }
 
-.message:hover {
-    color: rgba(0,0,0,.5);
+.message-description a {
+    color: #026cc8;
 }
 
 .mark-as-read-link {
@@ -176,7 +176,6 @@ a {
 
 .mark-as-read-link:hover {
     cursor: pointer;
-
 }
 
 .username {
@@ -204,19 +203,18 @@ a {
 
 /* MENU */
 .menu {
-  font-size: 14px;
-  font-weight: 400;
-  background: linear-gradient(135deg, #3a332f 0%,#403935 100%);
+    padding-top: 12px;
+    font-size: 14px;
+    font-weight: 400;
+    background: linear-gradient(135deg, #3a332f 0%,#403935 100%);
 }
 
 .nav-item {
-  margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .nav-link {
-    padding: 10px 20px 10px 40px;
     color: rgb(255, 255, 255);
-
     letter-spacing: .5px;
 }
 
@@ -239,7 +237,7 @@ a {
 }
 
 .table-name {
-    font-size: 22px;
+    font-size: 1.7rem;
     margin-top: 22px;
     margin-bottom: 22px;
 }
@@ -250,6 +248,7 @@ a {
 
 .table-responsive {
     font-size: .8rem;
+    margin-bottom: 40px;
 }
 
 .table-buttons {
@@ -257,13 +256,31 @@ a {
 }
 
 .form-container {
-    margin-top: 1rem;
+    max-width: 65em;
 
-    padding: 1.5rem;
-    border: 3px solid #f7f7f9;
+    margin-bottom: 22px;
 
     font-size: 1rem;
     font-weight: 400;
     text-align: left;
-    line-height: 1.5;
+    line-height: 1;
+}
+
+.form-title {
+    /*font-size: 22px;*/
+    margin-top: 22px;
+    margin-bottom: 40px;
+}
+
+.fieldset-legend {
+    font-size: 1.5rem;
+    margin-bottom: 22px !important;
+}
+
+.form-check-label {
+    margin-top: .3rem;
+}
+
+fieldset {
+    margin-bottom: 22px !important;
 }

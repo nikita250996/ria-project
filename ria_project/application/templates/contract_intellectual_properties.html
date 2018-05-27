@@ -34,7 +34,7 @@
     $(document).ready( function() {
         $('#myTable').DataTable( {
             ajax: {
-                url: API_URLS['contract-intellectual-property-list'],
+                url: API_URLS['intellectual-property-list'] + "?contracted=True",
                 dataSrc: '',
             },
             processing: true,

@@ -12,15 +12,14 @@ class DutySerializer(serializers.ModelSerializer):
 
 
 class IntellectualPropertySerializer(serializers.ModelSerializer):
-    contract_type = serializers.StringRelatedField()
-    provider = serializers.StringRelatedField()
-    commissioner = serializers.StringRelatedField()
-    ground = serializers.StringRelatedField()
-    type_fk = serializers.StringRelatedField()
+    duty_payments = serializers.StringRelatedField(many=True)
+    countries = serializers.StringRelatedField(many=True)
     owners = serializers.StringRelatedField(many=True)
     creators = serializers.StringRelatedField(many=True)
-    countries = serializers.StringRelatedField(many=True)
-    duty_payments = serializers.StringRelatedField(many=True)
+    provider = serializers.StringRelatedField()
+    commissioner = serializers.StringRelatedField()
+    contract_type = serializers.StringRelatedField()
+    type_fk = serializers.StringRelatedField()
 
     class Meta:
         model = IntellectualProperty
