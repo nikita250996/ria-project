@@ -3,22 +3,21 @@ from application.models import IntellectualProperty, Payment, IntangibleAssets, 
 
 
 class RequestIntellectualPropertyForm(forms.ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        super(RequestIntellectualPropertyForm, self).__init__(*args, **kwargs)
-
-        for _, field in self.fields.items():
-            field.widget.attrs = {
-                'class': 'form-control',
-                'placeholder': field.help_text,
-            }
-
-        self.fields['priority_date'].widget.attrs['type'] = 'date'
-        self.fields['is_contracted'].widget.attrs['class'] = 'form-check-input'
-
     class Meta:
         model = IntellectualProperty
         fields = '__all__'
+        exclude = ('duty_payments', 'is_supported', 'is_request')
+        widgets = {
+            'priority_date': forms.DateInput(attrs={'type': 'date'}),
+            'send_date': forms.DateInput(attrs={'type': 'date'}),
+            'receipt_date': forms.DateInput(attrs={'type': 'date'}),
+            'grant_date': forms.DateInput(attrs={'type': 'date'}),
+            'contract_date': forms.DateInput(attrs={'type': 'date'}),
+            'bulletin_date': forms.DateInput(attrs={'type': 'date'}),
+            'text': forms.Textarea(attrs={'rows': '4'}),
+            'abridgement': forms.Textarea(attrs={'rows': '4'}),
+            'note': forms.Textarea(attrs={'rows': '3'}),
+        }
 
 
 class IntellectualPropertyForm(forms.ModelForm):

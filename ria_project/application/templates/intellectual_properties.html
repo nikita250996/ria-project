@@ -32,9 +32,9 @@
 {% block custom-js %}
 <script>
     $(document).ready( function() {
-        $('#myTable').DataTable( {
+        let table = $('#myTable').DataTable( {
             ajax: {
-                url: API_URLS['intellectual-property-list'],
+                url: API_URLS['intellectual-property-list']+"?request=False",
                 dataSrc: '',
             },
             processing: true,
@@ -52,6 +52,34 @@
                             let path = FORM_URLS['intellectual-property-update']
                                 .replace( '1234567890', selectedId );
                             redirectTo(path);
+                        }
+                    }
+                },
+                {
+                    text: 'Перевести в заявку',
+                    className: '',
+                    action: function ( e, dt, node, config ) {
+                        let selectedId = getSelectObjectId();
+                        if ( selectedId ) {
+                            let confirmation = confirm("Вы уверены, что хотите перевести выбранную запись в заявки?");
+
+                            if ( confirmation ) {
+                                let formData = new FormData();
+                                formData.append('is_request', true);
+                                fetch( API_URLS['intellectual-property-detail'].replace('1234567890', selectedId), {
+                                    method: 'PATCH',
+                                    body: formData,
+                                }).then( response => {
+                                    if ( response.ok ) {
+                                        table.row('.selected').remove().draw();
+                                        console.log('Шалость удалась.');
+                                    } else {
+                                        alert('Возникла ошибка.');
+                                    }
+                                });
+                            }
+                        } else {
+                            alert('Пожалуйста, выберите запись.');
                         }
                     }
                 },
