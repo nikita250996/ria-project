@@ -13,12 +13,13 @@ class RequestIntellectualPropertyForm(forms.ModelForm):
                 'placeholder': field.help_text,
             }
 
-        self.fields['priority_date'].widget.attrs['type'] = 'date'
-        self.fields['is_contracted'].widget.attrs['class'] = 'form-check-input'
+        # self.fields['priority_date'].widget.attrs['type'] = 'date'
+        # self.fields['is_contracted'].widget.attrs['class'] = 'form-check-input'
 
     class Meta:
         model = IntellectualProperty
         fields = '__all__'
+        exclude = ('duty_payments',)
 
 
 class IntellectualPropertyForm(forms.ModelForm):

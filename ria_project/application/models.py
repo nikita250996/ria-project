@@ -260,14 +260,16 @@ class IntellectualProperty(models.Model):
                                       help_text='Вид договора', on_delete=models.PROTECT)
     contract_date = models.DateField(verbose_name='Дата заключения договора', null=True, blank=True,
                                      help_text='Дата заключения договора')
+
     provider = models.ForeignKey(to='Person', on_delete=models.PROTECT, related_name='provider',
                                  verbose_name='Исполнитель', help_text='Исполнитель')
     commissioner = models.ForeignKey(to='Person', on_delete=models.PROTECT, related_name='commissioner',
                                      verbose_name='Руководитель', help_text='Руководитель')
-    text = models.TextField(verbose_name='Тема', help_text='Тема РИД')
+    text = models.TextField(verbose_name='Тема', help_text='Тема РИД', null=True, blank=True)
     number_policy_measure = models.CharField(max_length=50, verbose_name='Номер программного мероприятия',
-                                             help_text='Номер программного мероприятия')
-    note = models.TextField(verbose_name='Примечание', help_text='Примечание')
+                                             help_text='Номер программного мероприятия', null=True,
+                                             blank=True)
+    note = models.TextField(verbose_name='Примечание', help_text='Примечание', null=True, blank=True)
 
     protection_title = models.CharField(max_length=40, blank=False, verbose_name='Охранный документ',
                                         help_text='Номер охранного документа')
@@ -283,18 +285,22 @@ class IntellectualProperty(models.Model):
                                        help_text='Страны, выдавшие патент.')
     ipc = models.CharField(max_length=1000, null=True, blank=True, default='', verbose_name='МПК',
                            help_text='Международная патентная классификация')
-    priority_date = models.DateField(verbose_name='Дата приоритета',
-                                     help_text='Дата регистрации РИД в ОФАП')
+    priority_date = models.DateField(verbose_name='Дата приоритета', help_text='Дата регистрации РИД в ОФАП',
+                                     null=True, blank=True)
     send_date = models.DateField(verbose_name='Дата подачи заявки', help_text='Дата подачи заявки')
     grant_date = models.DateField(verbose_name='Дата выдачи патента',
-                                  help_text='Дата выдачи ФИПС охранного документа на РИД')
+                                  help_text='Дата выдачи ФИПС охранного документа на РИД',
+                                  blank=True, null=True)
     receipt_date = models.DateField(verbose_name='Дата получения охранного документа',
-                                    help_text='Дата получения охранного документа отделом УИС')
+                                    help_text='Дата получения охранного документа отделом УИС',
+                                    null=True, blank=True, )
     bulletin_number = models.IntegerField(verbose_name='Номер бюллетеня', null=True, blank=True,
                                           validators=[MinValueValidator(1), MaxValueValidator(100)],
                                           help_text='Номер официального бюллетеня «Изобретения. Полезные модели»')
-    bulletin_date = models.DateField(verbose_name='Дата публикации бюллетеня', null=True, blank=True,
-                                     help_text='Дата публикации официального бюллетеня')
+    bulletin_date = models.DateField(verbose_name='Дата публикации бюллетеня',
+                                     help_text='Дата публикации официального бюллетеня',
+                                     null=True, blank=True)
+
     duty_payments = models.ManyToManyField(Duty, through='Payment', verbose_name='Оплаты пошлин',
                                            help_text='Пошлины к оплате за РИД.')
     is_supported = models.BooleanField(default=True, verbose_name='Статус', help_text='Поддерживается ли?')
