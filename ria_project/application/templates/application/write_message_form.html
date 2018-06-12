@@ -1,0 +1,37 @@
+{% extends "sent_messages.html" %}
+
+
+{% block content %}
+
+{% load widget_tweaks %}
+
+<div class="form-container">
+    <h3 class="form-title">Форма написания сообщения</h3>
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                {% include "./form_field.html" with field=form.receiver %}
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-9">
+                {% include "./form_field.html" with field=form.text %}
+            </div>
+        </div>
+
+        {#  Кнопки  #}
+        <div class="form-group">
+            <button type="submit" class="btn btn-success">
+                <span class="glyphicon glyphicon-ok"></span>Отправить
+            </button>
+            <a href="{% url 'sent_messages' %}" class="btn btn-secondary">Назад</a>
+        </div>
+
+        {{ form.sender }}
+
+    </form>
+</div>
+{% endblock %}

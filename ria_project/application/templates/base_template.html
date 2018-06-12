@@ -48,7 +48,12 @@
 		<h1 class="project-name col-sm-3">
             <a href="{% url 'index' %}" class="project-link">РИД СФУ</a>
         </h1>
-        <div class="col-sm-5"></div>
+        <div class="col-sm-2 font-weight-bold" >
+            <a class="text-white" href="{% url 'received_messages' %}">Входящие сообщения</a>
+        </div>
+        <div class="col-sm-2 font-weight-bold">
+            <a class="text-white" href="{% url 'sent_messages' %}">Исходящие сообщения</a>
+        </div>
 		<!-- Сотрудник и номер площадки -->
 		<section class="col-sm-4 my-auto staff-info">
 			<!-- Сотрудник -->
@@ -125,6 +130,11 @@
 
             'intellectual-property-detail': '{% url "intellectual-property-detail" pk=1234567890 %}',
             'intellectual-property-commercialization-list':'{% url "intellectual-property-commercialization-list" %}',
+
+            'messages-list': '{% url "messages-list" %}',
+            'sent-messages': '{% url "sent_messages" %}',
+            'messages-detail': '{% url "messages-detail" pk=1234567890 %}',
+
         };
 
         const FORM_URLS = {
@@ -142,6 +152,11 @@
                 '{% url "intellectual_properties_commercialization_create" %}',
             'intellectual-properties-commercialization-update':
                 '{% url "intellectual_properties_commercialization_update" pk=1234567890 %}',
+
+
+            'message-create': '{% url "message_create" %}',
+            'message-read': '{% url "message_read" pk=1234567890 %}',
+            'message-open': '{% url "message_open" pk=1234567890 %}',
         };
 
         {% if user.is_superuser %}

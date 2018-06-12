@@ -130,6 +130,16 @@ class LegalPersonAdmin(admin.ModelAdmin):
     list_display = ('name', 'address', 'phone', 'fax', 'site', 'email')
 
 
+# сообщения
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ('sender', 'receiver', 'text', 'send_at', 'read')
+
+
+# институты
+class InstituteAdmin(admin.ModelAdmin):
+    list_display = ('name', 'ground')
+
+
 admin.site.site_header = 'РИД СФУ'
 admin.site.index_template = './admin/index.html'
 admin.site.index_title = 'Главная'
@@ -151,3 +161,5 @@ admin.site.register(IntellectualPropertyType, IntellectualPropertyTypeAdmin)
 admin.site.register(ContractType, ContractTypeAdmin)
 admin.site.register(CommercializationType, CommercializationTypeAdmin)
 admin.site.register(LegalPerson, LegalPersonAdmin)
+admin.site.register(Message, MessageAdmin)
+admin.site.register(Institute, InstituteAdmin)

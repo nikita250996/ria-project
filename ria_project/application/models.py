@@ -7,9 +7,9 @@ from django.core.validators import MinValueValidator, MaxValueValidator, MinLeng
 class User(AbstractUser):
     """Пользователь
 
-        Поля:
-            patronymic Отчество
-        """
+    Поля:
+        patronymic Отчество
+    """
     patronymic = models.CharField(max_length=100, blank=True, null=True, verbose_name='Отчество',
                                   help_text='Отчество сотрудника УИС. Например, Рамильевич')
 
@@ -26,7 +26,6 @@ class EmployeeInfo(models.Model):
         home_phone Номер домашнего телефона
         user Имя пользователя
     """
-
     ground = models.ForeignKey(to='Ground', on_delete=models.PROTECT, null=True, verbose_name='Код площадки СФУ',
                                help_text='Код площадки СФУ, на которой трудится сотрудник УИС')
     jobrole = models.CharField(max_length=100, null=True, verbose_name='Должность',
@@ -39,8 +38,7 @@ class EmployeeInfo(models.Model):
                                     help_text='Номер мобильного телефона сотрудника УИС. Например, +78005553535')
     home_phone = models.CharField(max_length=20, null=True, verbose_name='Номер домашнего телефона',
                                   help_text='Номер домашнего телефона сотрудника УИС')
-    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True,
-                                verbose_name='Имя пользователя',
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Имя пользователя',
                                 help_text='Имя пользователя, к которому привязан сотрудник УИС')
 
     class Meta:
@@ -459,6 +457,7 @@ class PrivatePerson(Person):
         work_place Подразделения СФУ - место работы
         passport_series Серия паспорта
         passport_number Номер паспорта
+        user Имя пользователя
     """
 
     surname = models.CharField(max_length=100, blank=False, verbose_name='Фамилия',
@@ -467,13 +466,16 @@ class PrivatePerson(Person):
                             help_text='Имя автора. Например, Никита')
     patronymic = models.CharField(max_length=100, verbose_name='Отчество',
                                   help_text='Отчество автора. Например, Рамильевич')
-    work_place = models.CharField(max_length=100, blank=False,
-                                  verbose_name='Институт СФУ — место работы',
-                                  help_text='Институт СФУ — место работы автора. Например, ИКИТ')
+    work_place = models.ForeignKey(to='Institute', on_delete=models.PROTECT, null=True,
+                                   verbose_name='Институт СФУ — место работы',
+                                   help_text='Институт СФУ — место работы автора. Например, ИКИТ')
     passport_series = models.CharField(max_length=15, verbose_name='Серия паспорта',
                                        help_text='Серия паспорта автора', validators=[MinLengthValidator(4)])
     passport_number = models.CharField(max_length=15, verbose_name='Номер паспорта',
                                        help_text='Номер паспорта автора', validators=[MinLengthValidator(6)])
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True,
+                                verbose_name='Имя пользователя',
+                                help_text='Имя пользователя, к которому привязан автор')
 
     class Meta:
         verbose_name = 'автор'
@@ -481,7 +483,7 @@ class PrivatePerson(Person):
         unique_together = ('passport_series', 'passport_number')
 
     def __str__(self):
-        return self.full_name() + ", " + self.work_place
+        return self.full_name() + ", " + self.work_place.name
 
     def full_name(self):
         return self.surname + ' ' + self.name + ' ' + self.patronymic
@@ -532,3 +534,51 @@ class Notification(models.Model):
     type = models.CharField(verbose_name='Тип события', max_length=100, choices=NOTIFICATION_TYPE_CHOICES)
     description = models.TextField(verbose_name='Описание события')
     read = models.BooleanField(verbose_name='Просмотрено ли событие', default=False)
+
+
+class Message(models.Model):
+    """Сообщение
+
+    Поля:
+        sender Отправитель
+        receiver Получатель
+        text Текст
+        send_at Когда было отправлено
+        read Прочитано ли
+    """
+    sender = models.ForeignKey(to='application.Person', on_delete=models.PROTECT, related_name='sender',
+                               verbose_name='Отправитель', help_text='Отправитель сообщения', null=False, blank=False)
+    receiver = models.ForeignKey(to='application.Person', on_delete=models.PROTECT, related_name='receiver',
+                                 verbose_name='Получатель', help_text='Получатель сообщения', null=False, blank=False)
+    text = models.TextField(max_length=1000, blank=False, verbose_name='Текст', help_text='Текст сообщения')
+    send_at = models.DateField(auto_now_add=True, blank=True, verbose_name='Когда было отправлено',
+                               help_text='Когда сообщение было отправлено')
+    read = models.BooleanField(default=False, blank=True, verbose_name='Прочитано ли',
+                               help_text='Прочитано ли сообщение?')
+
+    class Meta:
+        verbose_name = 'сообщение'
+        verbose_name_plural = 'Сообщения'
+
+    def __str__(self):
+        return self.text
+
+
+class Institute(models.Model):
+    """Институт
+
+    Поля:
+        name Название
+        ground Код площадки СФУ
+    """
+
+    name = models.CharField(max_length=50, null=True, verbose_name='Название', help_text='Название института')
+    ground = models.ForeignKey(to='Ground', on_delete=models.PROTECT, null=True, verbose_name='Код площадки СФУ',
+                               help_text='Код площадки СФУ, к которой относится институт')
+
+    class Meta:
+        verbose_name = 'институт'
+        verbose_name_plural = 'Институты'
+
+    def __str__(self):
+        return self.name

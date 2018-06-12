@@ -64,3 +64,15 @@ urlpatterns += [
     path('коммерциализация-рид/<int:pk>/редактировать',
          views.IPCommercializationUpdate.as_view(), name='intellectual_properties_commercialization_update'),
 ]
+
+urlpatterns += [
+    path('сообщения/входящие',
+         login_required(TemplateView.as_view(template_name='received_messages.html')),
+         name='received_messages'),
+    path('сообщения/написать', views.MessageCreate.as_view(), name='message_create'),
+    path('сообщения/входящие/<int:pk>/ответить', views.MessageRead.as_view(), name='message_read'),
+    path('сообщения/исходящие/<int:pk>/', views.MessageOpen.as_view(), name='message_open'),
+    path('сообщения/исходящие',
+         login_required(TemplateView.as_view(template_name='sent_messages.html')),
+         name='sent_messages'),
+]
