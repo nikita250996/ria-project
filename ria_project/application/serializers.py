@@ -20,6 +20,7 @@ class IntellectualPropertySerializer(serializers.ModelSerializer):
     commissioner = serializers.StringRelatedField()
     contract_type = serializers.StringRelatedField()
     type_fk = serializers.StringRelatedField()
+    ground = serializers.StringRelatedField()
 
     class Meta:
         model = IntellectualProperty
@@ -28,7 +29,6 @@ class IntellectualPropertySerializer(serializers.ModelSerializer):
 
 
 class IntellectualPropertyCommercializationSerializer(serializers.ModelSerializer):
-    intellectual_property = serializers.StringRelatedField()
     commercialization_type = serializers.StringRelatedField()
     licenser = serializers.StringRelatedField(many=True)
 

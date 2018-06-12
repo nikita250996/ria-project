@@ -23,6 +23,7 @@
 
 {% block content %}
 <h3 class="table-name">РИД</h3>
+{% include 'partials/messages.html' %}
 <div class="table-responsive">
     <table id="myTable" class="table table-striped table-sm" style="width:100%">
     </table>
@@ -42,6 +43,7 @@
             dom: 'lfrtip<"table-buttons"B>',
             select: 'single',
             language: languageSettings,
+            order: [ [0, 'desc'] ],
             buttons: [
                 {
                     text: 'Редактировать запись',
@@ -87,6 +89,7 @@
             columns: [
                 {data: 'id', title: '№', className: 'id'},
                 {data: 'name', title: 'Название'},
+                {% comment %}
                 {data: 'is_request', title: 'Заявка',
                         render: function (data, type, row) {
                             return (data == true) ? '<img src="/static/admin/img/icon-yes.svg" alt="True">'
@@ -94,6 +97,7 @@
                         }
                 },
                 {data: 'request_number', title: 'Номер заявки'},
+                {% endcomment %}
                 {data: 'is_contracted', title: 'Договор',
                         render: function (data, type, row) {
                             return (data == true) ? '<img src="/static/admin/img/icon-yes.svg" alt="True">'

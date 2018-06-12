@@ -91,8 +91,8 @@ a {
     margin-left: 0;
     margin-right: 0;
 
-    font-size: 12.5px;
-    font-weight: 300;
+    font-size: 14px;
+    font-weight: 400;
     letter-spacing: 0.5px;
 
     line-height: 40px;
@@ -118,51 +118,70 @@ a {
     text-transform: uppercase;
 }
 
-.user {
+.user,
+.notification-holder,
+.ground {
     display: inline-block;
-    position: relative;
 }
 
 .user:after,
+.notification-holder:after,
 .ground:after {
     content: "/";
 }
 
-.user-notifications {
-    display: none;
-    position: absolute;
-    top: 75%;
-    right: 2%;
-    width: 400px;
+#notification-icon:hover {
+    cursor: pointer;
+}
 
-    padding: 14px 16px;
+[v-cloak] { display:none; }
+
+.notification-holder {
+    position: relative;
+}
+
+.notifications {
+    position: absolute;
+    top: 90%;
+    right: 5%;
+
+    width: 350px;
+    max-width: 400px;
+    max-height: 200px;
+
+    padding: 5px 16px;
 
     font-size: 12px;
     background: #fff;
 
     text-transform: none;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-
-    overflow: hidden;
-    z-index: 1;
-}
-
-.username:hover ~ .user-notifications {
-    cursor: pointer;
-    display: block;
-}
-
-.user-notifications:hover {
-    display: block;
-}
-
-.user-notifications {
     border-left: 5px solid #ff6000;
+
+    overflow-y: auto;
+    z-index: 2;
+}
+
+.triangle {
+    position: absolute;
+    bottom: 5%;
+    right: 30%;
+    z-index: 1;
+
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+
+    border-bottom: 10px solid #fff;
+
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
 .message {
-    text-align: left;
     color: #000;
+    /*line-height: 2;*/
+    text-align: start;
 }
 
 .message-description a {
@@ -178,15 +197,6 @@ a {
     cursor: pointer;
 }
 
-.username {
-    font-weight: 500;
-}
-
-.ground {
-    display: inline-block;
-}
-
-.username,
 .ground-number,
 .logout {
     border-bottom: 1px solid rgba(255, 255, 255, 0.5);
@@ -283,4 +293,35 @@ a {
 
 fieldset {
     margin-bottom: 22px !important;
+}
+
+.form-errors {
+    margin-bottom: 40px;
+    font-size: 15px;
+}
+
+.form-error-title {
+    font-weight: 400;
+    font-size: 1.5rem;
+    margin-bottom: 22px;
+}
+
+.field-error-name {
+    font-style: italic;
+}
+
+.field-errors {
+    padding-left: 40px;
+    padding-top: 10px;
+
+    list-style: square;
+}
+
+.field-errors {
+    /*color: red;*/
+}
+
+.payments {
+    padding-left: 40px;
+    list-style: decimal;
 }

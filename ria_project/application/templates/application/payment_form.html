@@ -2,83 +2,87 @@
 
 {% block content %}
 <div class="form-container">
+    {% if request.resolver_match.url_name == "payment_create" %}
+        <h3 class="form-title">Форма добавления оплаты</h3>
+    {% else %}
+        <h3 class="form-title">Форма редактирования оплаты</h3>
+    {% endif %}
+
     <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {#  ошибки  #}
-
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.duty.name.id_for_label }}">
-                {{ form.duty.label }}
-            </label>
-            <div class="col-sm-5">
-                {{ form.duty }}
+        {#    Ошибки    #}
+        {% if form.errors %}
+            <div class="form-errors">
+                <h3 class="form-error-title">Ошибки</h3>
+                {% for field in form %}
+                    {% if field.errors %}
+                        <i class="field-error-name">{{ field.label }}</i>
+                        <ul class="field-errors">
+                        {% for error in field.errors %}
+                            <li class="field-error"> {{ error }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endfor %}
             </div>
+        {% endif %}
+
+        <fieldset>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    {% include "./form_field.html" with field=form.intellectual_property %}
+                </div>
+
+                <div class="form-group col-md-4">
+                    {% include "./form_field.html" with field=form.duty %}
+                </div>
+            </div>
+
+            <div class="form-row">
+
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    {% include "./form_field.html" with field=form.purchase_order_number %}
+                </div>
+
+                <div class="form-group col-md-2">
+                    {% include "./form_field.html" with field=form.payment_date %}
+                </div>
+
+                <div class="form-group col-md-2">
+                    {% include "./form_field.html" with field=form.posted_date %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    {% include "./form_field.html" with field=form.paid_amount %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-8">
+                    {% include "./form_field.html" with field=form.note %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    {% include "./form_field.html" with field=form.check_scan %}
+                </div>
+            </div>
+        </fieldset>
+
+        {#  Кнопки  #}
+        <div class="form-group">
+            <button type="submit" class="btn btn-success">
+              <span class="glyphicon glyphicon-ok"></span> Сохранить
+            </button>
+            <a href="{% url 'contract_intellectual_properties' %}" class="btn btn-secondary">Назад</a>
         </div>
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.intellectual_property.name.id_for_label }}">
-                {{ form.intellectual_property.label }}
-            </label>
-            <div class="col-sm-5">
-                {{ form.intellectual_property }}
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.purchase_order_number.id_for_label }}">
-                {{ form.purchase_order_number.label }}
-            </label>
-            <div class="col-sm-5">
-                {{ form.purchase_order_number }}
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.payment_date.id_for_label }}">
-                {{ form.payment_date.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.payment_date }}
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.posted_date.id_for_label }}">
-                {{ form.posted_date.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.posted_date }}
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.paid_amount.id_for_label }}">
-                {{ form.paid_amount.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.paid_amount }}
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.note.id_for_label }}">
-                {{ form.note.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.note }}
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.check_scan.id_for_label }}">
-                {{ form.check_scan.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.check_scan }}
-            </div>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Сохранить</button>
 
     </form>
 </div>

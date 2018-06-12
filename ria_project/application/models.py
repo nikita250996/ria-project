@@ -110,7 +110,7 @@ class Ground(models.Model):
         verbose_name_plural = 'Площадки СФУ'
 
     def __str__(self):
-        return 'Площадка СФУ №' + str(self.ground_code)
+        return 'Площадка №' + str(self.ground_code)
 
 
 class IntellectualPropertyType(models.Model):
@@ -287,13 +287,13 @@ class IntellectualProperty(models.Model):
     # Бюллетень
     bulletin_number = models.IntegerField(verbose_name='Номер бюллетеня', null=True, blank=True,
                                           validators=[MinValueValidator(1), MaxValueValidator(100)],
-                                          help_text='Номер официального бюллетеня «Изобретения. Полезные модели»')
+                                          help_text='Номер официального бюллетеня')
     bulletin_date = models.DateField(verbose_name='Дата публикации бюллетеня',
                                      help_text='Дата публикации официального бюллетеня',
                                      null=True, blank=True)
     # Оплата пошлин
     duty_payments = models.ManyToManyField(Duty, through='Payment', verbose_name='Оплаты пошлин',
-                                           help_text='Пошлины к оплате за РИД.')
+                                           help_text='Пошлины к оплате за РИД.', blank=True)
     # Статус РИД
     is_supported = models.BooleanField(default=True, verbose_name='Статус', help_text='Поддерживается ли?')
 
@@ -304,7 +304,7 @@ class IntellectualProperty(models.Model):
     def __str__(self):
         if self.is_request:
             return 'Заявка на РИД с № (или id)' + str(self.request_number or self.id)
-        return self.name
+        return self.protection_title + ' - ' + self.name
 
 
 class Payment(models.Model):
@@ -334,8 +334,8 @@ class Payment(models.Model):
                                    help_text='Дата внесения оплаты пошлины')
     paid_amount = models.FloatField(verbose_name='Сумма оплаты',
                                     help_text='Сумма оплаты пошлины')
-    note = models.TextField(verbose_name='Примечание', help_text='Примечание')
-    check_scan = models.ImageField(verbose_name='Чек', help_text='Скан чека')
+    note = models.TextField(verbose_name='Примечание', help_text='Примечание', null=True, blank=True)
+    check_scan = models.ImageField(verbose_name='Чек', help_text='Скан чека', null=True, blank=True)
 
     class Meta:
         verbose_name = 'оплата пошлины'
@@ -382,8 +382,8 @@ class IPCommercialization(models.Model):
                                                   help_text='Акт сдачи-приёмки')
     contract_duration = models.CharField(max_length=100, verbose_name='Срок действия договора',
                                          help_text='Срок действия договора')
-    agreement_terms = models.TextField(verbose_name='Условия договора', help_text='Условия договора')
-    note = models.TextField(verbose_name='Примечание', help_text='Примечание')
+    agreement_terms = models.TextField(verbose_name='Условия договора', help_text='Условия договора', null=True, blank=True)
+    note = models.TextField(verbose_name='Примечание', help_text='Примечание', null=True, blank=True)
     licenser = models.ManyToManyField(Person, verbose_name='Лицензиары', help_text='Лицензиары.')
 
     class Meta:
@@ -413,7 +413,7 @@ class IntangibleAssets(models.Model):
                               help_text='Номер акта')
     book_value = models.FloatField(verbose_name='Балансовая стоимость',
                                    help_text='Балансовая стоимость')
-    retirement_date = models.DateField(verbose_name='Дата списания', help_text='Дата списания')
+    retirement_date = models.DateField(verbose_name='Дата списания', help_text='Дата списания', null=True, blank=True)
 
     class Meta:
         verbose_name = 'запись реестра НМА'

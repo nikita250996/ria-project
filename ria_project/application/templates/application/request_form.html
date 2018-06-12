@@ -5,9 +5,31 @@
 
 {% load widget_tweaks %}
 <div class="form-container">
-    <h3 class="form-title">Форма создания/редактирования заявки</h3>
-    <form method="post" novalidate>
+    {% if request.resolver_match.url_name == "request_intellectual_property_create" %}
+        <h3 class="form-title">Форма добавления заявки</h3>
+    {% else %}
+        <h3 class="form-title">Форма редактирования заявки</h3>
+    {% endif %}
+
+    <form method="post">
         {% csrf_token %}
+
+        {#    Ошибки    #}
+        {% if form.errors %}
+            <div class="form-errors">
+                <h3 class="form-error-title">Ошибки</h3>
+                {% for field in form %}
+                    {% if field.errors %}
+                        <i class="field-error-name">{{ field.label }}</i>
+                        <ul class="field-errors">
+                        {% for error in field.errors %}
+                            <li class="field-error"> {{ error }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
 
         {#   Заявка     #}
         <fieldset>

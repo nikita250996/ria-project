@@ -12,7 +12,8 @@
         </div>
       {% endfor %}
     {% else %}
-        {%  render_field field class="form-control is-valid" placeholder=field.help_text %}
+        {%  render_field field class="form-control" placeholder=field.help_text %}
+{#        {%  render_field field class="form-control is-valid" placeholder=field.help_text %}#}
     {% endif %}
 {% else %}
     {%  render_field field class="form-control" placeholder=field.help_text %}
