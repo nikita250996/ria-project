@@ -33,9 +33,10 @@
             font-style: normal;
         }
     </style>
+    <link rel="stylesheet" href="{% static 'css/fontawesome-all.min.css' %}">
 
     <link rel="stylesheet" href="{% static 'css/stylesheet.css' %}">
-	<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
 
     <link rel="stylesheet" href="{% static 'datatables/datatables.min.css' %}">
     <link rel="stylesheet" href="{% static 'datatables/buttons/css/buttons.dataTables.min.css' %}">
@@ -50,15 +51,22 @@
         </h1>
         <div class="col-sm-5"></div>
 		<!-- Сотрудник и номер площадки -->
-		<section class="col-sm-4 text-center my-auto staff-info">
+		<section class="col-sm-4 my-auto staff-info">
 			<!-- Сотрудник -->
             <div class="user">
                 Здравствуйте, <span class="username" id="username">{{ user.get_full_name }}</span>
+            </div>
+            <div class="notification-holder" id="notification-app" v-cloak>
                 {% if user.is_superuser %}
-                <div class="user-notifications" id="notification" v-if="notifications.length">
+                <i class="fa fa-bell" id="notification-icon" v-on:click="displayNotifications" v-if="notifications.length"></i>
+                <i class="far fa-bell" id="notification-icon" v-else></i>
+
+                <div class="triangle" v-show="display && notifications.length"></div>
+                <div class="notifications" v-show="display && notifications.length">
                     <div class="message" v-for="(message, index) in notifications">
-                        ${message.description} |
-                        <a class="mark-as-read-link" v-on:click="markAsRead(message.id, index)">Отметить как прочитанное</a>
+                        ${index+1}.&#9; <span class="message-description" v-html="message.description"></span> |
+                        <a class="mark-as-read-link" v-on:click="markAsRead(message.id, index)">
+                            <i class="far fa-times-circle"></i></a>
                     </div>
                 </div>
                 {% endif %}
@@ -123,6 +131,7 @@
             'intangible-asset-list': '{% url "intangible-asset-list" %}',
             'intellectual-property-list': '{% url "intellectual-property-list" %}',
 
+            'intellectual-property-detail': '{% url "intellectual-property-detail" pk=1234567890 %}',
             'intellectual-property-commercialization-list':'{% url "intellectual-property-commercialization-list" %}',
         };
 
@@ -148,9 +157,10 @@
         formData.append('read', true);
 
         const notificationApp = new Vue({
-            el: '#notification',
+            el: '#notification-app',
             data: {
                 notifications: [],
+                display: false,
             },
             delimiters: ['${', '}'],
             methods: {
@@ -163,6 +173,13 @@
                         this.notifications.splice( index, 1 );
                     }
                 });
+              },
+              displayNotifications: function () {
+                  if ( this.display ) {
+                      this.display = false;
+                  } else {
+                      this.display = true;
+                  }
               },
             },
             created () {

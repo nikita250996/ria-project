@@ -1,0 +1,24 @@
+{# поле формы #}
+{% load widget_tweaks %}
+
+<label for="{{ field.id_for_label }}">{{ field.label }}</label>
+
+{% if form.is_bound %}
+    {% if field.errors %}
+      {%  render_field field class="form-control is-invalid" placeholder=field.help_text %}
+      {% for error in field.errors %}
+        <div class="invalid-feedback">
+          {{ error }}
+        </div>
+      {% endfor %}
+    {% else %}
+        {%  render_field field class="form-control" placeholder=field.help_text %}
+{#        {%  render_field field class="form-control is-valid" placeholder=field.help_text %}#}
+    {% endif %}
+{% else %}
+    {%  render_field field class="form-control" placeholder=field.help_text %}
+{% endif %}
+
+{#    {% if field.help_text %}#}
+{#        <small class="form-text text-muted">{{ field.help_text }}</small>#}
+{#    {% endif %}#}

@@ -3,18 +3,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator, MinLengthValidator
 
-from django.utils.timezone import now
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.contrib.auth.signals import user_logged_out
-
-
-NOTIFICATION_TYPE_CHOICES = (
-    ('delete', 'Удаление'),
-    ('update', 'Редактирование'),
-    ('create', 'Добавление'),
-)
-
 
 class User(AbstractUser):
     """Пользователь
@@ -123,7 +111,7 @@ class Ground(models.Model):
         verbose_name_plural = 'Площадки СФУ'
 
     def __str__(self):
-        return 'Площадка СФУ №' + str(self.ground_code)
+        return 'Площадка №' + str(self.ground_code)
 
 
 class IntellectualPropertyType(models.Model):
@@ -140,7 +128,7 @@ class IntellectualPropertyType(models.Model):
     name = models.CharField(max_length=100, blank=False, null=True, verbose_name='Наименование',
                             help_text='Наименование типа РИД')
     protection_document_name = models.CharField(max_length=100, blank=False, null=True,
-                                                verbose_name='Название охранныого документа',
+                                                verbose_name='Название охранного документа',
                                                 help_text='Название охранного документа типа РИД')
     validity = models.IntegerField(null=True, verbose_name='Срок действия',
                                    help_text='Срок действия типа РИД')
@@ -244,12 +232,42 @@ class IntellectualProperty(models.Model):
         duty_payments Оплаты пошлин
         is_supported Статус
     """
-    name = models.CharField(max_length=200, blank=False, verbose_name='Название', help_text='Название РИД')
 
     # Заявка
     is_request = models.BooleanField(default=True, verbose_name='Заявка', help_text='Заявка ли?')
     request_number = models.IntegerField(verbose_name='Номер', null=True, blank=True,
                                          help_text='Номер заявки', validators=[MinValueValidator(0)])
+    send_date = models.DateField(verbose_name='Дата подачи заявки', help_text='Дата подачи заявки')
+
+    # Общие сведения
+    name = models.CharField(max_length=200, blank=False, verbose_name='Название', help_text='Название РИД')
+    type_fk = models.ForeignKey(to='IntellectualPropertyType', on_delete=models.PROTECT, verbose_name='Тип',
+                                help_text='Тип РИД')
+    ipc = models.CharField(max_length=1000, null=True, blank=True, default='', verbose_name='МПК',
+                           help_text='Международная патентная классификация')
+    text = models.TextField(verbose_name='Тема', help_text='Тема РИД', null=True, blank=True)
+    abridgement = models.TextField(verbose_name='Реферат', null=True, blank=True, help_text='Реферат РИД')
+    ground = models.ForeignKey(to='Ground', on_delete=models.PROTECT, verbose_name='Площадка СФУ',
+                               help_text='Номер площадки СФУ')
+    owners = models.ManyToManyField(Person, related_name='ip_owner', verbose_name='Патентообладатели',
+                                    help_text='Патентообладатели РИД.')
+    creators = models.ManyToManyField(Person, verbose_name='Авторы', help_text='Авторы РИД.')
+    countries = models.ManyToManyField(Country, verbose_name='Страны',
+                                       help_text='Страны, выдавшие патент.')
+    note = models.TextField(verbose_name='Примечание', help_text='Примечание', null=True, blank=True)
+
+    # Охранный документ
+    protection_title = models.CharField(max_length=40, blank=True, null=True,
+                                        verbose_name='Охранный документ',
+                                        help_text='Номер охранного документа')
+    priority_date = models.DateField(verbose_name='Дата приоритета', help_text='Дата регистрации РИД в ОФАП',
+                                     null=True, blank=True)
+    grant_date = models.DateField(verbose_name='Дата выдачи патента',
+                                  help_text='Дата выдачи ФИПС охранного документа на РИД',
+                                  blank=True, null=True)
+    receipt_date = models.DateField(verbose_name='Дата получения охранного документа',
+                                    help_text='Дата получения охранного документа отделом УИС',
+                                    null=True, blank=True,)
 
     # Договор
     is_contracted = models.BooleanField(verbose_name='Договор', blank=True, default=False,
@@ -261,42 +279,23 @@ class IntellectualProperty(models.Model):
     contract_date = models.DateField(verbose_name='Дата заключения договора', null=True, blank=True,
                                      help_text='Дата заключения договора')
     provider = models.ForeignKey(to='Person', on_delete=models.PROTECT, related_name='provider',
-                                 verbose_name='Исполнитель', help_text='Исполнитель')
+                                 verbose_name='Исполнитель', help_text='Исполнитель', null=True, blank=True)
     commissioner = models.ForeignKey(to='Person', on_delete=models.PROTECT, related_name='commissioner',
-                                     verbose_name='Руководитель', help_text='Руководитель')
-    text = models.TextField(verbose_name='Тема', help_text='Тема РИД')
+                                     verbose_name='Руководитель', help_text='Руководитель', null=True, blank=True)
     number_policy_measure = models.CharField(max_length=50, verbose_name='Номер программного мероприятия',
-                                             help_text='Номер программного мероприятия')
-    note = models.TextField(verbose_name='Примечание', help_text='Примечание')
-
-    protection_title = models.CharField(max_length=40, blank=False, verbose_name='Охранный документ',
-                                        help_text='Номер охранного документа')
-    abridgement = models.TextField(verbose_name='Реферат', null=True, blank=True, help_text='Реферат РИД')
-    ground = models.ForeignKey(to='Ground', on_delete=models.PROTECT, verbose_name='Площадка СФУ',
-                               help_text='Номер площадки СФУ')
-    type_fk = models.ForeignKey(to='IntellectualPropertyType', on_delete=models.PROTECT, verbose_name='Тип',
-                                help_text='Тип РИД')
-    owners = models.ManyToManyField(Person, related_name='ip_owner', verbose_name='Патентообладатели',
-                                    help_text='Патентообладатели РИД.')
-    creators = models.ManyToManyField(Person, verbose_name='Авторы', help_text='Авторы РИД.')
-    countries = models.ManyToManyField(Country, verbose_name='Страны',
-                                       help_text='Страны, выдавшие патент.')
-    ipc = models.CharField(max_length=1000, null=True, blank=True, default='', verbose_name='МПК',
-                           help_text='Международная патентная классификация')
-    priority_date = models.DateField(verbose_name='Дата приоритета',
-                                     help_text='Дата регистрации РИД в ОФАП')
-    send_date = models.DateField(verbose_name='Дата подачи заявки', help_text='Дата подачи заявки')
-    grant_date = models.DateField(verbose_name='Дата выдачи патента',
-                                  help_text='Дата выдачи ФИПС охранного документа на РИД')
-    receipt_date = models.DateField(verbose_name='Дата получения охранного документа',
-                                    help_text='Дата получения охранного документа отделом УИС')
+                                             help_text='Номер программного мероприятия', null=True,
+                                             blank=True)
+    # Бюллетень
     bulletin_number = models.IntegerField(verbose_name='Номер бюллетеня', null=True, blank=True,
                                           validators=[MinValueValidator(1), MaxValueValidator(100)],
-                                          help_text='Номер официального бюллетеня «Изобретения. Полезные модели»')
-    bulletin_date = models.DateField(verbose_name='Дата публикации бюллетеня', null=True, blank=True,
-                                     help_text='Дата публикации официального бюллетеня')
+                                          help_text='Номер официального бюллетеня')
+    bulletin_date = models.DateField(verbose_name='Дата публикации бюллетеня',
+                                     help_text='Дата публикации официального бюллетеня',
+                                     null=True, blank=True)
+    # Оплата пошлин
     duty_payments = models.ManyToManyField(Duty, through='Payment', verbose_name='Оплаты пошлин',
-                                           help_text='Пошлины к оплате за РИД.')
+                                           help_text='Пошлины к оплате за РИД.', blank=True)
+    # Статус РИД
     is_supported = models.BooleanField(default=True, verbose_name='Статус', help_text='Поддерживается ли?')
 
     class Meta:
@@ -305,8 +304,8 @@ class IntellectualProperty(models.Model):
 
     def __str__(self):
         if self.is_request:
-            return 'Заявка на РИД №' + str(self.request_number)
-        return self.name
+            return 'Заявка на РИД с № (или id)' + str(self.request_number or self.id)
+        return self.protection_title + ' - ' + self.name
 
 
 class Payment(models.Model):
@@ -336,8 +335,8 @@ class Payment(models.Model):
                                    help_text='Дата внесения оплаты пошлины')
     paid_amount = models.FloatField(verbose_name='Сумма оплаты',
                                     help_text='Сумма оплаты пошлины')
-    note = models.TextField(verbose_name='Примечание', help_text='Примечание')
-    check_scan = models.ImageField(verbose_name='Чек', help_text='Скан чека')
+    note = models.TextField(verbose_name='Примечание', help_text='Примечание', null=True, blank=True)
+    check_scan = models.ImageField(verbose_name='Чек', help_text='Скан чека', null=True, blank=True)
 
     class Meta:
         verbose_name = 'оплата пошлины'
@@ -384,8 +383,8 @@ class IPCommercialization(models.Model):
                                                   help_text='Акт сдачи-приёмки')
     contract_duration = models.CharField(max_length=100, verbose_name='Срок действия договора',
                                          help_text='Срок действия договора')
-    agreement_terms = models.TextField(verbose_name='Условия договора', help_text='Условия договора')
-    note = models.TextField(verbose_name='Примечание', help_text='Примечание')
+    agreement_terms = models.TextField(verbose_name='Условия договора', help_text='Условия договора', null=True, blank=True)
+    note = models.TextField(verbose_name='Примечание', help_text='Примечание', null=True, blank=True)
     licenser = models.ManyToManyField(Person, verbose_name='Лицензиары', help_text='Лицензиары.')
 
     class Meta:
@@ -415,7 +414,7 @@ class IntangibleAssets(models.Model):
                               help_text='Номер акта')
     book_value = models.FloatField(verbose_name='Балансовая стоимость',
                                    help_text='Балансовая стоимость')
-    retirement_date = models.DateField(verbose_name='Дата списания', help_text='Дата списания')
+    retirement_date = models.DateField(verbose_name='Дата списания', help_text='Дата списания', null=True, blank=True)
 
     class Meta:
         verbose_name = 'запись реестра НМА'
@@ -472,9 +471,9 @@ class PrivatePerson(Person):
     work_place = models.CharField(max_length=100, blank=False,
                                   verbose_name='Институт СФУ — место работы',
                                   help_text='Институт СФУ — место работы автора. Например, ИКИТ')
-    passport_series = models.CharField(max_length=15, default='    ', verbose_name='Серия паспорта',
+    passport_series = models.CharField(max_length=15, verbose_name='Серия паспорта',
                                        help_text='Серия паспорта автора', validators=[MinLengthValidator(4)])
-    passport_number = models.CharField(max_length=15, default='      ', verbose_name='Номер паспорта',
+    passport_number = models.CharField(max_length=15, verbose_name='Номер паспорта',
                                        help_text='Номер паспорта автора', validators=[MinLengthValidator(6)])
 
     class Meta:
@@ -522,24 +521,15 @@ class LegalPerson(Person):
         return self.name
 
 
+NOTIFICATION_TYPE_CHOICES = (
+    ('delete', 'Удаление'),
+    ('update', 'Редактирование'),
+    ('create', 'Добавление'),
+)
+
+
 class Notification(models.Model):
     time = models.DateTimeField(verbose_name="Время произошедшего события")
     type = models.CharField(verbose_name='Тип события', max_length=100, choices=NOTIFICATION_TYPE_CHOICES)
     description = models.TextField(verbose_name='Описание события')
     read = models.BooleanField(verbose_name='Просмотрено ли событие', default=False)
-
-
-@receiver(post_save, sender=User)
-def create_profile(sender, instance, created, **kwargs):
-    """Create a matching profile whenever a user object is created."""
-    if created:
-        profile, new = EmployeeInfo.objects.get_or_create(user=instance)
-
-
-@receiver(post_save, sender=IntellectualProperty)
-def on_create_request(sender, instance, created, **kwargs):
-    notification = Notification(
-        time=now(), type=NOTIFICATION_TYPE_CHOICES[0],
-        description='Заявка номер {0}'.format(instance.request_number)
-    )
-    notification.save()

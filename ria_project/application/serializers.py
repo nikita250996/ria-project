@@ -12,28 +12,23 @@ class DutySerializer(serializers.ModelSerializer):
 
 
 class IntellectualPropertySerializer(serializers.ModelSerializer):
-    # duty_payments = serializers.StringRelatedField(many = True)
-    # countries = serializers.StringRelatedField(many=True)
-    # owners = serializers.StringRelatedField(many=True)
-    # creators = serializers.StringRelatedField(many=True)
-    # provider = serializers.StringRelatedField()
-    # commissioner = serializers.StringRelatedField()
-    # contract_type = serializers.StringRelatedField()
-    # type_fk = serializers.StringRelatedField()
+    duty_payments = serializers.StringRelatedField(many=True)
+    countries = serializers.StringRelatedField(many=True)
+    owners = serializers.StringRelatedField(many=True)
+    creators = serializers.StringRelatedField(many=True)
+    provider = serializers.StringRelatedField()
+    commissioner = serializers.StringRelatedField()
+    contract_type = serializers.StringRelatedField()
+    type_fk = serializers.StringRelatedField()
+    ground = serializers.StringRelatedField()
 
     class Meta:
         model = IntellectualProperty
-        fields = (
-            'id',
-            'name',
-            'request_number',
-            'protection_title',
-        )
+        fields = '__all__'
         depth = 1
 
 
 class IntellectualPropertyCommercializationSerializer(serializers.ModelSerializer):
-    intellectual_property = serializers.StringRelatedField()
     commercialization_type = serializers.StringRelatedField()
     licenser = serializers.StringRelatedField(many=True)
 
