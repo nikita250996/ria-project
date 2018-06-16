@@ -106,7 +106,7 @@ class IPCommercializationForm(forms.ModelForm):
             'send_date': forms.DateInput(attrs={'type': 'date'}),
         }
 
-
+        
 class MessageAnswerForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
@@ -145,3 +145,4 @@ class MessageForm(forms.ModelForm):
             'sender': forms.HiddenInput(),
             'read': forms.HiddenInput(),
         }
+   
