@@ -1,256 +1,233 @@
 {% extends "intellectual_properties.html" %}
 
 {% block content %}
+
+{% load widget_tweaks %}
 <div class="form-container">
-    <form action="" method="post">
+    <h3 class="form-title">Форма редактирования РИД</h3>
+    <form method="post">
         {% csrf_token %}
-        {#  ошибки  #}
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.name.id_for_label }}">
-                {{ form.name.label }}
-            </label>
-            <div class="col-sm-5">
-                {{ form.name }}
+        {#    Ошибки    #}
+        {% if form.errors %}
+            <div class="form-errors">
+                <h3 class="form-error-title">Ошибки</h3>
+                {% for field in form %}
+                    {% if field.errors %}
+                        <i class="field-error-name">{{ field.label }}</i>
+                        <ul class="field-errors">
+                        {% for error in field.errors %}
+                            <li class="field-error"> {{ error }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endfor %}
             </div>
-        </div>
+        {% endif %}
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.is_request.id_for_label }}">
-                {{ form.is_request.label }}
-            </label>
-            <div class="col-sm-5">
-                {{ form.is_request }}
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.request_number.id_for_label }}">
-                {{ form.request_number.label }}
-            </label>
-            <div class="col-sm-5">
-                {{ form.request_number }}
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <div class="col-sm-2"> {{ form.is_contracted.label }}</div>
-            <div class="col-sm-5">
-                <div class="form-check">
-                    {{ form.is_contracted }}
+        {#   Заявка     #}
+        {% comment %}
+        <fieldset>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    {% include "./form_field.html" with field=form.request_number %}
+                </div>
+                <div class="form-group col-md-2">
+                    {% include "./form_field.html" with field=form.send_date %}
                 </div>
             </div>
-        </div>
+        </fieldset>
+        {% endcomment %}
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.contract_number.id_for_label }}">
-                {{ form.contract_number.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.contract_number }}
+        {#   Общие сведения  #}
+        <fieldset>
+            <legend class="fieldset-legend">Общие сведения</legend>
+            <div class="form-row">
+                <div class="form-group col-md-8">
+                    {% include "./form_field.html" with field=form.name %}
+                </div>
+                <div class="form-group col-md-4">
+                    {% include "./form_field.html" with field=form.type_fk %}
+                </div>
             </div>
-        </div>
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.contract_type.id_for_label }}">
-                {{ form.contract_type.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.contract_type }}
+            <div class="form-row">
+                <div class="form-group col-md-8">
+                    {% include "./form_field.html" with field=form.ipc %}
+                </div>
+                <div class="form-group col-md-4">
+                    {% include "./form_field.html" with field=form.ground %}
+                </div>
             </div>
-        </div>
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.contract_date.id_for_label }}">
-                {{ form.contract_date.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.contract_date }}
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    {% include "./form_field.html" with field=form.creators %}
+                </div>
+                <div class="form-group col-md-6">
+                    {% include "./form_field.html" with field=form.owners %}
+                </div>
             </div>
-        </div>
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.provider.id_for_label }}">
-                {{ form.provider.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.provider }}
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    {% include "./form_field.html" with field=form.text %}
+                </div>
+                <div class="form-group col-md-6">
+                    {% include "./form_field.html" with field=form.abridgement %}
+                </div>
             </div>
-        </div>
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.commissioner.id_for_label }}">
-                {{ form.commissioner.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.commissioner }}
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    {% include "./form_field.html" with field=form.countries %}
+                </div>
+                <div class="form-group col-md-8">
+                    {% include "./form_field.html" with field=form.note %}
+                </div>
             </div>
-        </div>
+        </fieldset>
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.text.id_for_label }}">
-                {{ form.text.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.text }}
+        {#   Охранный документ  #}
+        <fieldset>
+            <legend class="fieldset-legend">Охранный документ</legend>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    {% include "./form_field.html" with field=form.protection_title %}
+                </div>
+
+                <div class="form-group col-md-2">
+                    {% include "./form_field.html" with field=form.priority_date %}
+                </div>
+
+                <div class="form-group col-md-2">
+                    {% include "./form_field.html" with field=form.grant_date %}
+                </div>
+                <div class="form-group col-md-4">
+                    {% include "./form_field.html" with field=form.receipt_date %}
+                </div>
             </div>
-        </div>
+        </fieldset>
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.number_policy_measure.id_for_label }}">
-                {{ form.number_policy_measure.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.number_policy_measure }}
+        {#  Бюллетень  #}
+        <fieldset>
+            <legend class="fieldset-legend">Бюллетень</legend>
+            <div class="form-row">
+                <div class="form-group col-md-8">
+                    {% include "./form_field.html" with field=form.bulletin_number %}
+                </div>
+
+                <div class="form-group col-md-4">
+                    {% include "./form_field.html" with field=form.bulletin_date %}
+                </div>
             </div>
-        </div>
+        </fieldset>
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.note.id_for_label }}">
-                {{ form.note.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.note }}
+        {#  Статус  #}
+        <fieldset>
+            <legend class="fieldset-legend">Статус</legend>
+            <div class="form-group">
+                <div class="form-check">
+                    {%  include "./form_checkbox_field.html" with field=form.is_supported %}
+                    <label class="form-check-label" for="{{ form.is_supported.id_for_label }}">
+                        Укажите статус РИД (поддерживаем/не поддерживаем)</label>
+                </div>
             </div>
-        </div>
+        </fieldset>
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.protection_title.id_for_label }}">
-                {{ form.protection_title.label }}
-            </label>
-            <div class="col-sm-5">
-                {{ form.protection_title }}
+        {#  Договор      #}
+        <fieldset class="fieldset-contract">
+            <legend class="fieldset-legend">Договор</legend>
+
+            <div class="form-group">
+                <div class="form-check">
+                    {%  include "./form_checkbox_field.html" with field=form.is_contracted %}
+                    <label class="form-check-label" for="{{ form.is_contracted.id_for_label }}">
+                        Отметьте, если РИД выполнен по договору</label>
+                </div>
             </div>
-        </div>
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.abridgement.id_for_label }}">
-                {{ form.abridgement.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.abridgement }}
+            <div class="form-row">
+                <div class="form-group col-md-5">
+                    {% include "./form_field.html" with field=form.contract_number %}
+                </div>
+
+                <div class="form-group col-md-4">
+                    {% include "./form_field.html" with field=form.contract_type %}
+                </div>
+
+                <div class="form-group col-md-3">
+                    {% include "./form_field.html" with field=form.contract_date %}
+                </div>
             </div>
-        </div>
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.ground.id_for_label }}">
-                {{ form.ground.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.ground }}
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    {% include "./form_field.html" with field=form.provider %}
+                </div>
+                <div class="form-group col-md-6">
+                    {% include "./form_field.html" with field=form.commissioner %}
+                </div>
             </div>
-        </div>
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.type_fk.id_for_label }}">
-                {{ form.type_fk.label }}
-            </label>
-            <div class="col-sm-5">
-                {{ form.type_fk }}
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    {% include "./form_field.html" with field=form.number_policy_measure %}
+                </div>
             </div>
-        </div>
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.owners.id_for_label }}">
-                {{ form.owners.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.owners }}
-            </div>
-        </div>
+        </fieldset>
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.creators.id_for_label }}">
-                {{ form.creators.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.creators }}
-            </div>
-        </div>
+        {#  Оплаченные пошлины  #}
+        {% if payments %}
+            <fieldset>
+                <legend class="fieldset-legend">Оплаченные пошлины</legend>
+                    <ol class="payments">
+                    {% for payment in payments %}
+                        <li>
+                            <a href="{% url 'payment_update' pk=payment.id %}" target="_blank">{{ payment.name }}</a>
+                        </li>
+                    {% endfor %}
+                    </ol>
+            </fieldset>
+        {% endif %}
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.countries.id_for_label }}">
-                {{ form.countries.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.countries }}
-            </div>
+        {#  Кнопки  #}
+        <div class="form-group">
+            <button type="submit" class="btn btn-success">
+              <span class="glyphicon glyphicon-ok"></span> Сохранить
+            </button>
+            <a href="{% url 'intellectual_properties' %}" class="btn btn-secondary">Назад</a>
         </div>
-
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.ipc.id_for_label }}">
-                {{ form.ipc.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.ipc }}
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.priority_date.id_for_label }}">
-                {{ form.priority_date.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.priority_date }}
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.send_date.id_for_label }}">
-                {{ form.send_date.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.send_date }}
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.grant_date.id_for_label }}">
-                {{ form.grant_date.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.grant_date }}
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.receipt_date.id_for_label }}">
-                {{ form.receipt_date.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.receipt_date }}
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.bulletin_number.id_for_label }}">
-                {{ form.bulletin_number.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.bulletin_number }}
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.bulletin_date.id_for_label }}">
-                {{ form.bulletin_date.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.bulletin_date }}
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="{{ form.is_supported.id_for_label }}">
-                {{ form.is_supported.label }}
-            </label>
-            <div class="col-md-5">
-                {{ form.is_supported }}
-            </div>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Сохранить</button>
 
     </form>
 </div>
+{% endblock %}
+
+{% block custom-js %}
+<script>
+    $(document).ready( function() {
+{#        let ground = $('#id_ground');#}
+{#        ground.val({{ user.employeeinfo.ground.id }});#}
+
+        let isContractCheckbox = $('#id_is_contracted');
+        if ( isContractCheckbox.is(':checked') ) {
+            $('.fieldset-contract .form-row input').attr('disabled', false);
+            $('.fieldset-contract .form-row select').attr('disabled', false);
+        } else {
+            $('.fieldset-contract .form-row input').attr('disabled', true);
+            $('.fieldset-contract .form-row select').attr('disabled', true);
+        }
+
+        isContractCheckbox.change( function() {
+            if ( this.checked ) {
+                $('.fieldset-contract .form-row input').attr('disabled', false);
+                $('.fieldset-contract .form-row select').attr('disabled', false);
+            } else {
+                $('.fieldset-contract .form-row input').attr('disabled', true);
+                $('.fieldset-contract .form-row select').attr('disabled', true);
+            }
+        } );
+    } );
+</script>
 {% endblock %}

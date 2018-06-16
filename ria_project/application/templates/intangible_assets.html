@@ -23,6 +23,7 @@
 
 {% block content %}
 <h3 class="table-name">НМА</h3>
+{% include 'partials/messages.html' %}
 <div class="table-responsive">
     <table id="myTable" class="table table-striped table-sm" style="width:100%">
     </table>
@@ -42,6 +43,7 @@
             dom: 'lfrtip<"table-buttons"B>',
             select: 'single',
             language: languageSettings,
+            order: [ [0, 'desc'] ],
             buttons: [
                {
                     text: 'Добавить новую запись',
@@ -64,7 +66,7 @@
             ],
             columns: [
                 {data: 'id', title: '№', className: 'id'},
-                {data: 'intellectual_property.name', title: 'РИД'},
+                {data: 'intellectual_property.protection_title', title: 'Охранный документ'},
                 {data: 'date', title: 'Дата постановки на НМА',
                         render: function( data, type, row) {
                             return formatDate(data);
@@ -72,6 +74,7 @@
                 },
                 {data: 'number', title: 'Номер акта'},
                 {data: 'book_value', title: 'Балансовая стоимость'},
+                {data: 'ground', title: 'Площадка СФУ'},
                 {data: 'retirement_date', title: 'Дата списания',
                         render: function( data, type, row) {
                             return formatDate(data);

@@ -23,6 +23,7 @@
 
 {% block content %}
 <h3 class="table-name">Коммерциализация РИД</h3>
+{% include 'partials/messages.html' %}
 <div class="table-responsive">
     <table id="myTable" class="table table-striped table-sm" style="width:100%">
     </table>
@@ -42,6 +43,7 @@
             dom: 'lfrtip<"table-buttons"B>',
             select: 'single',
             language: languageSettings,
+            order: [ [0, 'desc'] ],
             buttons: [
                {
                     text: 'Добавить новую запись',
@@ -65,7 +67,7 @@
             ],
             columns: [
                 {data: 'id', title: '№', className: 'id'},
-                {data: 'intellectual_property', title: 'РИД'},
+                {data: 'intellectual_property.protection_title', title: 'Охранный документ'},
                 {data: 'reference_number', title: 'Номер дела'},
                 {data: 'send_date', title: 'Дата отправки на регистрацию',
                         render: function( data, type, row) {

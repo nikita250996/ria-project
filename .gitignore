@@ -12,3 +12,4 @@ ria_project/media/*
 ria_project/.DS_Store
 .idea/encodings.xml
 ria_project/application/.DS_Store
+ria_project/application/static/css/.DS_Store

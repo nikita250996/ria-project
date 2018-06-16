@@ -1,14 +1,13 @@
 # coding: utf-8
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.shortcuts import render
 from django.views.generic.edit import CreateView, UpdateView
+from django.contrib.messages.views import SuccessMessageMixin
 from rest_framework import viewsets
-
-from application.models import Message
 from . import serializers
 from . import models
 from . import forms
+from application.models import Message
 
 
 # VIEW SETS FOR REST API
@@ -64,6 +63,7 @@ class NotificationViewSet(viewsets.ModelViewSet):
         read_param = self.request.query_params.get('read', None)
         if read_param:
             queryset = queryset.filter(read=read_param)
+
         return queryset
 
 
@@ -83,84 +83,106 @@ class MessageViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-# FORMS
+# ФОРМЫ
 # добавить заявку
-class RequestCreate(CreateView):
+class RequestCreate(SuccessMessageMixin, CreateView):
     model = models.IntellectualProperty
     form_class = forms.RequestIntellectualPropertyForm
     success_url = reverse_lazy('index')
+    success_message = 'Заявка была добавлена.'
     template_name = 'application/request_form.html'
 
 
 # редактировать заявку
-class RequestUpdate(UpdateView):
+class RequestUpdate(SuccessMessageMixin, UpdateView):
     model = models.IntellectualProperty
     form_class = forms.RequestIntellectualPropertyForm
     success_url = reverse_lazy('index')
+    success_message = 'Заявка была изменена.'
     template_name = 'application/request_form.html'
 
 
 # редактировать РИД
-class IPUpdate(UpdateView):
+class IPUpdate(SuccessMessageMixin, UpdateView):
     model = models.IntellectualProperty
     form_class = forms.IntellectualPropertyForm
     success_url = reverse_lazy('intellectual_properties')
+    success_message = "РИД c названием '{name}' был изменен."
     template_name = 'application/intellectual_property_form.html'
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message.format(name=self.object.name)
+
+    def get(self, request, *args, **kwargs):
+        instance = models.IntellectualProperty.objects.get(id=kwargs['pk'])
+        payments = instance.duty_payments.all()
+        form = self.form_class(instance=instance)
+        return render(request, self.template_name, {'form': form, 'payments': payments})
 
 
 # редактировать РИД по договору
-class IPContractUpdate(UpdateView):
+class IPContractUpdate(SuccessMessageMixin, UpdateView):
     model = models.IntellectualProperty
     form_class = forms.ContractIntellectualPropertyForm
     success_url = reverse_lazy('contract_intellectual_properties')
+    success_message = "РИД c названием '{name}' был изменен."
     template_name = 'application/contract_intellectual_property_form.html'
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message.format(name=self.object.name)
 
 
 # добавить запись реестра НМА
-class IntAssetCreate(CreateView):
+class IntAssetCreate(SuccessMessageMixin, CreateView):
     model = models.IntangibleAssets
     form_class = forms.IntangibleAssetForm
     success_url = reverse_lazy('intangible_assets')
+    success_message = "В реестр НМА добавлена новая запись."
     template_name = 'application/intangible_assets_form.html'
 
 
 # редактировать запись реестра НМА
-class IntAssetUpdate(UpdateView):
+class IntAssetUpdate(SuccessMessageMixin, UpdateView):
     model = models.IntangibleAssets
     form_class = forms.IntangibleAssetForm
     success_url = reverse_lazy('intangible_assets')
+    success_message = "Запись в реестре обновлена."
     template_name = 'application/intangible_assets_form.html'
 
 
 # добавить оплату пошлины
-class PaymentCreate(CreateView):
+class PaymentCreate(SuccessMessageMixin, CreateView):
     model = models.Payment
     form_class = forms.PaymentForm
     success_url = reverse_lazy('payments')
+    success_message = "Добавлена новая запись."
     template_name = 'application/payment_form.html'
 
 
 # редактировать оплату пошлины
-class PaymentUpdate(UpdateView):
+class PaymentUpdate(SuccessMessageMixin, UpdateView):
     model = models.Payment
     form_class = forms.PaymentForm
     success_url = reverse_lazy('payments')
+    success_message = "Запись обновлена."
     template_name = 'application/payment_form.html'
 
 
 # добавить коммерциализацию РИд
-class IPCommercializationCreate(CreateView):
+class IPCommercializationCreate(SuccessMessageMixin, CreateView):
     model = models.IPCommercialization
     form_class = forms.IPCommercializationForm
     success_url = reverse_lazy('intellectual_properties_commercialization')
+    success_message = "Добавлена новая запись."
     template_name = 'application/ip_commercialization_form.html'
 
 
 # редактировать коммерциализацию РИД
-class IPCommercializationUpdate(UpdateView):
+class IPCommercializationUpdate(SuccessMessageMixin, UpdateView):
     model = models.IPCommercialization
     form_class = forms.IPCommercializationForm
     success_url = reverse_lazy('intellectual_properties_commercialization')
+    success_message = "Запись обновлена."
     template_name = 'application/ip_commercialization_form.html'
 
 
@@ -169,10 +191,6 @@ class MessageCreate(CreateView):
     form_class = forms.MessageForm
     success_url = reverse_lazy('sent_messages')
     template_name = 'application/write_message_form.html'
-
-    #def post(self, request, *args, **kwargs):
-    #    my_some = "HARDHAT"
-    #    return TemplateResponse(request, self.template_name, {"my_some": my_some})
 
     def get_form_kwargs(self):
         kwargs = super(MessageCreate, self).get_form_kwargs()
@@ -193,13 +211,6 @@ class MessageRead(CreateView):
         form = self.form_class(message=message)
         return render(request, self.template_name, {'form': form, 'message': message})
 
-    # def get_form_kwargs(self):
-    #     kwargs = super(MessageRead, self).get_form_kwargs()
-    #     kwargs.update({
-    #         'message': self.message,
-    #     })
-    #     return kwargs
-
 
 class MessageOpen(UpdateView):
     model = models.Message
@@ -213,9 +224,6 @@ class MessageOpen(UpdateView):
             'request': self.request
         })
         return kwargs
-
-    #def get_read(self, queryset=None):
-    #   return self.request.read
 
     def form_valid(self, form):
         clean = form.cleaned_data

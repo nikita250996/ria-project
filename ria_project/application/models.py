@@ -10,6 +10,7 @@ class User(AbstractUser):
     Поля:
         patronymic Отчество
     """
+
     patronymic = models.CharField(max_length=100, blank=True, null=True, verbose_name='Отчество',
                                   help_text='Отчество сотрудника УИС. Например, Рамильевич')
 
@@ -26,6 +27,7 @@ class EmployeeInfo(models.Model):
         home_phone Номер домашнего телефона
         user Имя пользователя
     """
+
     ground = models.ForeignKey(to='Ground', on_delete=models.PROTECT, null=True, verbose_name='Код площадки СФУ',
                                help_text='Код площадки СФУ, на которой трудится сотрудник УИС')
     jobrole = models.CharField(max_length=100, null=True, verbose_name='Должность',
@@ -38,7 +40,8 @@ class EmployeeInfo(models.Model):
                                     help_text='Номер мобильного телефона сотрудника УИС. Например, +78005553535')
     home_phone = models.CharField(max_length=20, null=True, verbose_name='Номер домашнего телефона',
                                   help_text='Номер домашнего телефона сотрудника УИС')
-    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Имя пользователя',
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True,
+                                verbose_name='Имя пользователя',
                                 help_text='Имя пользователя, к которому привязан сотрудник УИС')
 
     class Meta:
@@ -108,7 +111,7 @@ class Ground(models.Model):
         verbose_name_plural = 'Площадки СФУ'
 
     def __str__(self):
-        return 'Площадка СФУ №' + str(self.ground_code)
+        return 'Площадка №' + str(self.ground_code)
 
 
 class IntellectualPropertyType(models.Model):
@@ -285,13 +288,13 @@ class IntellectualProperty(models.Model):
     # Бюллетень
     bulletin_number = models.IntegerField(verbose_name='Номер бюллетеня', null=True, blank=True,
                                           validators=[MinValueValidator(1), MaxValueValidator(100)],
-                                          help_text='Номер официального бюллетеня «Изобретения. Полезные модели»')
+                                          help_text='Номер официального бюллетеня')
     bulletin_date = models.DateField(verbose_name='Дата публикации бюллетеня',
                                      help_text='Дата публикации официального бюллетеня',
                                      null=True, blank=True)
     # Оплата пошлин
     duty_payments = models.ManyToManyField(Duty, through='Payment', verbose_name='Оплаты пошлин',
-                                           help_text='Пошлины к оплате за РИД.')
+                                           help_text='Пошлины к оплате за РИД.', blank=True)
     # Статус РИД
     is_supported = models.BooleanField(default=True, verbose_name='Статус', help_text='Поддерживается ли?')
 
@@ -302,7 +305,7 @@ class IntellectualProperty(models.Model):
     def __str__(self):
         if self.is_request:
             return 'Заявка на РИД с № (или id)' + str(self.request_number or self.id)
-        return self.name
+        return self.protection_title + ' - ' + self.name
 
 
 class Payment(models.Model):
@@ -332,8 +335,8 @@ class Payment(models.Model):
                                    help_text='Дата внесения оплаты пошлины')
     paid_amount = models.FloatField(verbose_name='Сумма оплаты',
                                     help_text='Сумма оплаты пошлины')
-    note = models.TextField(verbose_name='Примечание', help_text='Примечание')
-    check_scan = models.ImageField(verbose_name='Чек', help_text='Скан чека')
+    note = models.TextField(verbose_name='Примечание', help_text='Примечание', null=True, blank=True)
+    check_scan = models.ImageField(verbose_name='Чек', help_text='Скан чека', null=True, blank=True)
 
     class Meta:
         verbose_name = 'оплата пошлины'
@@ -380,8 +383,8 @@ class IPCommercialization(models.Model):
                                                   help_text='Акт сдачи-приёмки')
     contract_duration = models.CharField(max_length=100, verbose_name='Срок действия договора',
                                          help_text='Срок действия договора')
-    agreement_terms = models.TextField(verbose_name='Условия договора', help_text='Условия договора')
-    note = models.TextField(verbose_name='Примечание', help_text='Примечание')
+    agreement_terms = models.TextField(verbose_name='Условия договора', help_text='Условия договора', null=True, blank=True)
+    note = models.TextField(verbose_name='Примечание', help_text='Примечание', null=True, blank=True)
     licenser = models.ManyToManyField(Person, verbose_name='Лицензиары', help_text='Лицензиары.')
 
     class Meta:
@@ -411,7 +414,7 @@ class IntangibleAssets(models.Model):
                               help_text='Номер акта')
     book_value = models.FloatField(verbose_name='Балансовая стоимость',
                                    help_text='Балансовая стоимость')
-    retirement_date = models.DateField(verbose_name='Дата списания', help_text='Дата списания')
+    retirement_date = models.DateField(verbose_name='Дата списания', help_text='Дата списания', null=True, blank=True)
 
     class Meta:
         verbose_name = 'запись реестра НМА'
@@ -457,7 +460,6 @@ class PrivatePerson(Person):
         work_place Подразделения СФУ - место работы
         passport_series Серия паспорта
         passport_number Номер паспорта
-        user Имя пользователя
     """
 
     surname = models.CharField(max_length=100, blank=False, verbose_name='Фамилия',
@@ -473,9 +475,6 @@ class PrivatePerson(Person):
                                        help_text='Серия паспорта автора', validators=[MinLengthValidator(4)])
     passport_number = models.CharField(max_length=15, verbose_name='Номер паспорта',
                                        help_text='Номер паспорта автора', validators=[MinLengthValidator(6)])
-    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True,
-                                verbose_name='Имя пользователя',
-                                help_text='Имя пользователя, к которому привязан автор')
 
     class Meta:
         verbose_name = 'автор'
@@ -546,9 +545,9 @@ class Message(models.Model):
         send_at Когда было отправлено
         read Прочитано ли
     """
-    sender = models.ForeignKey(to='application.Person', on_delete=models.PROTECT, related_name='sender',
+    sender = models.ForeignKey(to='application.User', on_delete=models.PROTECT, related_name='sender',
                                verbose_name='Отправитель', help_text='Отправитель сообщения', null=False, blank=False)
-    receiver = models.ForeignKey(to='application.Person', on_delete=models.PROTECT, related_name='receiver',
+    receiver = models.ForeignKey(to='application.User', on_delete=models.PROTECT, related_name='receiver',
                                  verbose_name='Получатель', help_text='Получатель сообщения', null=False, blank=False)
     text = models.TextField(max_length=1000, blank=False, verbose_name='Текст', help_text='Текст сообщения')
     send_at = models.DateField(auto_now_add=True, blank=True, verbose_name='Когда было отправлено',
