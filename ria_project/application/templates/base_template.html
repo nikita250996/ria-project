@@ -49,21 +49,22 @@
 		<h1 class="project-name col-sm-3">
             <a href="{% url 'index' %}" class="project-link">РИД СФУ</a>
         </h1>
-        <div class="col-sm-2 font-weight-bold" >
-            <a class="text-white" href="{% url 'received_messages' %}">Входящие сообщения</a>
+        <div class="col-sm-4 my-auto row">
+            <div class="received-messages col-sm-6" >
+                <a class="text-white" href="{% url 'received_messages' %}">Входящие сообщения</a>
+            </div>
+            <div class="sent-messages col-sm-6">
+                <a class="text-white" href="{% url 'sent_messages' %}">Исходящие сообщения</a>
+            </div>
         </div>
-        <div class="col-sm-2 font-weight-bold">
-            <a class="text-white" href="{% url 'sent_messages' %}">Исходящие сообщения</a>
-        </div>
-        <div class="col-sm-1"></div>
 		<!-- Сотрудник и номер площадки -->
-		<section class="col-sm-4 my-auto staff-info">
+		<section class="col-sm-5 my-auto staff-info">
 			<!-- Сотрудник -->
             <div class="user">
                 Здравствуйте, <span class="username" id="username">{{ user.get_full_name }}</span>
             </div>
+            {% if user.is_superuser %}
             <div class="notification-holder" id="notification-app" v-cloak>
-                {% if user.is_superuser %}
                 <i class="fa fa-bell" id="notification-icon" v-on:click="displayNotifications" v-if="notifications.length"></i>
                 <i class="far fa-bell" id="notification-icon" v-else></i>
 
@@ -75,8 +76,8 @@
                             <i class="far fa-times-circle"></i></a>
                     </div>
                 </div>
-                {% endif %}
             </div>
+            {% endif %}
 			<!-- Номер площадки -->
             {% if not user.is_superuser %}
             <div class="ground">
