@@ -32,12 +32,11 @@ class PaymentAdmin(admin.ModelAdmin):
                     'paid_amount', 'note', 'check_scan_image')
 
     def check_scan_image(self, obj):
-        return mark_safe('<a href={url} target="_blank"><img src="{url}" width="{width}" height={height}"></a>'.format(
-            url=obj.check_scan.url,
-            width=64,
-            height=64,
-        )
-    )
+        if obj.check_scan and hasattr(obj, 'check_scan'):
+            return mark_safe('<a href={url} target="_blank"><img src="{url}" width="{width}" height={height}"></a>'
+                .format(url=obj.check_scan.url, width=64, height=64,)
+            )
+        return "Нет чека"
     check_scan_image.short_description = 'Скан чека'
 
 
