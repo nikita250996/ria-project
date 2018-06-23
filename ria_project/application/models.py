@@ -303,8 +303,9 @@ class IntellectualProperty(models.Model):
 
     def __str__(self):
         if self.is_request:
-            return 'Заявка на РИД с № (или id)' + str(self.request_number or self.id)
-        return self.protection_title + ' - ' + self.name
+            return 'Заявка на РИД с № (или id)' + str(self.request_number or self.pk)
+        return "{0} - {1}".format(self.name, self.protection_title or 'нет охр. док')
+
 
 
 class Payment(models.Model):
