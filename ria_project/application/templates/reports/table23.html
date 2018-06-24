@@ -1,0 +1,42 @@
+{% extends "base_template.html" %}
+
+{% block title %}<title>Печать таблицы "Основные показатели результативности ..."</title>{% endblock %}
+
+{% block nav %}
+<nav class="col-md-2 d-none d-md-block sidebar menu">
+    <div class="sidebar-sticky">
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link"        href="{% url 'index' %}">Заявки на РИД</a></li>
+            <li class="nav-item"><a class="nav-link"        href="{% url 'intellectual_properties' %}">РИД</a></li>
+            <li class="nav-item"><a class="nav-link"        href="{% url 'contract_intellectual_properties' %}">РИД по договорам</a></li>
+            <li class="nav-item"><a class="nav-link"        href="{% url 'intangible_assets' %}">НМА</a></li>
+            <li class="nav-item"><a class="nav-link"        href="{% url 'payments' %}">Оплаты пошлин</a></li>
+            <li class="nav-item"><a class="nav-link"        href="{% url 'intellectual_properties_commercialization' %}">Коммерциализация РИД</a></li>
+            <li class="nav-item"><a class="nav-link active" href="{% url 'statistics' %}">Отчеты/Реестры</a></li>
+            {% if user.is_superuser %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">Панель администратора</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<h3 class='table-name'>Печать таблицы "Основные показатели результативности ..."</h3>
+<div class="form-container">
+  <form id="actual_patents_form" method="post" action='показатели-1/печать'>
+    {% csrf_token %}
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ form.year.name.id_for_label }}">
+            {{ form.year.label }}
+        </label>
+        <div class="col-sm-5">
+            {{ form.year }}
+        </div>
+    </div>
+
+    <input class="btn btn-primary" type="submit" name="docx" value="Сформировать документ .docx"/>
+  </form>
+</div>
+
+{% endblock %}

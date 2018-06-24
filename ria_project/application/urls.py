@@ -64,3 +64,23 @@ urlpatterns += [
     path('коммерциализация-рид/<int:pk>/редактировать',
          views.IPCommercializationUpdate.as_view(), name='intellectual_properties_commercialization_update'),
 ]
+
+urlpatterns += [
+    path('отчеты/количество-поданных-заявок', views.requests_statistics, name='requests'),
+    path('отчеты/количество-поданных-заявок/печать', views.print_requests_statistics, name='req_print'),
+    path('отчеты/служебная-на-оплату-пошлины', views.payment_req, name='payment_req'),
+    path('отчеты/служебная-на-оплату-пошлины/печать', views.print_payment_req, name='print_payment_req'),
+    path('отчеты/список-действующих-патентов', views.actual_patents, name='actual_patents'),
+    path('отчеты/список-действующих-патентов/печать', views.print_actual_patents, name='print_actual_patents'),
+    path('отчеты/список-патентов', views.patents_statistics, name='requests'),
+    path('отчеты/список-патентов/печать', views.print_patents_statistics, name='req_print'),
+    path('отчеты/список-патентов-по-оплате-пошлин-на-поддержание', views.maintenance_of_patents, name='requests'),
+    path('отчеты/список-патентов-по-оплате-пошлин-на-поддержание/печать', views.print_maintenance_of_patents, name='req_print'),
+    path('отчеты/показатели-1', views.table23, name='requests'),
+    path('отчеты/показатели-1/печать', views.print_table23, name='req_print'),
+    path('отчеты/оплаченные-пошлины', views.payments, name='requests'),
+    path('отчеты/оплаченные-пошлины/печать', views.print_payments, name='req_print'),
+
+
+    # path('документация/документ1', views.doc1, name='doc1')
+]

@@ -187,6 +187,11 @@ class Duty(models.Model):
                                     help_text='Номер перечня')
     name = models.CharField(max_length=250, null=True, verbose_name='Наименование',
                             help_text='Наименование пошлины')
+    date = models.IntegerField(
+        null=True,
+        verbose_name='Срок, в который уплачивается пошлина (количество лет)',
+        help_text='Срок, в который уплачивается пошлина (количество лет)',
+        blank=True)
     size = models.FloatField(null=True, verbose_name='Размер', help_text='Размер пошлины')
     intellectual_property_type = models.ManyToManyField(IntellectualPropertyType, verbose_name='Типы РИД',
                                                         help_text='Типы РИД, к которым относится пошлина.')
@@ -197,6 +202,31 @@ class Duty(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ClassificationGroup(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Нименование')
+    code = models.PositiveIntegerField(verbose_name='Код')
+
+    class Meta:
+        verbose_name = 'группа классификаций'
+        verbose_name_plural = 'Группа классификаций'
+
+    def __str__(self):
+        return '{0} {1}'.format(self.code, self.name)
+
+
+class Classification(models.Model):
+    group = models.ForeignKey(to='ClassificationGroup', on_delete=models.PROTECT)
+    name = models.CharField(max_length=100, verbose_name='Нименование')
+    code = models.PositiveIntegerField(verbose_name='Код')
+
+    class Meta:
+        verbose_name = 'классификация'
+        verbose_name_plural = 'Классификации'
+
+    def __str__(self):
+        return '{0}.{1} - {2} ({3})'.format(self.group.code, self.code, self.name, self.group.name)
 
 
 class IntellectualProperty(models.Model):
@@ -234,6 +264,7 @@ class IntellectualProperty(models.Model):
     """
 
     # Заявка
+    class_fication = models.ForeignKey(to='Classification', on_delete=models.PROTECT, null=True, blank=True)
     is_request = models.BooleanField(default=True, verbose_name='Заявка', help_text='Заявка ли?')
     request_number = models.IntegerField(verbose_name='Номер', null=True, blank=True,
                                          help_text='Номер заявки', validators=[MinValueValidator(0)])
@@ -241,6 +272,7 @@ class IntellectualProperty(models.Model):
 
     # Общие сведения
     name = models.CharField(max_length=200, blank=False, verbose_name='Название', help_text='Название РИД')
+
     type_fk = models.ForeignKey(to='IntellectualPropertyType', on_delete=models.PROTECT, verbose_name='Тип',
                                 help_text='Тип РИД')
     ipc = models.CharField(max_length=1000, null=True, blank=True, default='', verbose_name='МПК',
@@ -306,7 +338,6 @@ class IntellectualProperty(models.Model):
         if self.is_request:
             return 'Заявка на РИД с № (или id)' + str(self.request_number or self.pk)
         return "{0} - {1}".format(self.name, self.protection_title or 'нет охр. док')
-
 
 
 class Payment(models.Model):
@@ -534,3 +565,30 @@ class Notification(models.Model):
     type = models.CharField(verbose_name='Тип события', max_length=100, choices=NOTIFICATION_TYPE_CHOICES)
     description = models.TextField(verbose_name='Описание события')
     read = models.BooleanField(verbose_name='Просмотрено ли событие', default=False)
+
+
+class PaymentInfo(models.Model):
+    t_1 = models.CharField(verbose_name='Кто', max_length=100)
+    t_2 = models.CharField(verbose_name='Кому', max_length=100)
+
+    f_1 = models.CharField(verbose_name='Получатель', max_length=100)
+    f_2 = models.CharField(verbose_name='Расчетный счет', max_length=100)
+    f_3 = models.CharField(verbose_name='Банк получателя', max_length=100)
+    f_4 = models.CharField(verbose_name='Корр. счет', max_length=100)
+    f_5 = models.CharField(verbose_name='БИК', max_length=100)
+    f_6 = models.CharField(verbose_name='ИНН', max_length=100)
+    f_7 = models.CharField(verbose_name='КПП', max_length=100)
+    f_8 = models.CharField(verbose_name='ОКАТО', max_length=100)
+    f_9 = models.CharField(verbose_name='ОКПО', max_length=100)
+    f_10 = models.CharField(verbose_name='ОГРН', max_length=100)
+
+    i = models.CharField(verbose_name='В платежном поручении указать ...', max_length=500)
+
+    h = models.CharField(verbose_name='Начальник отдела', max_length=100, null=True)
+
+    class Meta:
+        verbose_name = 'данные для служебной записки'
+        verbose_name_plural = 'Данные для служебной записки'
+
+    def __str__(self):
+        return 'Данные для служебной записки №{0}'.format(self.id)
