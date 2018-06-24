@@ -1,7 +1,15 @@
 from django import forms
-from application.models import IntellectualProperty, Payment, IntangibleAssets, IPCommercialization, Message, User
+from application.models import ContractType, Duty, \
+    IntellectualPropertyType, IntellectualProperty, Payment, \
+    IntangibleAssets, IPCommercialization, Message, User
 from django.db.models import Q
 from django.contrib.auth import get_user
+
+# MaintenanceOfPatents - поле сортировки документа
+SORTING_MOP_CHOICES = (
+    ('request_number', "номер патента"),
+    ('priority_date', "дата приоритета")
+)
 
 
 class RequestIntellectualPropertyForm(forms.ModelForm):
@@ -62,7 +70,6 @@ class PaymentForm(forms.ModelForm):
         super(PaymentForm, self).__init__(*args, **kwargs)
 
         self.fields['intellectual_property'].queryset = IntellectualProperty.objects.filter(is_request=False)
-        # self.fields['intellectual_property'].queryset = IntellectualProperty.objects.all
 
     class Meta:
         model = Payment
@@ -107,6 +114,57 @@ class IPCommercializationForm(forms.ModelForm):
         }
 
         
+class ReportIPForm(forms.Form):
+    name = forms.CharField(label='IP name', max_length=100)
+
+    class Meta:
+        model = IntellectualProperty
+
+
+class RequestPayment(forms.Form):
+    protection_title_choices = [
+        (ip.pk, ip.protection_title) for ip in IntellectualProperty.objects.filter(is_request=False).all()
+    ]
+
+    doc_number = forms.ChoiceField(label='Номер охранного документа', choices=protection_title_choices)
+    # doc_number = fforms.CharField(label='Номер охранного документа', choices=protection_title_choices, max_length=100)
+
+
+class ActualPatents(forms.Form):
+    ip_type = forms.ModelChoiceField(label='Тип РИД', queryset=IntellectualPropertyType.objects.all())
+
+
+class RequestsStatistics(forms.Form):
+    year_choices = [('2017', '2017'), ('2018', '2018')]
+    # for ip in IntellectualProperty.objects.all():
+    #     if ip.priority_date is not None:
+    #         year = str(ip.priority_date).split('.')[2]
+    #         if year not in year_choices:
+    #             year_choices.append((year, year))
+
+    # doc_number = forms.ChoiceField(label='Номер охранного документа', choices=protection_title_choices)
+    ip_type = forms.ModelChoiceField(label='Тип РИД', queryset=IntellectualPropertyType.objects.all())
+    year = forms.ChoiceField(label='Год', choices=year_choices)
+
+
+class PatentsStatistics(forms.Form):
+    contract_type = forms.ModelChoiceField(label='Тип договора', queryset=ContractType.objects.all())
+    year = forms.CharField(label='Год', max_length=4)
+
+
+class MaintenanceOfPatents(forms.Form):
+    sorting_field = forms.ChoiceField(
+        choices=SORTING_MOP_CHOICES, label='Сортировка по полю: ', initial=0,
+        widget=forms.Select(), required=True)
+
+class Payments(forms.Form):
+    year = forms.CharField(label='Год: ', max_length=4)
+    is_supported = forms.BooleanField(label='Только поддерживаемые: ', required=False)
+
+class Table23(forms.Form):
+    year = forms.CharField(label='Год: ', max_length=4, initial='2018')
+
+
 class MessageAnswerForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
@@ -145,4 +203,3 @@ class MessageForm(forms.ModelForm):
             'sender': forms.HiddenInput(),
             'read': forms.HiddenInput(),
         }
-   

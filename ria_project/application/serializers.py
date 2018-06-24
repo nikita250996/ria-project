@@ -21,6 +21,7 @@ class IntellectualPropertySerializer(serializers.ModelSerializer):
     contract_type = serializers.StringRelatedField()
     type_fk = serializers.StringRelatedField()
     ground = serializers.StringRelatedField()
+    class_fication = serializers.StringRelatedField()
 
     class Meta:
         model = IntellectualProperty

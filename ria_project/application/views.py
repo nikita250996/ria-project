@@ -1,13 +1,15 @@
 # coding: utf-8
+import os
 from django.urls import reverse_lazy
 from django.shortcuts import render
+from django.http import HttpResponse
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
 from rest_framework import viewsets
 from . import serializers
 from . import models
 from . import forms
-from application.models import Message
+from application.documentation import wb_proc
 
 
 # VIEW SETS FOR REST API
@@ -186,6 +188,168 @@ class IPCommercializationUpdate(SuccessMessageMixin, UpdateView):
     template_name = 'application/ip_commercialization_form.html'
 
 
+# ------------------------------------------------------------------------------
+# ПЕЧАТЬ ДОКУМЕНТОВ
+# ------------------------------------------------------------------------------
+
+# ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ - вложение
+def attachment(document, name, format_as_string):
+    response = HttpResponse(
+        document, content_type='application/{0}'.format(format_as_string))
+    response['Content-Length'] = os.path.getsize(wb_proc.FILE)
+    os.remove(wb_proc.FILE)
+    cntnt = 'attachment; filename={0}_{1}.docx'.format(name, wb_proc.today())
+    response['Content-Disposition'] = cntnt
+
+    return response
+
+# СЛУЖЕБНАЯ НА ОПЛАТУ ПОШЛИН - форма
+def payment_req(request):
+    form = forms.RequestPayment(request.POST)
+    if form.is_valid():
+        doc_number = form.cleaned_data['doc_number']
+
+    return render(request, 'reports/payment_req.html', {'form': form})
+
+# СЛУЖЕБНАЯ НА ОПЛАТУ ПОШЛИН - печать
+def print_payment_req(request):
+    doc_number = request.POST['doc_number']
+
+    document = wb_proc.payment_request_docx(doc_number)
+
+    response = attachment(document, 'Sluzhebnaya_na_oplatu_poshlin', 'docx')
+    return response
+
+# ИНФОРМАЦИЯ О ЗАЯВКАХ - форма
+def requests_statistics(request):
+    form = forms.RequestsStatistics(request.POST)
+    if form.is_valid():
+        year = form.cleaned_data['year']
+        ip_type = form.cleaned_data['ip_type']
+
+    return render(request, 'reports/requests_statistics.html', {'form': form})
+
+# ИНФОРМАЦИЯ О ЗАЯВКАХ - печать
+def print_requests_statistics(request):
+    ip_type = request.POST['ip_type']
+    year = request.POST['year']
+
+    if 'docx' in request.POST:
+        document = wb_proc.requests_statistics_docx(ip_type, year)
+        response = attachment(document, 'Kolichestvo_zayavok', 'docx')
+    elif 'xlsx' in request.POST:
+        document = wb_proc.requests_statistics_xlsx(ip_type, year)
+        response = attachment(document, 'Kolichestvo_zayavok', 'xlsx')
+    return response
+
+# ИНФОРМАЦИЯ О ПАТЕНТАХ - форма
+def patents_statistics(request):
+    form = forms.PatentsStatistics(request.POST)
+    if form.is_valid():
+        year = form.cleaned_data['year']
+        contract_type = form.cleaned_data['contract_type']
+
+    return render(request, 'reports/patents_statistics.html', {'form': form})
+
+# ИНФОРМАЦИЯ О ПАТЕНТАХ - печать
+def print_patents_statistics(request):
+    year = request.POST['year']
+    contract_type = request.POST['contract_type']
+
+    if 'docx' in request.POST:
+        document = wb_proc.patents_statistics_docx(contract_type, year)
+        response = attachment(document, 'Spisok_patentov', 'docx')
+    elif 'xlsx' in request.POST:
+        document = wb_proc.patents_statistics_xlsx(ip_type, year)
+        response = attachment(document, 'Spisok_patentov', 'xlsx')
+
+    return response
+
+# СПИСОК ПАТЕНТОВ ПО ОПЛАТЕ ПОШЛИН НА ПОДДЕРЖАНИЕ - форма
+def maintenance_of_patents(request):
+    form = forms.MaintenanceOfPatents(request.POST)
+    if form.is_valid():
+        sorting_field = form.cleaned_data['sorting_field']
+
+    return render(request, 'reports/maintenance_of_patents.html', {'form': form})
+
+# СПИСОК ПАТЕНТОВ ПО ОПЛАТЕ ПОШЛИН НА ПОДДЕРЖАНИЕ - печать
+def print_maintenance_of_patents(request):
+    filename = 'Spisok_patentov_na_podderzhanie'
+    sorting_field = request.POST['sorting_field']
+
+    if 'docx' in request.POST:
+        document = wb_proc.maintenance_of_patents_docx(sorting_field)
+        response = attachment(document, filename, 'docx')
+    elif 'xlsx' in request.POST:
+        document = wb_proc.maintenance_of_patents_xlsx(sorting_field)
+        response = attachment(document, filename, 'xlsx')
+
+    return response
+
+# СПИСОК ДЕЙСТВУЮЩИХ ПАТЕНТОВ - форма
+def actual_patents(request):
+    form = forms.ActualPatents(request.POST)
+    if form.is_valid():
+        doc_number = form.cleaned_data['doc_number']
+        duty = form.cleaned_data['duty']
+
+    return render(request, 'reports/actual_patents.html', {'form': form})
+
+# СПИСОК ДЕЙСТВУЮЩИХ ПАТЕНТОВ - печать
+def print_actual_patents(request):
+    ip_type = request.POST['ip_type']
+
+    document = wb_proc.actual_patents(ip_type)
+
+    if 'docx' in request.POST:
+        document = wb_proc.patents_statistics_docx(contract_type, year)
+        response = attachment(document, 'Spisok_deystvuyuschih_patentov', 'docx')
+    elif 'xlsx' in request.POST:
+        document = wb_proc.patents_statistics_xlsx(ip_type, year)
+        response = attachment(document, 'Spisok_deystvuyuschih_patentov', 'xlsx')
+
+    return response
+
+# ИНФОРМАЦИЯ ОБ ОПЛАЧЕННЫХ ПОШЛИНАХ - форма
+def payments(request):
+    form = forms.Payments(request.POST)
+    if form.is_valid():
+        year = form.cleaned_data['year']
+        is_supported = form.cleaned_data['is_supported']
+
+    return render(request, 'reports/payments.html', {'form': form})
+
+# НФОРМАЦИЯ ОБ ОПЛАЧЕННЫХ ПОШЛИНАХ - печать
+def print_payments(request):
+    year = request.POST['year']
+    is_supported = request.POST.get('is_supported', False)
+
+    if 'docx' in request.POST:
+        document = wb_proc.payments_docx(year, is_supported)
+        response = attachment(document, 'Oplachennye_poshliny', 'docx')
+
+    return response
+
+# СПИСОК ДЕЙСТВУЮЩИХ ПАТЕНТОВ - форма
+def table23(request):
+    form = forms.Table23(request.POST)
+    if form.is_valid():
+        year = form.cleaned_data['year']
+
+    return render(request, 'reports/table23.html', {'form': form})
+
+# СПИСОК ДЕЙСТВУЮЩИХ ПАТЕНТОВ - печать
+def print_table23(request):
+    year = request.POST['year']
+
+    if 'docx' in request.POST:
+        document = wb_proc.table_23_docx(year)
+        response = attachment(document, 'Table_23', 'docx')
+
+    return response
+
+  
 class MessageCreate(CreateView):
     model = models.Message
     form_class = forms.MessageForm
@@ -207,7 +371,7 @@ class MessageRead(CreateView):
     template_name = 'application/answer_message_form.html'
 
     def get(self, request, *args, **kwargs):
-        message = Message.objects.get(id=self.kwargs['pk'])
+        message = models.Message.objects.get(id=self.kwargs['pk'])
         form = self.form_class(message=message)
         return render(request, self.template_name, {'form': form, 'message': message})
 

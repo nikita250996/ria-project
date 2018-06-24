@@ -15,7 +15,7 @@ def create_profile(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=IntellectualProperty)
 def on_create_intellectual_property(sender, instance, created, **kwargs):
-    if created:
+    if created and instance.is_request:
         notification = Notification(
             time=now(), type=NOTIFICATION_TYPE_CHOICES[0],
             description="На площадке №{0} добавлена ""<a href='{1}'>новая заявка</a>".format(

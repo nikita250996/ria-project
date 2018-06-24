@@ -32,12 +32,11 @@ class PaymentAdmin(admin.ModelAdmin):
                     'paid_amount', 'note', 'check_scan_image')
 
     def check_scan_image(self, obj):
-        return mark_safe('<a href={url} target="_blank"><img src="{url}" width="{width}" height={height}"></a>'.format(
-            url=obj.check_scan.url,
-            width=64,
-            height=64,
-        )
-    )
+        if obj.check_scan and hasattr(obj, 'check_scan'):
+            return mark_safe('<a href={url} target="_blank"><img src="{url}" width="{width}" height={height}"></a>'
+                .format(url=obj.check_scan.url, width=64, height=64,)
+            )
+        return "Нет чека"
     check_scan_image.short_description = 'Скан чека'
 
 
@@ -70,7 +69,7 @@ class PaymentInline(admin.TabularInline):
 class IntellectualPropertyAdmin(admin.ModelAdmin):
     inlines = (PaymentInline,)
     list_display = (
-        'name', 'is_request', 'request_number', 'is_contracted', 'contract_number', 'contract_type',
+        'name', 'class_fication', 'is_request', 'request_number', 'is_contracted', 'contract_number', 'contract_type',
         'contract_date', 'provider', 'commissioner', 'text', 'number_policy_measure', 'note', 'protection_title',
         'abridgement', 'ground', 'type_fk', 'get_owners', 'get_creators', 'get_countries', 'ipc',
         'priority_date', 'send_date', 'grant_date', 'receipt_date', 'bulletin_number', 'bulletin_date',
@@ -161,5 +160,8 @@ admin.site.register(IntellectualPropertyType, IntellectualPropertyTypeAdmin)
 admin.site.register(ContractType, ContractTypeAdmin)
 admin.site.register(CommercializationType, CommercializationTypeAdmin)
 admin.site.register(LegalPerson, LegalPersonAdmin)
+admin.site.register(PaymentInfo)
+admin.site.register(ClassificationGroup)
+admin.site.register(Classification)
 admin.site.register(Message, MessageAdmin)
 admin.site.register(Institute, InstituteAdmin)
