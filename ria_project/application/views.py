@@ -187,6 +187,7 @@ class IPCommercializationUpdate(SuccessMessageMixin, UpdateView):
     success_message = "Запись обновлена."
     template_name = 'application/ip_commercialization_form.html'
 
+
 # ------------------------------------------------------------------------------
 # ПЕЧАТЬ ДОКУМЕНТОВ
 # ------------------------------------------------------------------------------
@@ -348,7 +349,7 @@ def print_table23(request):
 
     return response
 
-
+  
 class MessageCreate(CreateView):
     model = models.Message
     form_class = forms.MessageForm

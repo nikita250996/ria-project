@@ -160,10 +160,8 @@ admin.site.register(IntellectualPropertyType, IntellectualPropertyTypeAdmin)
 admin.site.register(ContractType, ContractTypeAdmin)
 admin.site.register(CommercializationType, CommercializationTypeAdmin)
 admin.site.register(LegalPerson, LegalPersonAdmin)
-
 admin.site.register(PaymentInfo)
 admin.site.register(ClassificationGroup)
 admin.site.register(Classification)
-
 admin.site.register(Message, MessageAdmin)
 admin.site.register(Institute, InstituteAdmin)

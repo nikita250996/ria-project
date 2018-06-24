@@ -70,7 +70,6 @@ class PaymentForm(forms.ModelForm):
         super(PaymentForm, self).__init__(*args, **kwargs)
 
         self.fields['intellectual_property'].queryset = IntellectualProperty.objects.filter(is_request=False)
-        # self.fields['intellectual_property'].queryset = IntellectualProperty.objects.all
 
     class Meta:
         model = Payment
@@ -114,7 +113,7 @@ class IPCommercializationForm(forms.ModelForm):
             'send_date': forms.DateInput(attrs={'type': 'date'}),
         }
 
-
+        
 class ReportIPForm(forms.Form):
     name = forms.CharField(label='IP name', max_length=100)
 
@@ -146,7 +145,6 @@ class RequestsStatistics(forms.Form):
     # doc_number = forms.ChoiceField(label='Номер охранного документа', choices=protection_title_choices)
     ip_type = forms.ModelChoiceField(label='Тип РИД', queryset=IntellectualPropertyType.objects.all())
     year = forms.ChoiceField(label='Год', choices=year_choices)
-    # year = forms.CharField(label='Год', max_length=4)
 
 
 class PatentsStatistics(forms.Form):

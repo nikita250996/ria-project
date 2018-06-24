@@ -165,6 +165,9 @@
             'message-open': '{% url "message_open" pk=1234567890 %}',
             'message-read': '{% url "message_read" pk=1234567890 %}',
 
+            'message-create': '{% url "message_create" %}',
+            'message-read': '{% url "message_read" pk=1234567890 %}',
+            'message-open': '{% url "message_open" pk=1234567890 %}',
         };
 
         {% if user.is_superuser %}
