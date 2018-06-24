@@ -84,3 +84,15 @@ urlpatterns += [
 
     # path('документация/документ1', views.doc1, name='doc1')
 ]
+
+urlpatterns += [
+    path('сообщения/входящие',
+         login_required(TemplateView.as_view(template_name='received_messages.html')),
+         name='received_messages'),
+    path('сообщения/написать', views.MessageCreate.as_view(), name='message_create'),
+    path('сообщения/входящие/<int:pk>/ответить', views.MessageRead.as_view(), name='message_read'),
+    path('сообщения/исходящие/<int:pk>/', views.MessageOpen.as_view(), name='message_open'),
+    path('сообщения/исходящие',
+         login_required(TemplateView.as_view(template_name='sent_messages.html')),
+         name='sent_messages'),
+]

@@ -1,0 +1,26 @@
+{% extends "sent_messages.html" %}
+
+
+{% block content %}
+
+{% load widget_tweaks %}
+<div class="form-container">
+    <h3 class="form-title">Форма просмотра сообщения</h3>
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="form-row">
+            <div class="form-group col-md-9">
+                {% include "./form_field.html" with field=form.text %}
+            </div>
+        </div>
+
+        {#  Кнопки  #}
+        <div class="form-group">
+            <a href="{% url 'sent_messages' %}" class="btn btn-secondary">Назад</a>
+        </div>
+
+    </form>
+</div>
+{% endblock %}
+

@@ -1,16 +1,15 @@
 # coding: utf-8
+import os
 from django.urls import reverse_lazy
 from django.shortcuts import render
+from django.http import HttpResponse
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
 from rest_framework import viewsets
 from . import serializers
 from . import models
 from . import forms
-
 from application.documentation import wb_proc
-from django.http import HttpResponse
-import os
 
 
 # VIEW SETS FOR REST API
@@ -67,6 +66,22 @@ class NotificationViewSet(viewsets.ModelViewSet):
         if read_param:
             queryset = queryset.filter(read=read_param)
 
+        return queryset
+
+
+# сообщения
+class MessageViewSet(viewsets.ModelViewSet):
+    queryset = models.Message.objects.all()
+    serializer_class = serializers.MessageSerializer
+
+    def get_queryset(self):
+        queryset = models.Message.objects.all()
+        #http://127.0.0.1:8000/сообщения/входящие
+        if self.request.META['HTTP_REFERER'] == 'http://' + self.request.get_host() + '/%D1%81%D0%BE%D0%BE%D0%B1%D1%89%D0%B5%D0%BD%D0%B8%D1%8F/%D0%B2%D1%85%D0%BE%D0%B4%D1%8F%D1%89%D0%B8%D0%B5':
+            queryset = queryset.filter(receiver=self.request.user.id)
+        #http://127.0.0.1:8000/сообщения/исходящие
+        if self.request.META['HTTP_REFERER'] == 'http://' + self.request.get_host() + '/%D1%81%D0%BE%D0%BE%D0%B1%D1%89%D0%B5%D0%BD%D0%B8%D1%8F/%D0%B8%D1%81%D1%85%D0%BE%D0%B4%D1%8F%D1%89%D0%B8%D0%B5':
+            queryset = queryset.filter(sender=self.request.user.id)
         return queryset
 
 
@@ -332,3 +347,49 @@ def print_table23(request):
         response = attachment(document, 'Table_23', 'docx')
 
     return response
+
+
+class MessageCreate(CreateView):
+    model = models.Message
+    form_class = forms.MessageForm
+    success_url = reverse_lazy('sent_messages')
+    template_name = 'application/write_message_form.html'
+
+    def get_form_kwargs(self):
+        kwargs = super(MessageCreate, self).get_form_kwargs()
+        kwargs.update({
+            'request': self.request
+        })
+        return kwargs
+
+
+class MessageRead(CreateView):
+    model = models.Message
+    form_class = forms.MessageAnswerForm
+    success_url = reverse_lazy('received_messages')
+    template_name = 'application/answer_message_form.html'
+
+    def get(self, request, *args, **kwargs):
+        message = models.Message.objects.get(id=self.kwargs['pk'])
+        form = self.form_class(message=message)
+        return render(request, self.template_name, {'form': form, 'message': message})
+
+
+class MessageOpen(UpdateView):
+    model = models.Message
+    form_class = forms.MessageForm
+    success_url = reverse_lazy('sent_messages')
+    template_name = 'application/open_message_form.html'
+
+    def get_form_kwargs(self):
+        kwargs = super(MessageOpen, self).get_form_kwargs()
+        kwargs.update({
+            'request': self.request
+        })
+        return kwargs
+
+    def form_valid(self, form):
+        clean = form.cleaned_data
+        context = {}
+        self.object = context.save(clean)
+        return super(MessageOpen, self).form_valid(form)

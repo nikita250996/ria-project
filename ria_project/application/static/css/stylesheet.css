@@ -112,6 +112,11 @@ a {
   transition: all 0.2s;
 }
 
+.sent-messages,
+.received-messages {
+    font-size: 14px;
+}
+
 .staff-info {
     text-align: right;
     color: rgb(255, 255, 255);

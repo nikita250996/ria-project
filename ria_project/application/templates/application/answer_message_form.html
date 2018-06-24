@@ -1,0 +1,43 @@
+{% extends "received_messages.html" %}
+
+
+{% block content %}
+
+{% load widget_tweaks %}
+<div class="form-container">
+    <h3 class="form-title">Сообщение</h3>
+    <p>
+        {{ message.text }}
+    </p>
+</div>
+
+<div class="form-container">
+    <h3 class="form-title">Ответ на сообщение</h3>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="form-row">
+            <div class="form-group col-md-9">
+                {% include "./form_field.html" with field=form.text %}
+            </div>
+        </div>
+
+        {{ form.sender }}
+        {{ form.receiver }}
+
+        {#  Кнопки  #}
+        <div class="form-group">
+            <button type="submit" class="btn btn-success">
+                <span class="glyphicon glyphicon-ok"></span>Ответить
+            </button>
+            <a href="{% url 'received_messages' %}" class="btn btn-secondary">Назад</a>
+        </div>
+
+        {% load app_extras %}
+        <div hidden="true">{% check request.path %}</div>
+    </form>
+
+</div>
+{% endblock %}
+

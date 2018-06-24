@@ -500,9 +500,9 @@ class PrivatePerson(Person):
                             help_text='Имя автора. Например, Никита')
     patronymic = models.CharField(max_length=100, verbose_name='Отчество',
                                   help_text='Отчество автора. Например, Рамильевич')
-    work_place = models.CharField(max_length=100, blank=False,
-                                  verbose_name='Институт СФУ — место работы',
-                                  help_text='Институт СФУ — место работы автора. Например, ИКИТ')
+    work_place = models.ForeignKey(to='Institute', on_delete=models.PROTECT, null=True,
+                                   verbose_name='Институт СФУ — место работы',
+                                   help_text='Институт СФУ — место работы автора. Например, ИКИТ')
     passport_series = models.CharField(max_length=15, verbose_name='Серия паспорта',
                                        help_text='Серия паспорта автора', validators=[MinLengthValidator(4)])
     passport_number = models.CharField(max_length=15, verbose_name='Номер паспорта',
@@ -514,7 +514,7 @@ class PrivatePerson(Person):
         unique_together = ('passport_series', 'passport_number')
 
     def __str__(self):
-        return self.full_name() + ", " + self.work_place
+        return self.full_name() + ", " + self.work_place.name
 
     def full_name(self):
         return self.surname + ' ' + self.name + ' ' + self.patronymic
@@ -592,3 +592,51 @@ class PaymentInfo(models.Model):
 
     def __str__(self):
         return 'Данные для служебной записки №{0}'.format(self.id)
+
+
+class Message(models.Model):
+    """Сообщение
+
+    Поля:
+        sender Отправитель
+        receiver Получатель
+        text Текст
+        send_at Когда было отправлено
+        read Прочитано ли
+    """
+    sender = models.ForeignKey(to='application.User', on_delete=models.PROTECT, related_name='sender',
+                               verbose_name='Отправитель', help_text='Отправитель сообщения', null=False, blank=False)
+    receiver = models.ForeignKey(to='application.User', on_delete=models.PROTECT, related_name='receiver',
+                                 verbose_name='Получатель', help_text='Получатель сообщения', null=False, blank=False)
+    text = models.TextField(max_length=1000, blank=False, verbose_name='Текст', help_text='Текст сообщения')
+    send_at = models.DateField(auto_now_add=True, blank=True, verbose_name='Когда было отправлено',
+                               help_text='Когда сообщение было отправлено')
+    read = models.BooleanField(default=False, blank=True, verbose_name='Прочитано ли',
+                               help_text='Прочитано ли сообщение?')
+
+    class Meta:
+        verbose_name = 'сообщение'
+        verbose_name_plural = 'Сообщения'
+
+    def __str__(self):
+        return self.text
+
+
+class Institute(models.Model):
+    """Институт
+
+    Поля:
+        name Название
+        ground Код площадки СФУ
+    """
+
+    name = models.CharField(max_length=50, null=True, verbose_name='Название', help_text='Название института')
+    ground = models.ForeignKey(to='Ground', on_delete=models.PROTECT, null=True, verbose_name='Код площадки СФУ',
+                               help_text='Код площадки СФУ, к которой относится институт')
+
+    class Meta:
+        verbose_name = 'институт'
+        verbose_name_plural = 'Институты'
+
+    def __str__(self):
+        return self.name

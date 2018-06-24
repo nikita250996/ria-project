@@ -1,6 +1,9 @@
 from django import forms
-from application.models import ContractType, Duty, IntellectualPropertyType, IntellectualProperty, Payment, IntangibleAssets, IPCommercialization
-
+from application.models import ContractType, Duty, \
+    IntellectualPropertyType, IntellectualProperty, Payment, \
+    IntangibleAssets, IPCommercialization, Message, User
+from django.db.models import Q
+from django.contrib.auth import get_user
 
 # MaintenanceOfPatents - поле сортировки документа
 SORTING_MOP_CHOICES = (
@@ -162,3 +165,43 @@ class Payments(forms.Form):
 
 class Table23(forms.Form):
     year = forms.CharField(label='Год: ', max_length=4, initial='2018')
+
+
+class MessageAnswerForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        self.message = kwargs.pop('message', None)
+        super(MessageAnswerForm, self).__init__(*args, **kwargs)
+
+        if self.message:
+            self.fields['sender'].initial = User.objects.get(id=self.message.receiver.id)
+            self.fields['receiver'].initial = User.objects.get(id=self.message.sender.id)
+
+    class Meta:
+        model = Message
+        fields = '__all__'
+        widgets = {
+            'text': forms.Textarea(attrs={'rows': '6'}),
+            'sender': forms.HiddenInput(),
+            'read': forms.HiddenInput(),
+            'receiver': forms.HiddenInput(),
+        }
+
+
+class MessageForm(forms.ModelForm):
+
+    def __init__(self, request, *args, **kwargs):
+        self.request = request
+        super(MessageForm, self).__init__(*args, **kwargs)
+
+        self.fields['sender'].initial = User.objects.get(id=get_user(self.request).id)
+        self.fields['receiver'].queryset = User.objects.filter(~Q(id=get_user(self.request).id))
+
+    class Meta:
+        model = Message
+        fields = '__all__'
+        widgets = {
+            'text': forms.Textarea(attrs={'rows': '6'}),
+            'sender': forms.HiddenInput(),
+            'read': forms.HiddenInput(),
+        }
