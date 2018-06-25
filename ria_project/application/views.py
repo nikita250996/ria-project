@@ -229,6 +229,7 @@ def requests_statistics(request):
 
     return render(request, 'reports/requests_statistics.html', {'form': form})
 
+
 # ИНФОРМАЦИЯ О ЗАЯВКАХ - печать
 def print_requests_statistics(request):
     ip_type = request.POST['ip_type']
@@ -242,6 +243,7 @@ def print_requests_statistics(request):
         response = attachment(document, 'Kolichestvo_zayavok', 'xlsx')
     return response
 
+
 # ИНФОРМАЦИЯ О ПАТЕНТАХ - форма
 def patents_statistics(request):
     form = forms.PatentsStatistics(request.POST)
@@ -250,6 +252,7 @@ def patents_statistics(request):
         contract_type = form.cleaned_data['contract_type']
 
     return render(request, 'reports/patents_statistics.html', {'form': form})
+
 
 # ИНФОРМАЦИЯ О ПАТЕНТАХ - печать
 def print_patents_statistics(request):
@@ -265,6 +268,7 @@ def print_patents_statistics(request):
 
     return response
 
+
 # СПИСОК ПАТЕНТОВ ПО ОПЛАТЕ ПОШЛИН НА ПОДДЕРЖАНИЕ - форма
 def maintenance_of_patents(request):
     form = forms.MaintenanceOfPatents(request.POST)
@@ -272,6 +276,7 @@ def maintenance_of_patents(request):
         sorting_field = form.cleaned_data['sorting_field']
 
     return render(request, 'reports/maintenance_of_patents.html', {'form': form})
+
 
 # СПИСОК ПАТЕНТОВ ПО ОПЛАТЕ ПОШЛИН НА ПОДДЕРЖАНИЕ - печать
 def print_maintenance_of_patents(request):
@@ -287,6 +292,7 @@ def print_maintenance_of_patents(request):
 
     return response
 
+
 # СПИСОК ДЕЙСТВУЮЩИХ ПАТЕНТОВ - форма
 def actual_patents(request):
     form = forms.ActualPatents(request.POST)
@@ -295,6 +301,7 @@ def actual_patents(request):
         duty = form.cleaned_data['duty']
 
     return render(request, 'reports/actual_patents.html', {'form': form})
+
 
 # СПИСОК ДЕЙСТВУЮЩИХ ПАТЕНТОВ - печать
 def print_actual_patents(request):
@@ -311,6 +318,7 @@ def print_actual_patents(request):
 
     return response
 
+
 # ИНФОРМАЦИЯ ОБ ОПЛАЧЕННЫХ ПОШЛИНАХ - форма
 def payments(request):
     form = forms.Payments(request.POST)
@@ -319,6 +327,7 @@ def payments(request):
         is_supported = form.cleaned_data['is_supported']
 
     return render(request, 'reports/payments.html', {'form': form})
+
 
 # НФОРМАЦИЯ ОБ ОПЛАЧЕННЫХ ПОШЛИНАХ - печать
 def print_payments(request):
@@ -331,6 +340,7 @@ def print_payments(request):
 
     return response
 
+
 # СПИСОК ДЕЙСТВУЮЩИХ ПАТЕНТОВ - форма
 def table23(request):
     form = forms.Table23(request.POST)
@@ -338,6 +348,7 @@ def table23(request):
         year = form.cleaned_data['year']
 
     return render(request, 'reports/table23.html', {'form': form})
+
 
 # СПИСОК ДЕЙСТВУЮЩИХ ПАТЕНТОВ - печать
 def print_table23(request):

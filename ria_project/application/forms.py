@@ -157,9 +157,11 @@ class MaintenanceOfPatents(forms.Form):
         choices=SORTING_MOP_CHOICES, label='Сортировка по полю: ', initial=0,
         widget=forms.Select(), required=True)
 
+
 class Payments(forms.Form):
     year = forms.CharField(label='Год: ', max_length=4)
     is_supported = forms.BooleanField(label='Только поддерживаемые: ', required=False)
+
 
 class Table23(forms.Form):
     year = forms.CharField(label='Год: ', max_length=4, initial='2018')
